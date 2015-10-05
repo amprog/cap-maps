@@ -1,0 +1,335 @@
+{
+  "regions": {
+    "koz1": {
+      "data": {
+        "contact": {
+          "region": "Northwest",
+          "name": "Travis Siegel",
+          "title": "Marketing Specialist",
+          "org": "Northwest Commission",
+          "street1": "395 Seneca Street",
+          "street2": "",
+          "street3": "",
+          "city": "Oil City",
+          "zip_code": "16301",
+          "phone_number": "814.677.4800 x123",
+          "fax_number": "814.677.7663",
+          "email": "traviss@nwcommission.org",
+          "lat": "41.440430",
+          "long": "-79.707342",
+          "counties": [
+            "Butler",
+            "Crawford",
+            "Clarion",
+            "Erie",
+            "Forest",
+            "Lawrence",
+            "Mercer",
+            "Venango",
+            "Warren"
+            ]
+        }
+      }
+    },
+    "koz2": {
+      "data": {
+        "contact": {
+          "region": "Southwest",
+          "name": "Lauren Mundell",
+          "title": "",
+          "org": "Southwestern Planning Commission",
+          "street1": "Two Chetham Center",
+          "street2": "Suite 500",
+          "street3": "112 Washington Place",
+          "city": "Pittsburgh",
+          "zip_code": "15219-3451",
+          "phone_number": "412.391.5590 x317",
+          "fax_number": "412.391.9160 ",
+          "email": "lmundell@spcregion.org",
+          "lat": "40.439213",
+          "long": "-79.991606",
+          "counties": [
+            "Armstrong",
+            "Allegheny",
+            "Beaver",
+            "Fayette",
+            "Greene",
+            "Indiana",
+            "Washington",
+            "Westmoreland"
+          ]
+        }
+      }
+    },
+    "koz3": {
+      "data": {
+        "contact": {
+          "region": "North Central",
+          "name": "Amber Hancharick",
+          "title": "Export Trade Specialist",
+          "org": "North Central PA Regional Planning & Development Commission",
+          "street1": "651 Montmorenci Road",
+          "street2": "",
+          "street3": "",
+          "city": "Ridgway",
+          "zip_code": "15853",
+          "phone_number": "814.773.3162 x3050",
+          "fax_number": "814-772-7045",
+          "email": "ahancharick@ncentral.com",
+          "lat": "41.434744",
+          "long": "-78.744055",
+          "counties": [
+            "Cameron",
+            "Clearfield",
+            "Elk",
+            "Jefferson",
+            "McKean",
+            "Potter"
+          ]
+        }
+      }
+    },
+    "koz4": {
+      "data": {
+        "contact": {
+          "region": "Southern Alleghenies",
+          "name": "Brandon Carson",
+          "title": "Director, Planning and Community Development",
+          "org": "Southern Alleghenies Planning & Development Commission",
+          "street1": "3 Sheraton Drive",
+          "street2": "",
+          "street3": "",
+          "city": "Altoona",
+          "zip_code": "16602",
+          "phone_number": "814.949.6506",
+          "fax_number": "814.949.6505",
+          "email": "bcarson@sapdc.org",
+          "lat": "40.458727",
+          "long": "-78.409575",
+          "counties": [
+            "Bedford",
+            "Blair",
+            "Cambria",
+            "Fulton",
+            "Huntingdon",
+            "Somerset"
+          ]
+        }
+      }
+    },
+    "koz5": {
+      "data": {
+        "contact": {
+          "region": "Northern Tier",
+          "name": "Rachel Hauser",
+          "title": "Program Manager",
+          "org": "Northern Tier Regional Planning & Development Commission",
+          "street1": "312 Main Street",
+          "street2": "",
+          "street3": "",
+          "city": "Towanda",
+          "zip_code": "18848",
+          "phone_number": "570.265.9103",
+          "fax_number": "570.265.7585",
+          "email": "hauser@northerntier.org",
+          "lat": "41.766876",
+          "long": "-76.443128",
+          "counties": [
+            "Bradford",
+            "Sullivan",
+            "Susquenhanna",
+            "Tioga",
+            "Wyoming"
+          ]
+        }
+      }
+    },
+    "koz6": {
+      "data": {
+        "contact": {
+          "region": "Central PA",
+          "name": "Stacy Anderson",
+          "title": "Chief Economic Development Programs",
+          "org": "SEDA-Council of Governments",
+          "street1": "201 Furnace Rd.",
+          "street2": "",
+          "street3": "",
+          "city": "Lewisburg",
+          "zip_code": "17837",
+          "phone_number": "570.524.4491",
+          "fax_number": "570.524.9190",
+          "email": "sanderson@seda-cog.org",
+          "lat": "40.925413",
+          "long": "-76.867118",
+          "counties": [
+            "Centre",
+            "Clinton",
+            "Columbia",
+            "Juniata",
+            "Lycoming",
+            "Mifflin",
+            "Montour",
+            "Northumberland",
+            "Snyder",
+            "Union"
+          ]
+        }
+      }
+    },
+    "koz7": {
+      "data": {
+        "contact": {
+          "region": "South Central",
+          "name": "Shaun Donovan",
+          "title": "Economic Development Specialist",
+          "org": "Harrisburg Regional Chamber & CREDIC",
+          "street1": "3211 North Front Street",
+          "street2": "Suite 201",
+          "street3": "",
+          "city": "Harrisburg",
+          "zip_code": "17110",
+          "phone_number": "717.213.5033",
+          "fax_number": "717.232.5184",
+          "email": "sdonovan@hbgrc.org",
+          "lat": "40.299708",
+          "long": "-76.903553",
+          "counties": [
+            "Adams",
+            "Cumberland",
+            "Dauphin",
+            "Franklin",
+            "Lebanon",
+            "Perry",
+            "York"
+          ]
+        }
+      }
+    },
+    "koz8": {
+      "data": {
+        "contact": {
+          "region": "Lackawanna/Luzerne",
+          "name": "Nicole Davis",
+          "title": "Zone Coordinator",
+          "org": "Redevelopment Authority of Luzerne County",
+          "street1": "Suite #210",
+          "street2": "16 Luzerne Avenue",
+          "street3": "",
+          "city": "West Pittston",
+          "zip_code": "18643",
+          "phone_number": "570.655.3329",
+          "fax_number": "570.655.3287",
+          "email": "lcranmg@epix.net",
+          "lat": "41.327549",
+          "long": "-75.793901",
+          "counties": [
+            "Lackawanna",
+            "Luzerne",
+            "Wayne"
+          ]
+        }
+      }
+    },
+    "koz9": {
+      "data": {
+        "contact": {
+          "region": "Schuylkill/Carbon",
+          "name": "Mark Scarbinsky",
+          "title": "Director",
+          "org": "Schuylkill County Economic Development Office",
+          "street1": "401 North Second Street",
+          "street2": "",
+          "street3": "",
+          "city": "Pottsville",
+          "zip_code": "17901",
+          "phone_number": "570.628.1167",
+          "fax_number": "570.628.1210",
+          "email": "mjscarbinsky@co.schuylkill.pa.us",
+          "lat": "40.687754",
+          "long": "-76.198540",
+          "counties": [
+            "Carbon",
+            "Schuylkill"
+          ]
+        }
+      }
+    },
+    "koz10": {
+      "data": {
+        "contact": {
+          "region": "Lehigh Valley",
+          "name": "Andrew Kleiner",
+          "title": "KOZ Program Coordinator",
+          "org": "Lehigh Valley Economic Development Corporation",
+          "street1": "2158 Avenue C",
+          "street2": "Suite 200",
+          "street3": "",
+          "city": "Bethlehem",
+          "zip_code": "18017",
+          "phone_number": "610.266.7619",
+          "fax_number": "610.266.7623",
+          "email": "akleiner@lehighvalley.org",
+          "lat": "40.655685",
+          "long": "-75.423758",
+          "counties": [
+            "Lehigh",
+            "Monroe",
+            "Northampton"
+          ]
+        }
+      }
+    },
+    "koz11": {
+      "data": {
+        "contact": {
+          "region": "Southeast",
+          "name": "Jane Stein",
+          "title": "",
+          "org": "Montgomery County Department of Economic & Workforce Development",
+          "street1": "140 DeKalb Street",
+          "street2": "Human Services Center, 5th Floor",
+          "street3": "P.O. Box 311",
+          "city": "Norristown",
+          "zip_code": "19404",
+          "phone_number": "610.278.3530",
+          "fax_number": "610.278.5944",
+          "email": "jstein@montcopa.org",
+          "lat": "40.107889",
+          "long": "-75.345532",
+          "counties": [
+            "Berks",
+            "Bucks",
+            "Chester",
+            "Delaware",
+            "Lancaster",
+            "Montgomery"
+          ]
+        }
+      }
+    },
+    "koz12": {
+      "data": {
+        "contact": {
+          "region": "City of Philadelphia",
+          "name": "Vincent Dougherty",
+          "title": "",
+          "org": "Philadelphia Department of Commerce ",
+          "street1": "One Parkway",
+          "street2": "1515 Arch Street",
+          "street3": "12th Floor",
+          "city": "Philadelphia",
+          "zip_code": "19102",
+          "phone_number": "215.683.2021",
+          "fax_number": "215.557.8538",
+          "email": "vincent.dougherty@phila.gov",
+          "lat": "39.955125",
+          "long": "-75.165873",
+          "counties": [
+            "Philadelphia"
+          ]
+        }
+      }
+    }
+  }
+}
+

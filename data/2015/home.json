@@ -1,0 +1,98 @@
+{
+  "s2_chart1": {
+    "options": {
+      "segmentStrokeColor": "#D34C4C",
+      "scaleOverride": true,
+      "scaleStartValue": 0,
+      "scaleStepWidth": 10,
+      "scaleSteps": 10,
+      "bezierCurve": false,
+      "pointDot": true,
+      "scaleLineColor": "#e1e1e1",
+      "scaleFontColor": "#4F4F4F",
+      "scaleFontSize": 13,
+      "scaleGridLineColor": "#e1e1e1",
+      "datasetStroke": false,
+      "datasetStrokeWidth": 0,
+      "animationSteps": 120,
+      "scaleShowVerticalLines": false,
+      "scaleShowLabels": false,
+      "legendTemplate": "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:#000\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>",
+      "source": "https://www.sba.gov/sites/default/files/files/pa10.pdf"
+    },
+    "data_array": {
+      "labels": [
+        "Private-sector employment",
+        "Government employment",
+        "Male self-employment",
+        "Female self-employment",
+        "Minority self-employment",
+        "Veteran self-employment"
+      ],
+      "datasets": [
+        {
+          "label": "2009",
+          "fillColor": "rgba(192,0,0,0.6)",
+          "data": [
+            4741,
+            722,
+            418,
+            169,
+            57,
+            63
+          ]
+        }
+      ]
+    }
+  },
+  "s5_linepie": {
+    "options": {
+      "font": "17px Arial",
+      "animateRotate": true,
+      "lineWidth": 25,
+      "showLabels": true,
+      "labelOffset": 40,
+      "chartType": "linepie",
+      "chartName": "Trade by Country",
+      "defaultColor": "#fff",
+      "showChartName": true
+    },
+    "data_array": [
+      {
+        "data": [
+          {
+            "label": "Germany",
+            "value": 5,
+            "color": "#93A9CF",
+            "highlight": "#2E4272"
+          },
+          {
+            "label": "Netherlands",
+            "value": 10,
+            "color": "#5F7099",
+            "highlight": "#2E4272"
+          },
+          {
+            "label": "China",
+            "value": 15,
+            "color": "#B93A43",
+            "highlight": "#0E204B"
+          },
+          {
+            "label": "Mexico",
+            "value": 20,
+            "color": "#ffffff",
+            "highlight": "#8A1019"
+          },
+
+          {
+            "label": "Canada",
+            "value": 60,
+            "color": "#4572A7",
+            "highlight": "#2E4272"
+          }
+        ]
+      }
+    ]
+  }
+}

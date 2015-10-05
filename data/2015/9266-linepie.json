@@ -1,0 +1,36 @@
+{
+  "options": {
+    "font": "20px Arial",
+    "animateRotate": true,
+    "lineWidth": 25,
+    "showLabels": true,
+    "chartType": "linepie",
+    "chartName": "Trade Chart",
+    "defaultColor": "#111",
+    "showChartName": true
+  },
+  "data_array": [
+    {
+      "data": [
+        {
+          "label": "Mexico",
+          "value": 10,
+          "color": "#B93A43",
+          "highlight": "#8A1019"
+        },
+        {
+          "label": "China",
+          "value": 65,
+          "color": "#2E4272",
+          "highlight": "#0E204B"
+        },
+        {
+          "label": "Canada",
+          "value": 75,
+          "color": "#5F7099",
+          "highlight": "#2E4272"
+        }
+      ]
+    }
+  ]
+}

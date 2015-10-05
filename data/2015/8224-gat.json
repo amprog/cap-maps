@@ -1,0 +1,210 @@
+{
+  "regions": {
+    "gat1": {
+      "data": {
+        "contact": {
+          "region": "Northwest",
+          "name": "Doug Massey",
+          "subtitle": "Regional Director",
+          "street_addr1": "100 State Street",
+          "street_addr2": "Suite 205",
+          "city": "Erie",
+          "zip_code": "16507",
+          "lat": "42.133523",
+          "long": "-80.088833",
+          "phone_number": "814.871.4770",
+          "email": "dmassey@pa.gov",
+          "page_url": "/governors-action-team-gat/northwest/"
+        },
+        "counties": [
+          "Clarion",
+          "Crawford",
+		  "Elk",
+          "Erie",
+          "Forest",
+		  "Jefferson",
+          "Lawrence",
+		  "McKean",
+          "Mercer",
+		  "Potter",
+          "Venango",
+          "Warren"
+        ]
+      }
+    },
+    "gat2": {
+      "data": {
+        "contact": {
+          "region": "Central",
+          "name": "Jill Collier",
+          "subtitle": "Regional Director",
+          "street_addr1": "155 North 15th Street",
+          "street_addr2": "",
+          "city": "Lewisburg",
+          "zip_code": "17837",
+          "lat": "40.962026",
+          "long": "-76.902160",
+          "phone_number": "717.787.8199",
+          "email": "jcollier@pa.gov",
+          "page_url": "/governors-action-team-gat/central/"
+        },
+        "counties": [
+          "Blair",
+		  "Cameron",
+		  "Center",
+		  "Clearfield",
+		  "Huntingdon",
+		  "Juniata",
+		  "Lycoming",
+		  "Mifflin",
+		  "Montour",
+		  "Northumberland",
+		  "Snyder",
+		  "Union"
+        ]
+      }
+    },
+	"gat3": {
+      "data": {
+        "contact": {
+          "region": "Lehigh Valley",
+          "name": "Janet Smith",
+          "subtitle": "Regional Director",
+          "street_addr1": "2158 Avenue C",
+          "street_addr2": "",
+          "city": "Bethlehem",
+          "zip_code": "18017",
+          "lat": "40.655685",
+          "long": "-75.423758",
+          "phone_number": "717.433.8587",
+          "email": "janetsmith@pa.gov",
+          "page_url": "/governors-action-team-gat/lehigh-valley/"
+        },
+        "counties": [
+          "Berks",
+		  "Lehigh",
+		  "Monroe",
+		  "Northampton"
+        ]
+      }
+    },
+	"gat4": {
+      "data": {
+        "contact": {
+          "region": "Southwest",
+          "name": "Lance Chimka",
+          "subtitle": "Regional Director",
+          "street_addr1": "301 5th Avenue",
+          "street_addr2": "Suite 250",
+          "city": "Pittsburgh",
+          "zip_code": "15222",
+          "lat": "40.440928",
+          "long": "-79.999706",
+          "phone_number": "412.565.2788",
+          "email": "lchimka@pa.gov",
+          "page_url": "/governors-action-team-gat/southwest/"
+        },
+        "counties": [
+          "Allegheny",
+		  "Armstrong",
+		  "Beaver",
+		  "Butler",
+		  "Cambria",
+		  "Fayette",
+		  "Greene",
+		  "Indiana",
+		  "Somerset",
+		  "Washington",
+		  "Westmoreland"
+		]
+      }
+    },
+	"gat5": {
+      "data": {
+        "contact": {
+          "region": "Harrisburg (Headquarters)",
+          "name": "Brent Vernon",
+          "subtitle": "Deputy Director for Program Management",
+          "street_addr1": "400 North Street",
+          "street_addr2": "",
+          "city": "Harrisburg",
+          "zip_code": "17120",
+          "lat": "40.267060",
+          "long": "-76.884265",
+          "phone_number": "717.787.8199",
+          "email": "bvernon@pa.gov",
+          "page_url": "/governors-action-team-gat/harrisburg/"
+        },
+        "counties": [
+          "Adams",
+		  "Bedford",
+		  "Cumberland",
+		  "Dauphin",
+		  "Franklin",
+		  "Fulton",
+		  "Lancaster",
+		  "Lebanon",
+		  "Perry",
+		  "York"    
+        ]
+      }
+    },
+	"gat6": {
+      "data": {
+        "contact": {
+          "region": "Northeast",
+          "name": "",
+          "subtitle": "",
+          "street_addr1": "409 Lackawanna Avenue",
+          "street_addr2": "",
+          "city": "Scranton",
+          "zip_code": "18503",
+          "lat": "41.407588",
+          "long": "-75.665754",
+          "phone_number": "570.963.4598",
+          "email": " ",
+          "page_url": "/governors-action-team-gat/northeast/"
+        },
+        "counties": [
+          "Bradford",
+		  "Carbon",
+		  "Columbia",      
+		  "Lackawanna",
+		  "Luzerne",
+		  "Pike",
+		  "Schuylkill",
+		  "Sullivan",
+		  "Susquehanna",
+		  "Tioga",
+		  "Wayne",
+		  "Wyoming"
+        ]
+      }
+    },
+	"gat7": {
+      "data": {
+        "contact": {
+          "region": "Southeast",
+          "name": "Ben Ramos",
+          "subtitle": "Regional Director",
+          "street_addr1": "200 South Broad Street",
+          "street_addr2": "11th Floor",
+          "city": "Philadelphia",
+          "zip_code": "19102",
+          "lat": "39.949183",
+          "long": "-75.164777",
+          "phone_number": "215.965.1942",
+          "email": "beramos@pa.gov",
+          "page_url": "/governors-action-team-gat/southeast/"
+        },
+        "counties": [
+          "Bucks",
+		  "Chester",
+		  "Delaware",
+		  "Montgomery",
+		  "Philadelphia"        
+        ]
+      }
+    }
+  }
+}

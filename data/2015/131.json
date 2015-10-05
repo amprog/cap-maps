@@ -1,0 +1,469 @@
+{
+  "options": {
+    "segmentStrokeColor": "#D2DFF2",
+    "animateRotate": true,
+    "source": ""
+  },
+  "data_array": [
+    {
+      "i": 0,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "Council of Great Lakes Governors",
+        "name": "Ms. Angela Foley",
+        "name2": "",
+        "street1": "Suite 48, Level 9, 88 Pitt Street",
+        "street2": "",
+        "city": "Sydney",
+        "zip": "New South Wales 2000",
+        "country": "Australia",
+        "repcountry": "Australia",
+        "territory": "Australia, New Zealand",
+        "phone1": "+61.2.9229.8555",
+        "phone2": "",
+        "email": "angela@foley.net.au",
+        "email2": ""
+      }
+    },
+    {
+      "i": 1,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "AHP Group",
+        "name": "Mr. Stefan Peikert",
+        "name2": "",
+        "street1": "Karl-Heinrich-Ulrichs Strasse 11",
+        "street2": "",
+        "city": "Berlin",
+        "zip": "10787",
+        "country": "Germany",
+        "repcountry": "Austria",
+        "territory": "Germany, Austria, Switzerland, Poland",
+        "phone1": "+49.0.30.756.8754.12",
+        "phone2": "",
+        "email": "peikert@newpa.de",
+        "email2": ""
+      }
+    },
+    {
+      "i": 2,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "Bureau de la Pennsylvanie",
+        "name": "Mr. Johann Sponar (French & English), Mr. Geert Hovens (Dutch & English)",
+        "name2": "",
+        "street1": "",
+        "street2": "",
+        "city": "",
+        "zip": "",
+        "country": "",
+        "repcountry": "Belgium",
+        "territory": "France, Belgium, Switzerland",
+        "phone1": "+33.0.481.763236 (French & English), +31.478.50.81.65 (Dutch & English)",
+        "phone2": "",
+        "email": "j.sponar@newpa.eu",
+        "email2": ""
+      }
+    },
+    {
+      "i": 3,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "",
+        "name": "Mr. Fabio Yukio Yamada",
+        "name2": "",
+        "street1": "Rua Helena 280, Suites 703 & 704",
+        "street2": "",
+        "city": "Sao Paulo",
+        "zip": "SP 04552-050",
+        "country": "Brazil",
+        "repcountry": "Brazil",
+        "territory": "Brazil",
+        "phone1": "+55.11.3044.4848",
+        "phone2": "+55.11.97207.2065",
+        "email": "fabio@tradebrz.com",
+        "email2": ""
+      }
+    },
+    {
+      "i": 4,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "CIDEP",
+        "name": "Mr. Jason Rose",
+        "name2": "",
+        "street1": "84, Notre-Dame West, Suite 100",
+        "street2": "",
+        "city": "Montréal",
+        "zip": "QC H2Y 1S6",
+        "country": "Canada",
+        "repcountry": "Canada",
+        "territory": "Canada",
+        "phone1": "514.907.2350",
+        "phone2": "",
+        "email": "j.rose@newpa.ca",
+        "email2": ""
+      }
+    },
+    {
+      "i": 5,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "",
+        "name": "Ms. Irene Tsai",
+        "name2": "",
+        "street1": "Suite 7D-16, No. 5",
+        "street2": "Xin-Yi Rd., Sec. 5",
+        "city": "Taipei",
+        "zip": "110",
+        "country": "China",
+        "repcountry": "China",
+        "territory": "China, Taiwan",
+        "phone1": "+886.2.8789.8855",
+        "phone2": "",
+        "email": "PA.Taipei@msa.hinet.net",
+        "email2": ""
+      }
+    },
+    {
+      "i": 6,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "",
+        "name": "Mr. Geert Hovens",
+        "name2": "",
+        "street1": "St. Vitusstraat 12",
+        "street2": "",
+        "city": "Well",
+        "zip": "5855 BM",
+        "country": "The Netherlands",
+        "repcountry": "Denmark",
+        "territory": "Netherlands, Belgium, Finland, Denmark, Norway, Sweden",
+        "phone1": "+31.478.50.81.65",
+        "phone2": "",
+        "email": "ghovens@lancebv.com",
+        "email2": ""
+      }
+    },
+    {
+      "i": 7,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "",
+        "name": "Mr. Geert Hovens",
+        "name2": "",
+        "street1": "St. Vitusstraat 12",
+        "street2": "",
+        "city": "Well",
+        "zip": "5855 BM",
+        "country": "The Netherlands",
+        "repcountry": "Finland",
+        "territory": "Netherlands, Belgium, Finland, Denmark, Norway, Sweden",
+        "phone1": "+31.478.50.81.65",
+        "phone2": "",
+        "email": "ghovens@lancebv.com",
+        "email2": ""
+      }
+    },
+    {
+      "i": 8,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "Bureau de la Pennsylvanie",
+        "name": "Mr. Johann Sponar",
+        "name2": "",
+        "street1": "35 Cours de la Liberté",
+        "street2": "",
+        "city": "Lyon",
+        "zip": "69003",
+        "country": "France",
+        "repcountry": "France",
+        "territory": "France, Belgium, Switzerland",
+        "phone1": "+886.2.8789.8855",
+        "phone2": "",
+        "email": "j.sponar@newpa.eu",
+        "email2": ""
+      }
+    },
+    {
+      "i": 9,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "AHP Group",
+        "name": "Mr. Stefan Peikert",
+        "name2": "",
+        "street1": "Karl-Heinrich-Ulrichs Strasse 11",
+        "street2": "",
+        "city": "Berlin",
+        "zip": "10787",
+        "country": "Germany",
+        "repcountry": "Germany",
+        "territory": "Germany, Austria, Switzerland, Poland",
+        "phone1": "+49.0.30.756.8754.12",
+        "phone2": "",
+        "email": "peikert@newpa.de",
+        "email2": ""
+      }
+    },
+    {
+      "i": 10,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "Bees Communication",
+        "name": "Ms. Patrizia Marani",
+        "name2": "",
+        "street1": "Via Santo Stefano 32",
+        "street2": "",
+        "city": "Bologna",
+        "zip": "40125",
+        "country": "Italy",
+        "repcountry": "Italy",
+        "territory": "Italy",
+        "phone1": "+39.05.119.9866.50",
+        "phone2": "",
+        "email": "patrizia.marani@beescommunication.it",
+        "email2": ""
+      }
+    },
+    {
+      "i": 11,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "",
+        "name": "Mr. Richard Kilner",
+        "name2": "",
+        "street1": "133 Coombe Lane",
+        "street2": "",
+        "city": "London",
+        "zip": "SW200QY",
+        "country": "United Kingdom",
+        "repcountry": "Ireland",
+        "territory": "United Kingdom, Ireland",
+        "phone1": "+44.20.8944.6589",
+        "phone2": "",
+        "email": "rjkilner@aol.com",
+        "email2": ""
+      }
+    },
+    {
+      "i": 12,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "",
+        "name": "Ms. Supriya Kanetkar",
+        "name2": "",
+        "street1": "201 Infantry Court",
+        "street2": "130 Infantry Road",
+        "city": "Bengaluru",
+        "zip": "560 001",
+        "country": "India",
+        "repcountry": "India",
+        "territory": "India",
+        "phone1": "+91.80.2286.8732",
+        "phone2": "",
+        "email": "paindiaoffice2@gmail.com",
+        "email2": ""
+      }
+    },
+    {
+      "i": 13,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "Middle East Regional Office",
+        "name": "Mr. Seth Vogelman",
+        "name2": "Mr. Jonathan Sternberg",
+        "street1": "POB 45005",
+        "street2": "",
+        "city": "Jerusalem",
+        "zip": "91450",
+        "country": "Israel",
+        "repcountry": "Israel",
+        "territory": "Israel",
+        "phone1": "+972.2.571.0199",
+        "phone2": "",
+        "email": "seth.vogelman@atid-edi.com",
+        "email2": "jon@atid-edi.com"
+      }
+    },
+    {
+      "i": 14,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "Fenetre Partners, LLC",
+        "name": "Mr. Satoshi Takayama",
+        "name2": "",
+        "street1": "Roppongi, Mikawadai Bldg 7F",
+        "street2": "4-8-7, Roppongi Minato-ku",
+        "city": "Tokyo",
+        "zip": "106-0032",
+        "country": "Japan",
+        "repcountry": "Japan",
+        "territory": "Japan",
+        "phone1": "+81.3.5414.7866",
+        "phone2": "",
+        "email": "takeda@yamano.co.jp",
+        "email2": ""
+      }
+    },
+    {
+      "i": 15,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "",
+        "name": "Mr. Geert Hovens",
+        "name2": "",
+        "street1": "St. Vitusstraat 12",
+        "street2": "",
+        "city": "Well",
+        "zip": "5855 BM",
+        "country": "The Netherlands",
+        "repcountry": "The Netherlands",
+        "territory": "Netherlands, Belgium, Finland, Denmark, Norway, Sweden",
+        "phone1": "+31.478.50.81.65",
+        "phone2": "",
+        "email": "ghovens@lancebv.com",
+        "email2": ""
+      }
+    },
+    {
+      "i": 16,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "Council of Great Lakes Governors",
+        "name": "Ms. Angela Foley",
+        "name2": "",
+        "street1": "Suite 48, Level 9, 88 Pitt Street",
+        "street2": "",
+        "city": "Sydney",
+        "zip": "New South Wales 2000",
+        "country": "Australia",
+        "repcountry": "New Zealand",
+        "territory": "Australia, New Zealand",
+        "phone1": "+61.2.9229.8555",
+        "phone2": "",
+        "email": "angela@foley.net.au",
+        "email2": ""
+      }
+    },
+    {
+      "i": 17,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "",
+        "name": "Mr. Geert Hovens",
+        "name2": "",
+        "street1": "St. Vitusstraat 12",
+        "street2": "",
+        "city": "Well",
+        "zip": "5855 BM",
+        "country": "The Netherlands",
+        "repcountry": "Norway",
+        "territory": "Netherlands, Belgium, Finland, Denmark, Norway, Sweden",
+        "phone1": "+31.478.50.81.65",
+        "phone2": "",
+        "email": "ghovens@lancebv.com",
+        "email2": ""
+      }
+    },
+    {
+      "i": 18,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "AHP Group",
+        "name": "Mr. Stefan Peikert",
+        "name2": "",
+        "street1": "Karl-Heinrich-Ulrichs Strasse 11",
+        "street2": "",
+        "city": "Berlin",
+        "zip": "10787",
+        "country": "Germany",
+        "repcountry": "Poland",
+        "territory": "Germany, Austria, Switzerland, Poland",
+        "phone1": "+49.0.30.756.8754.12",
+        "phone2": "",
+        "email": "peikert@newpa.de",
+        "email2": ""
+      }
+    },
+    {
+      "i": 19,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "",
+        "name": "Mr. Geert Hovens",
+        "name2": "",
+        "street1": "St. Vitusstraat 12",
+        "street2": "",
+        "city": "Well",
+        "zip": "5855 BM",
+        "country": "The Netherlands",
+        "repcountry": "Sweden",
+        "territory": "Netherlands, Belgium, Finland, Denmark, Norway, Sweden",
+        "phone1": "+31.478.50.81.65",
+        "phone2": "",
+        "email": "ghovens@lancebv.com",
+        "email2": ""
+      }
+    },
+    {
+      "i": 20,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "AHP Group",
+        "name": "Mr. Stefan Peikert (German & English), Mr Johann Sponar (French & English)",
+        "name2": "",
+        "street1": "",
+        "street2": "",
+        "city": "",
+        "zip": "",
+        "country": "",
+        "repcountry": "Switzerland",
+        "territory": "Germany, Austria, Switzerland, Poland",
+        "phone1": "+49.0.30.756.8754.12 (German & English), +33.0.481.763236 (French & English)",
+        "phone2": "",
+        "email": "peikert@newpa.de",
+        "email2": ""
+      }
+    },
+    {
+      "i": 21,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "",
+        "name": "Ms. Irene Tsai",
+        "name2": "",
+        "street1": "Suite 7D-16, No. 5",
+        "street2": "Xin-Yi Rd., Sec. 5",
+        "city": "Taipei",
+        "zip": "110",
+        "country": "China",
+        "repcountry": "Taiwan",
+        "territory": "China, Taiwan",
+        "phone1": "+886.2.8789.8855",
+        "phone2": "",
+        "email": "PA.Taipei@msa.hinet.net",
+        "email2": ""
+      }
+    },
+    {
+      "i": 22,
+      "name": "Global Investment Representative",
+      "contacts": {
+        "agency": "",
+        "name": "Mr. Richard Kilner",
+        "name2": "",
+        "street1": "133 Coombe Lane",
+        "street2": "",
+        "city": "London",
+        "zip": "SW200QY",
+        "country": "United Kingdom",
+        "repcountry":"United Kingdom",
+        "territory": "United Kingdom, Ireland",
+        "phone1": "+44.20.8944.6589",
+        "phone2": "",
+        "email": "rjkilner@aol.com",
+        "email2": ""
+      }
+    }
+  ]
+}

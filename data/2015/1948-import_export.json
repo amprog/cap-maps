@@ -1,0 +1,87 @@
+{
+  "options": {
+    "chart": {
+      "title": "Based off 2013 Stats"
+    },
+    "legend": {
+      "position": "none"
+    },
+    "colors": [
+      "#93A9CF",
+      "#4572A7"
+    ],
+    "height":"600",
+    "width":"600",
+    "chartArea": {
+      "backgroundColor": "#ffffff"
+    },
+    "vAxis": {
+      "textStyle": {
+        "fontSize": "17"
+      }
+    },
+    "hAxis": {
+      "textStyle": {
+        "fontSize": "17"
+      }
+    },
+    "bars": "horizontal"
+  },
+  "data": [
+    [
+      "Country",
+      "Import",
+      "Export"
+    ],
+    [
+      "Canada",
+      8000,
+      8000
+    ],
+    [
+      "Mexico",
+      24000,
+      20000
+    ],
+    [
+      "China",
+      30000,
+      24000
+    ],
+    [
+      "Netherlands",
+      50000,
+      45000
+    ],
+    [
+      "Germany",
+      60000,
+      55000
+    ],
+    [
+      "Japan",
+      50000,
+      75000
+    ],
+    [
+      "United Kingdom",
+      60000,
+      29000
+    ],
+    [
+      "Brazil",
+      50000,
+      75000
+    ],
+    [
+      "South Korea",
+      60000,
+      45000
+    ],
+    [
+      "Belgium",
+      60000,
+      35000
+    ]
+  ]
+}
