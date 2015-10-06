@@ -1,0 +1,311 @@
+{
+    "regions": {
+        "ren1": {
+            "data": {
+                "contact": {
+                    "name": "Lehigh University Small Business Development Center",
+                    "region": "Lehigh Valley",
+                    "title": "LexNet Coordinator",
+                    "company": "Lehigh Export Network",
+                    "contact_name": "Cora Landis",
+                    "street_addr1": "Lehigh University Stabler Complex",
+                    "street_addr2": "125 Goodman Drive",
+                    "city": "Bethlehem",
+                    "state": "PA",
+                    "zip_code": "18015",
+                    "phone_number": "610.758.4350",
+                    "email": "cll4@lehigh.edu",
+                    "website": "www.lehigh.edu/sbdc",
+                    "page_url": "/international/trade/regional-export-network/lehigh-valley/",
+                    "lat": "40.587409",
+                    "long": "-75.350864"
+                },
+                "counties": [
+                    "Lehigh",
+                    "Northampton"
+                ]
+            }
+        },
+        "ren2": {
+            "data": {
+                "contact": {
+                    "name": "North Central Pennsylvania Regional Planning and Development Commission",
+                    "region": "Northcentral",
+                    "title": "Export Marketing Director",
+                    "company": "North Central Pennsylvania Regional Planning and Development Commission",
+                    "contact_name": "Christine Perneski",
+                    "street_addr1": "651 Montmorenci Road",
+                    "street_addr2": "",
+                    "city": "Ridgway",
+                    "state": "PA",
+                    "zip_code": "15853",
+                    "phone_number": "814.773.3162",
+                    "email": "ncexport@ncentral.com",
+                    "website": "www.ncentral.com",
+                    "page_url": "/international/trade/regional-export-network/north-central/",
+                    "lat": "41.434744",
+                    "long": "-78.744055"
+                },
+                "counties": [
+                    "Cameron",
+                    "Clearfield",
+                    "Elk",
+                    "Jefferson",
+                    "McKean",
+                    "Potter"
+                ]
+            }
+        },
+        "ren3": {
+            "data": {
+                "contact": {
+                    "name": "Northeastern Pennsylvania Alliance",
+                    "region": "Northeast",
+                    "title": "Director, International Development",
+                    "company": "Northeastern Pennsylvania Alliance",
+                    "contact_name": "Michael Horvath",
+                    "street_addr1": "1151 Oak Street",
+                    "street_addr2": "",
+                    "city": "Pittston",
+                    "state": "PA",
+                    "zip_code": "18640",
+                    "phone_number": "570.655.5581 x 247",
+                    "email": "mhorvath@nepa-alliance.org",
+                    "website": "www.nepa-alliance.org",
+                    "page_url": "/international/trade/regional-export-network/northeast/",
+                    "lat": "41.307421",
+                    "long": "-75.769549"
+                },
+                "counties": [
+                    "Carbon",
+                    "Lackawanna",
+                    "Luzerne",
+                    "Monroe",
+                    "Pike",
+                    "Schuylkill",
+                    "Wayne"
+                ]
+            }
+        },
+        "ren4": {
+            "data": {
+                "contact": {
+                    "name": "Northern Tier Regional Planning and Development Commission",
+                    "region": "Northern Tier",
+                    "title": "Export Development Program Manager",
+                    "company": "Northern Tier Regional Planning and Development Commission",
+                    "contact_name": "Cynthia Traore",
+                    "street_addr1": "312 Main Street",
+                    "street_addr2": "",
+                    "city": "Towanda",
+                    "state": "PA",
+                    "zip_code": "18848",
+                    "phone_number": "570.265.1534",
+                    "email": "traore@northerntier.org",
+                    "website": "www.northerntier.org",
+                    "page_url": "/international/trade/regional-export-network/northern-tier/",
+                    "lat": "41.766876",
+                    "long": "-76.443128"
+                },
+                "counties": [
+                    "Bradford",
+                    "Sullivan",
+                    "Susquehanna",
+                    "Tioga",
+                    "Wyoming"
+                ]
+            }
+        },
+        "ren5": {
+            "data": {
+                "contact": {
+                    "name": "Northwest Pennsylvania Regional Planning and Development Commission",
+                    "region": "Northwest",
+                    "title": "Manager, International Trade Program",
+                    "company": "Northwest Pennsylvania Regional Planning and Development Commission",
+                    "contact_name": "Dorte Heffernan",
+                    "street_addr1": "395 Seneca Street",
+                    "street_addr2": "",
+                    "city": "Oil City",
+                    "state": "PA",
+                    "zip_code": "16301",
+                    "phone_number": "814.677.4800 x 110",
+                    "email": "dorteh@northwestpa.org",
+                    "website": "northwestpa.org",
+                    "page_url": "/international/trade/regional-export-network/northwest/",
+                    "lat": "41.440430",
+                    "long": "-79.707342"
+                },
+                "counties": [
+                    "Clarion",
+                    "Crawford",
+                    "Erie",
+                    "Forest",
+                    "Lawrence",
+                    "Mercer",
+                    "Venango",
+                    "Warren"
+                ]
+            }
+        },
+        "ren6": {
+            "data": {
+                "contact": {
+                    "name": "Southern Alleghenies Planning and Development Commission",
+                    "region": "Southern Alleghenies",
+                    "title": "International Trade Program Manager",
+                    "company": "Southern Alleghenies Planning and Development Commission",
+                    "contact_name": "Tina Taylor",
+                    "street_addr1": "3 Sheraton Drive",
+                    "street_addr2": "",
+                    "city": "Altoona",
+                    "state": "PA",
+                    "zip_code": "16601",
+                    "phone_number": "814.949.6517",
+                    "email": "ttaylor@sapdc.org",
+                    "website": "www.sapdc.org",
+                    "page_url": "/international/trade/regional-export-network/southern-alleghenies/",
+                    "lat": "40.458727",
+                    "long": "-78.409575"
+                },
+                "counties": [
+                    "Bedford",
+                    "Blair",
+                    "Cambria",
+                    "Fulton",
+                    "Huntingdon",
+                    "Somerset"
+                ]
+            }
+        },
+        "ren7": {
+            "data": {
+                "contact": {
+                    "name": "Southwestern Pennsylvania Commission",
+                    "region": "Southwest",
+                    "title": "Manager, International Trade",
+                    "company": "Southwestern Pennsylvania Commission",
+                    "contact_name": "Rena Liu-Belshe",
+                    "street_addr1": "Two Chatham Center, Suite 500",
+                    "street_addr2": "112 Washington Place",
+                    "city": "Pittsburgh",
+                    "state": "PA",
+                    "zip_code": "15219",
+                    "phone_number": "412.391.5590 x320",
+                    "email": "renabelshe@spcregion.org",
+                    "website": "www.spcregion.org",
+                    "page_url": "/international/trade/regional-export-network/southwest/",
+                    "lat": "40.439449",
+                    "long": "-79.992927"
+                },
+                "counties": [
+                    "Allegheny",
+                    "Armstrong",
+                    "Beaver",
+                    "Butler",
+                    "Fayette",
+                    "Greene",
+                    "Indiana",
+                    "Washington",
+                    "Westmoreland"
+                ]
+            }
+        },
+        "ren8": {
+            "data": {
+                "contact": {
+                    "name": "Susquehanna Economic Development Association (SEDA) - Council of Governments",
+                    "region": "Central",
+                    "title": "Director, Export Development Program",
+                    "company": "Susquehanna Economic Development Association (SEDA) - Council of Governments",
+                    "contact_name": "Noelle Long",
+                    "street_addr1": "201 Furnace Road",
+                    "street_addr2": "",
+                    "city": "Lewisburg",
+                    "state": "PA",
+                    "zip_code": "17837",
+                    "phone_number": "570.524.4491 x 7330",
+                    "email": "nlong@seda-cog.org",
+                    "website": "www.seda-cog.org/export",
+                    "page_url": "/international/trade/regional-export-network/central/",
+                    "lat": "40.925413",
+                    "long": "-76.867118"
+                },
+                "counties": [
+                    "Centre",
+                    "Clinton",
+                    "Columbia",
+                    "Juniata",
+                    "Lycoming",
+                    "Mifflin",
+                    "Montour",
+                    "Northumberland",
+                    "Perry",
+                    "Snyder",
+                    "Union"
+                ]
+            }
+        },
+        "ren9": {
+            "data": {
+                "contact": {
+                    "name": "World Trade Center Harrisburg",
+                    "region": "Southcentral",
+                    "title": "Executive Director",
+                    "company": "World Trade Center Harrisburg",
+                    "contact_name": "Tina Weyant",
+                    "street_addr1": "600 North Hartley Street, Suite 110",
+                    "street_addr2": "",
+                    "city": "York",
+                    "state": "PA",
+                    "zip_code": "17404",
+                    "phone_number": "717.843.1090",
+                    "email": "tina@wtccentralpa.org",
+                    "website": "www.wtccentralpa.org",
+                    "page_url": "/international/trade/regional-export-network/south-central/",
+                    "lat": "39.964753",
+                    "long": "-76.748065"
+                },
+                "counties": [
+                    "Adams",
+                    "Berks",
+                    "Cumberland",
+                    "Dauphin",
+                    "Franklin",
+                    "Lancaster",
+                    "Lebanon",
+                    "York"
+                ]
+            }
+        },
+        "ren10": {
+            "data": {
+                "contact": {
+                    "name": "World Trade Center of Greater Philadelphia",
+                    "region": "Southeast",
+                    "title": "Senior Vice President",
+                    "company": "World Trade Center of Greater Philadelphia",
+                    "contact_name": "Dino Ramos",
+                    "street_addr1": "Two Penn Center",
+                    "street_addr2": "1500 John F. Kennedy Blvd., Suite 305",
+                    "city": "Philadelphia",
+                    "state": "PA",
+                    "zip_code": "19102",
+                    "phone_number": "215.586.4246",
+                    "email": "dramos@wtcphila.org",
+                    "website": "www.wtcphila.org",
+                    "page_url": "/international/trade/regional-export-network/southeast/",
+                    "lat": "39.953336",
+                    "long": "-75.165930"
+                },
+                "counties": [
+                    "Bucks",
+                    "Chester",
+                    "Delaware",
+                    "Montgomery",
+                    "Philadelphia"
+                ]
+            }
+        }
+    }
+}

@@ -1,0 +1,169 @@
+{
+    "regions": {
+        "home1": {
+            "data": {
+                "contact": {
+                    "region": "Central Valley Regional Homeless Advisory Board",
+                    "care": "Eastern Pennsylvania Continuum of Care – PA 509",
+                    "name1": "Ben Laudermilch",
+                    "phone_number1": "717.249.0789 x118",
+                    "email1": "blaudermilch@cchra.com",
+                    "name2": "Shawn Frankenstein",
+                    "phone_number2": "",
+                    "email2": "sfrankenstein@sam-inc.org"
+                },
+                "counties": [
+                    "Columbia",
+                    "Cumberland",
+                    "Juniata",
+                    "Lebanon",
+                    "Mifflin",
+                    "Montour",
+                    "Northumberland",
+                    "Perry",
+                    "Schuylkill",
+                    "Snyder",
+                    "Union"
+                ]
+            }
+        },
+        "home2": {
+          "data": {
+            "contact": {
+              "region": "Lehigh Valley Regional Homeless Advisory Board",
+              "care": "Eastern Pennsylvania Continuum of Care – PA 509",
+              "name1": "Kathi Krablin",
+              "phone_number1": "610.820.0166 x318",
+              "email1": "kkrablin@valleyyouthhouse.org",
+              "name2": "Lori Sywensky",
+              "phone_number2": "610.559.3200 x2",
+              "email2": "lsywensky@northamptoncounty.org"
+            },
+            "counties": [
+              "Lehigh",
+              "Northampton"
+            ]
+          }
+        },
+        "home3": {
+          "data": {
+            "contact": {
+              "region": "Pocono Regional Homeless Advisory Board",
+              "care": "Eastern Pennsylvania Continuum of Care – PA 509",
+              "name1": "Leslie Perryman",
+              "phone_number1": "570.476.9228",
+              "email1": "leslie.perryman@rhd.org",
+              "name2": "Andy Whyte",
+              "phone_number2": "570.253.4262",
+              "email2": "awhyte@co.wayne.pa.us"
+            },
+            "counties": [
+              "Carbon",
+              "Monroe",
+              "Pike",
+              "Wayne"
+            ]
+          }
+        },
+        "home4": {
+          "data": {
+            "contact": {
+              "region": "Northern Tier Regional Homeless Advisory Board",
+              "care": "Eastern Pennsylvania Continuum of Care – PA 509",
+              "name1": "Jeff Rich",
+              "phone_number1": "570.748.2954 x12",
+              "email1": "jeff@clintoncountyhousing.com",
+              "name2": "Mae Ling Kranz",
+              "phone_number2": "570.322.4637",
+              "email2": "mkranz@ywcawilliamsport.org"
+            },
+            "counties": [
+              "Bradford",
+              "Clinton",
+              "Lycoming",
+              "Sullivan",
+              "Susquehanna",
+              "Tioga",
+              "Wyoming"
+            ]
+          }
+        },
+        "home5": {
+          "data": {
+            "contact": {
+              "region": "South Central Regional Homeless Advisory Board",
+              "care": "Eastern Pennsylvania Continuum of Care – PA 509",
+              "name1": "Bill Hunter",
+              "phone_number1": "814.946.3651",
+              "email1": "bill.hunter@blaircap.org",
+              "name2": "Jen Johnson",
+              "phone_number2": "",
+              "email2": "jmjohnson@franklincountypa.gov"
+            },
+            "counties": [
+              "Adams",
+              "Bedford",
+              "Blair",
+              "Cambria",
+              "Centre",
+              "Fulton",
+              "Franklin",
+              "Huntingdon",
+              "Somerset"
+            ]
+          }
+        },
+        "home6": {
+          "data": {
+            "contact": {
+              "region": "Northwest Regional Homeless Advisory Board",
+              "care": "Western Pennsylvania Continuum of Care - PA 601",
+              "name1": "Kim Stucke",
+              "phone_number1": "814.878.2170",
+              "email1": "kmstucke@stairwaysbh.org",
+              "name2": "Linda Thompson",
+              "phone_number2": "814.887.5563 x412",
+              "email2": "lathompson@mckeancountypa.org"
+            },
+            "counties": [
+              "Cameron",
+              "Clarion",
+              "Clearfield",
+              "Crawford",
+              "Elk",
+              "Forest",
+              "Jefferson",
+              "Lawrence",
+              "McKean",
+              "Mercer",
+              "Potter",
+              "Venango",
+              "Warren"
+            ]
+          }
+        },
+        "home7": {
+          "data": {
+            "contact": {
+              "region": "Southwest Regional Homeless Advisory Board",
+              "care": "Western Pennsylvania Continuum of Care - PA 601",
+              "name1": "Amanda Feltenberger",
+              "phone_number1": "724.284.5114",
+              "email1": "afeltenb@co.butler.pa.us",
+              "name2": "Tammy Knouse",
+              "phone_number2": "724.430.3013",
+              "email2": "tknouse@fccaa.org"
+            },
+            "counties": [
+              "Armstrong",
+              "Butler",
+              "Fayette",
+              "Greene",
+              "Indiana",
+              "Washington",
+              "Westmoreland"
+            ]
+          }
+        }
+      }
+}

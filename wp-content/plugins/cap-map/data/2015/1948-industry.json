@@ -1,0 +1,83 @@
+{
+  "options": {
+    "chart": {
+      "title": "Top Industries"
+    },
+    "legend": {
+      "position": "none"
+    },
+    "colors": [
+      "#B93A43",
+      "#4572A7"
+    ],
+    "height":"400",
+    "width":"1200",
+    "chartArea": {
+      "backgroundColor": "#F4F4F4"
+    },
+    "vAxis": {
+      "gridlines": {
+        "color": "#F4F4F4"
+      },
+      "textStyle": {
+        "fontSize": "17"
+      }
+    },
+    "hAxis": {
+      "gridlines": {
+        "color": "#F4F4F4"
+      },
+      "textStyle": {
+        "fontSize": "17"
+      }
+    },
+    "bars": "vertical"
+  },
+  "data": [
+    [
+      "Revenue",
+      "2013",
+      "2014"
+    ],
+    [
+      "Dairy",
+      8000,
+      8000
+    ],
+    [
+      "Beef",
+      24000,
+      20000
+    ],
+    [
+      "Coal",
+      30000,
+      24000
+    ],
+    [
+      "Oil",
+      50000,
+      45000
+    ],
+    [
+      "Medical",
+      60000,
+      55000
+    ],
+    [
+      "Aircraft",
+      50000,
+      75000
+    ],
+    [
+      "Motorcycles",
+      60000,
+      29000
+    ],
+    [
+      "Cars",
+      50000,
+      75000
+    ]
+  ]
+}

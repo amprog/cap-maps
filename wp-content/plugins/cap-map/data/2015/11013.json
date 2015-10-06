@@ -1,0 +1,163 @@
+{
+  "options": {
+    "segmentShowStroke": false,
+    "animateRotate": true,
+    "source": "pa site search"
+  },
+  "s1_1": {
+    "name": "Top Countries for Foreign Direct Investment",
+    "source1": "pa site search",
+    "data": [
+      {
+        "label": "United Kingdom",
+        "value": 27.44,
+        "color": "#942831",
+        "highlight": "#88111b"
+      },
+      {
+        "label": "Germany",
+        "value": 21.43,
+        "color": "#8d2c38",
+        "highlight": "#811522"
+      },
+      {
+        "label": "Canada",
+        "value": 12.78,
+        "color": "#843040",
+        "highlight": "#771a2b"
+      },
+      {
+        "label": "France",
+        "value": 10.53,
+        "color": "#7b3649",
+        "highlight": "#6d2035"
+      },
+      {
+        "label": "Japan",
+        "value": 5.26,
+        "color": "#713b53",
+        "highlight": "#622640"
+      },
+      {
+        "label": "Switzerland",
+        "value": 4.89,
+        "color": "#67415d",
+        "highlight": "#562c4b"
+      },
+      {
+        "label": "Spain",
+        "value": 4.89,
+        "color": "#5d4667",
+        "highlight": "#4b3256"
+      },
+      {
+        "label": "Netherlands",
+        "value": 4.89,
+        "color": "#534c70",
+        "highlight": "#403860"
+      },
+      {
+        "label": "Sweden",
+        "value": 4.14,
+        "color": "#4a4f77",
+        "highlight": "#363c68"
+      },
+      {
+        "label": "South Korea",
+        "value": 3.76,
+        "color": "#465580",
+        "highlight": "#324372"
+      }
+    ]
+  },
+  "s1_2": {
+    "name": "Types of FDI Projects PA Attracts",
+    "source1": "pa site search",
+    "data": [
+      {
+        "label": "New",
+        "value": 67.06,
+        "color": "#942831",
+        "highlight": "#88111b"
+      },
+      {
+        "label": "Expansion",
+        "value": 30.27,
+        "color": "#7b3649",
+        "highlight": "#6d2035"
+      },
+      {
+        "label": "Co-Location",
+        "value": 2.67,
+        "color": "#465580",
+        "highlight": "#324372"
+      }
+    ]
+  },
+  "s1_3": {
+    "name": "FDI Projects Top Activities in PA",
+    "source1": "pa site search",
+    "data": [
+      {
+        "label": "Manufacturing",
+        "value": 35.06,
+        "color": "#942831",
+        "highlight": "#88111b"
+      },
+      {
+        "label": "Sales, Marketing & Support",
+        "value": 18.9,
+        "color": "#8d2c38",
+        "highlight": "#811522"
+      },
+      {
+        "label": "Headquarters",
+        "value": 14.63,
+        "color": "#843040",
+        "highlight": "#771a2b"
+      },
+      {
+        "label": "Business Services",
+        "value": 12.8,
+        "color": "#7b3649",
+        "highlight": "#6d2035"
+      },
+      {
+        "label": "Logistics, Distribution, & Transportation",
+        "value": 8.25,
+        "color": "#713b53",
+        "highlight": "#622640"
+      },
+      {
+        "label": "Design, Development, & Testing",
+        "value": 4.57,
+        "color": "#67415d",
+        "highlight": "#562c4b"
+      },
+      {
+        "label": "Research & Development",
+        "value": 2.74,
+        "color": "#5d4667",
+        "highlight": "#4b3256"
+      },
+      {
+        "label": "Electricity",
+        "value": 1.22,
+        "color": "#534c70",
+        "highlight": "#403860"
+      },
+      {
+        "label": "Education & Training",
+        "value": 1.22,
+        "color": "#4a4f77",
+        "highlight": "#363c68"
+      },
+      {
+        "label": "Extraction",
+        "value": 0.61,
+        "color": "#465580",
+        "highlight": "#324372"
+      }
+    ]
+  }
+}
