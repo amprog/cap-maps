@@ -132,7 +132,8 @@ EOD;
         $screen        = 'page';
         $context       = 'normal';
         $priority      = 'high';
-        add_meta_box( 'hero-meta', $title, $callback, $screen, $context, $priority);
+        add_meta_box( 'capmap-meta', $title, $callback, $screen, $context, $priority);
+        add_meta_box( 'capmap-meta', $title, $callback, 'post', $context, $priority);
     }
 
 
@@ -187,7 +188,10 @@ EOD;
                 </select>
             </li>
             <li class="svg_li <?php echo $svg_h; ?>">
-                <span>SVG File</span>
+
+                <h3>SVG File</h3>
+                <p>TODO: ALLOW A USER TO UPLOAD SVG, JS, AND JSON FILES FROM HERE!  IF THAT WERE POSSIBLE, NO ROLLS NEEDED!</p>
+                <span>Select SVG File</span>
                 <select class="svg_select" name="svg_select">
                     <option>Select One</option>
                     <?php while (false !== ($entry = readdir($handle))): ?>
@@ -202,7 +206,17 @@ EOD;
                 </select>
             </li>
             <li class="chart_li <?php echo $chart_h; ?>">
-                <span>Chart Type</span>
+
+                <h3>Charts</h3>
+                <p><a href="javascript:void(0);" class="create" data-type="chart_new">Create new chart</a> or select one from the list below. </p>
+                <div id="chart_new" class="h">
+                    <input type="text" name="chart_name" id="chart_name" placeholder="Enter a Chart Name" />
+
+                    <textarea id="chart_json" name="chart_json"></textarea>
+
+                    <input type="button" id="chart_submit" value="Create New Chart" />
+                </div>
+                <span>Select Chart Type</span>
                 <select class="chart_select" name="chart_select">
                     <option>Select One</option>
                     <?php foreach ($chart_types as $c): ?>
@@ -273,13 +287,13 @@ EOD;
         // make sure we have permission
         if ( isset( $_POST['post_type'] ) && 'page' == $_POST['post_type'] ) {
 
-            if ( ! current_user_can( 'edit_page', $post->ID ) ) {
+            if ( ! current_user_can( 'edit_page',  $_POST['ID'] ) ) {
                 return;
             }
 
         } else {
 
-            if ( ! current_user_can( 'edit_post', $post->ID ) ) {
+            if ( ! current_user_can( 'edit_post',  $_POST['ID'] ) ) {
                 return;
             }
         }
@@ -316,14 +330,14 @@ EOD;
         $cap_map  = new cap_map;
         $id       = get_the_ID();
         $svg_raw  = get_post_meta($id,'svg_select',true);
-        $svg_file = ABSPATH.$cap_map->plugin_uri.'svg/'.$svg_raw;
         $content  = '';
 
         //always include front end css
         wp_enqueue_style('capmapcss', $cap_map->plugin_uri.'assets/css/frontend.css');
 
-        if($svg_file) {
+        if($svg_raw != 'Select One') {
             //include js and css IF exists
+            $svg_file     = ABSPATH.$cap_map->plugin_uri.'svg/'.$svg_raw;
             $custom_js    = $cap_map->plugin_uri.'assets/js/svg/'.str_replace('.svg','.js',$svg_raw);
             $custom_css   = $cap_map->plugin_uri.'assets/css/svg/'.str_replace('.svg','.css',$svg_raw);
             if(file_exists(ABSPATH.$custom_js)) {
@@ -339,6 +353,25 @@ EOD;
             $content .=  '</div>';
 
         }
+
+
+        $chart_page  = get_post_meta($id,'chart_select',true);
+        if($svg_raw != 'Select One') {
+
+            wp_enqueue_script('charts',  $cap_map->plugin_uri.'assets/js/common/Chart.min.js','','1',true);
+            wp_enqueue_script('charts',  $cap_map->plugin_uri.'assets/js/common/charts.options.js','','1',true);
+
+
+            //get chart type
+
+
+
+            $content .= '<canvas id="c1" height="248" width="497" style="width: 497px; height: 248px;"></canvas>';
+
+
+
+        }
+
 
         /*
         //instead of php build php here
@@ -366,9 +399,14 @@ EOD;
  *
  */
 function init_cap_map() {
+
+    $cap_cap = new Cap_Map();
+
+    /*
     if(method_exists('Cap_Map', 'Cap_Map')) {
-        $cap_cap = new cap_map;
+        //$cap_cap = new Cap_Map();
     }
+    */
 }
 
 add_action('plugins_loaded', 'init_cap_map');
