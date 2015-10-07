@@ -1,0 +1,27 @@
+
+
+ul.list span {
+    display: inline-block;
+    line-height: 1.8;
+    vertical-align: top;
+    width:auto;
+    min-width: 100px;
+    max-width: 200px;
+}
+
+
+
+
+ul.list input,ul.list textarea {
+    width:90%;
+}
+
+ul.list textarea {
+    height:70px;
+}
+
+.h {
+    display: none;
+}
+
+
