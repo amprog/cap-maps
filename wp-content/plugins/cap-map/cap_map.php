@@ -217,15 +217,6 @@ EOD;
 
         wp_nonce_field( 'cap_map_meta_save', 'admin_meta_box_nonce' );
 
-        $chart_types = array(
-            'Doughnut',
-            'Pie',
-            'Line',
-            'LinePie',
-            'bar',
-            'Radar'
-        );
-
         ?>
         <p class="note">If you need an svg file or a chart for this page, please insert the following short code where you want it to appear: [capmap]</p>
         <ul class="list">
@@ -244,47 +235,7 @@ EOD;
                         <?php endif; ?>
                     <?php endwhile; closedir($handle); ?>
                 </select>
-                <div id="chart_new" class="h">
-
-                    <ul>
-                        <li>
-                            <span>Chart Name</span>
-                            <input type="text" name="chart_name" id="chart_name" placeholder="Enter a Chart Name" />
-
-                        </li>
-                        <li>
-                            <span>Chart Slug</span>
-                            <input type="text" name="chart_slug" id="chart_slug" placeholder="Slug contains no spaces" />
-
-                        </li>
-
-                        <li>
-                            <span>Select Chart Type</span>
-                            <select class="chart_select" name="chart_select">
-                                <option>Select One</option>
-                                <?php foreach ($chart_types as $c): ?>
-                                    <?php if($chart_select==$c): ?>
-                                        <option selected><?php echo $c; ?></option>
-                                    <?php else: ?>
-                                        <option><?php echo $c; ?></option>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-                            </select>
-                        </li>
-
-                        <!--
-                        <li>
-                            <span>JSON Code</span>
-                            <textarea id="chart_json" name="chart_json"></textarea>
-                        </li>
-                        -->
-                    </ul>
-
-
-
-
-                    <input type="button" id="chart_submit" value="Create New Chart" />
-                </div>
+                <div id="chart_new"></div>
 
             </li>
 
@@ -490,7 +441,199 @@ EOD;
 
         return $content;
     }
+
+
+    /**
+     * AJAX: show template box, either with data or blank
+     */
+    function cap_map_chart_action_callback() {
+
+        $list = $disable = '';
+        $chart_slug = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;  //proper way of getting variables without notice errors
+        $d_place    = 'Enter a Slug with Underscores Not Spaces';
+
+        //if there is a chart type, then drop down selected so we grab data
+        if($chart_slug) {
+            $cap_map    = new Cap_Map();
+            $package    = $cap_map->plugin_uri.'charts/'.$chart_slug;
+            $jsonfile   = $package.'/'.$chart_slug.'.json';
+            $json       = file_get_contents(ABSPATH.$jsonfile);
+            $data       = json_decode($json,true);
+
+            //form values
+            $chart_name = isset($data['data_array'][0]['name']) ? $data['data_array'][0]['name'] : null;
+            $chart_type = isset($data['options']['chart_type']) ? $data['options']['chart_type']  : null;
+            $source     = isset($data['options']['source']) ? $data['options']['source']  : null;
+
+            $disable    = 'disabled';
+            $d_place    = '';
+
+            //need special function for getting data depending on type of chart
+            $chart_data = self::get_chart_data($data,$chart_type);
+
+            //print_r($json);
+
+            //echo $json;
+            //wp_die();
+
+        } else {
+
+            //chart data should be a blank form
+
+        }
+
+        $chart_types = array(
+            'Doughnut',
+            'Pie',
+            'Line',
+            'LinePie',
+            'bar',
+            'Radar'
+        );
+
+
+        foreach ($chart_types as $c) {
+          if($chart_type==$c) {
+              $list .= "<option selected>$c</option>";
+                } else {
+              $list .= "<option>$c</option>";
+           }
+        }
+
+
+
+
+        $html = <<< EOS
+
+                    <ul class="sub">
+                        <li>
+                            <span>Chart Slug</span>
+                            <input type="text" name="chart_slug" id="chart_slug" placeholder="$d_place" value="$chart_slug" $disable />
+
+                        </li>
+                        <li>
+                            <span>Chart Name</span>
+                            <input type="text" name="chart_name" id="chart_name" placeholder="Enter a Chart Name with No Special Characters" value="$chart_name" />
+
+                        </li>
+                        <li>
+                            <span>Data Source</span>
+                            <input type="text" name="source" id="source" placeholder="Enter a url for the source of this data" value="$source" />
+
+                        </li>
+                        <li>
+                            <span>Chart Type</span>
+                            <select class="chart_select" name="chart_select">
+                                <option>Select One</option>
+                                $list
+                            </select>
+                        </li>
+
+
+                        <li>$chart_data</li>
+
+                        <li><input type="button" id="chart_submit" value="SAVE" class="admin_btn" /></li>
+</ul>
+EOS;
+
+
+
+
+        $return = array(
+            'html'=>$html,
+            'json'=> $json,
+            'data'=> $data,
+            'chart_name' =>$chart_name,
+            'chart_data' =>$chart_data
+        );
+
+
+
+        wp_send_json($return);
+
+
+
+        //echo $html;
+        //echo wp_send_json($json);
+
+        wp_die(); // this is required to terminate immediately and return a proper response
+    }
+
+
+    /**
+     * Depending on chart type, take data and return in form format
+     * @param $data
+     * @param $chart_type
+     * @return mixed
+     */
+    function get_chart_data($data,$chart_type) {
+
+        $chart_data = '';
+        switch ($chart_type) {
+            case 'Doughnut':
+
+                //if there is data, then plug it in
+
+                if($data) {
+
+                    $chart_data .= '<ul class="chart_data_wrap">';
+                    foreach($data['data_array'][0]['chart_data'] as $k=>$v) {
+                        $chart_data .= <<< EOS
+                        <li>
+                            <ul class="chart_data_inner">
+                                <li>
+                                    <span>Label</span>
+                                    <input type="text" name="label" value="{$v['label']}" />
+                                </li>
+                                <li>
+                                    <span>Value</span>
+                                    <input type="text" name="value" value="{$v['value']}" />
+                                </li>
+                                <li>
+                                    <span>Color</span>
+                                    <input type="text" name="color" value="{$v['color']}" />
+                                </li>
+                                <li>
+                                    <span>Highlight</span>
+                                    <input type="text" name="highlight" value="{$v['highlight']}" />
+                                </li>
+                            </ul>
+                        </li>
+EOS;
+                    }
+                    $chart_data .= '</ul>';
+
+                } else {
+                    $chart_data = <<< EOS
+                        <li>
+                            <span>Chart Name</span>
+                            <input type="text" name="chart_name" id="chart_name" placeholder="Enter a Chart Name with No Special Characters" value="$chart_name" />
+
+                        </li>
+EOS;
+                }
+
+
+
+
+
+                break;
+            case 1:
+                echo "i equals 1";
+                break;
+            case 2:
+                echo "i equals 2";
+                break;
+        }
+
+        return $chart_data;
+    }
+
+
+
+
 }
+
 
 
 
@@ -510,10 +653,20 @@ function init_cap_map() {
     */
 }
 
-add_action('plugins_loaded', 'init_cap_map');
-add_action( 'admin_menu', 'Cap_Map::cap_map_options_admin' );
-add_action("add_meta_boxes", "Cap_Map::cap_map_meta");
-add_action( 'save_post', 'Cap_Map::cap_map_meta_save' );  //this is causing problems with new post pages
-add_shortcode( 'cap_svg', 'Cap_Map::cap_map_svg_shortcode' );  //register shortcode for svg
-add_shortcode( 'cap_chart', 'Cap_Map::cap_map_chart_shortcode' );  //register shortcode
+add_action('plugins_loaded', 'init_cap_map'); //load plugin
+
+
+
+if ( is_admin() ) {
+    add_action( 'admin_menu', 'Cap_Map::cap_map_options_admin' );  //options page, TODO: perhaps put chart options here
+    add_action("add_meta_boxes", "Cap_Map::cap_map_meta"); //meta box
+    add_action( 'save_post', 'Cap_Map::cap_map_meta_save' );  //this is causing problems with new post pages
+    add_action( 'wp_ajax_cap_map_chart_action', 'Cap_Map::cap_map_chart_action_callback' );  //ajax for new chart
+    add_action( 'wp_ajax_nopriv_cap_map_chart_action', 'Cap_Map::cap_map_chart_action_callback' );   //ajax for new chart
+
+} else {
+    add_shortcode( 'cap_svg', 'Cap_Map::cap_map_svg_shortcode' );  //register shortcode for svg
+    add_shortcode( 'cap_chart', 'Cap_Map::cap_map_chart_shortcode' );  //register shortcode
+}
+
 ?>

@@ -38,6 +38,19 @@ jQuery(document).ready(function($) {
     $( ".chart_select" ).change(function() {
         $( ".chart_select option:selected" ).each(function() {
             console.log($( this ).val());
+
+            var data = {
+                'action': 'cap_map_chart_action',
+                'chart_slug': $( this ).val()
+            };
+            // We can also pass the url value separately from ajaxurl for front end AJAX implementations
+            jQuery.post(ajaxurl, data, function(response) {
+                console.dir(response);
+
+                $('#chart_new').html(response.html);
+            });
+
+
         });
     });
 
