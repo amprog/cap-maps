@@ -3,7 +3,10 @@
     "chart_type": "Doughnut",
     "segmentStrokeColor": "#D2DFF2",
     "animateRotate": true,
-    "source": "http://www.wisertrade.org"
+    "source": "http://www.wisertrade.org",
+    "width": 300,
+    "height": 300,
+    "legend": 1
   },
   "data_array": [
     {

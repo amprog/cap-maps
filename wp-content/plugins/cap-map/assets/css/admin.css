@@ -1,6 +1,6 @@
 
 
-ul.list span {
+ul.list li > span  {
     display: inline-block;
     line-height: 1.8;
     vertical-align: top;
@@ -8,9 +8,6 @@ ul.list span {
     min-width: 100px;
     max-width: 200px;
 }
-
-
-
 
 ul.list input,ul.list textarea {
     width:90%;
@@ -59,4 +56,114 @@ ul.chart_data_wrap input {
     border: 2px solid #313131;
     width: 150px!important;
     font-size:20px;
+}
+
+/* switch */
+.switch {
+    clear: both;
+    margin: 27px 0;
+    height: 27px;
+}
+/*
+.switch span {
+    min-width: inherit;
+    max-width: inherit;
+    width: inherit;
+}
+*/
+.switch div {
+    width: 200px;
+    float: left
+}
+
+.large .switch div {
+    width: 350px;
+    float: left
+}
+
+.cb-enable,.cb-disable,.cb-enable span,.cb-disable span {
+    background: url(../images/switch.gif) repeat-x;
+    display: block;
+    float: left
+}
+
+.cb-enable span,.cb-disable span {
+    line-height: 30px;
+    display: block;
+    background-repeat: no-repeat;
+    font-weight: 700
+}
+
+.cb-enable span {
+    background-position: left -90px;
+    padding: 0 10px
+}
+
+.cb-disable span {
+    background-position: right -180px;
+    padding: 0 10px
+}
+
+.cb-disable.selected {
+    background-position: 0 -30px
+}
+
+.cb-disable.selected span {
+    background-position: right -210px;
+    color: #fff
+}
+
+.cb-enable.selected {
+    background-position: 0 -60px
+}
+
+.cb-enable.selected span {
+    background-position: left -150px;
+    color: #fff
+}
+
+.switch label {
+    cursor: pointer;
+}
+
+.switch input {
+    display: none
+}
+
+
+.yesnobox {
+    font-size: 20px;
+    margin: 27px 0 0;
+    padding: 0
+}
+
+.yesnobox.small {
+    font-size: 14px
+}
+
+.yesnobox span {
+    min-width: 190px;
+    width: auto;
+    display: inline-block;
+    margin-left: 10px
+}
+
+.yesnobox i.icon-ok {
+    color: #1cb325
+}
+
+.yesnobox i.icon-cancel {
+    color: #bebebe
+}
+
+.ni {
+    font-family: "fontello";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 30px;
+    display: block;
+    width: 100%;
+    color: #093F7F;
+    padding-top: 5px;
+    height: 20px
 }

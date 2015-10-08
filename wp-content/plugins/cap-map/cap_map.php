@@ -15,7 +15,7 @@ class Cap_Map {
      */
     function __construct() {
 
-
+        header('Access-Control-Allow-Origin: *');
         //set variables
         $this->plugin_name = 'CAP MAP';
         $this->slug        = 'cap_map';
@@ -124,8 +124,11 @@ EOD;
         $cap_map = new Cap_Map();  //this should not be necessary!!!!
 
         if (is_admin() ) {
+            wp_enqueue_style( 'wp-color-picker' );
+            wp_enqueue_script( 'wp-color-picker');
             wp_enqueue_style( $cap_map->namespace.'-admin', $cap_map->plugin_uri.'assets/css/admin.css');
             wp_enqueue_script( $cap_map->namespace.'-admin', $cap_map->plugin_uri.'assets/js/admin.js');
+
         }
         $title1        = 'SVG Maps';
         $callback1     = 'Cap_Map::cap_map_svg_callback';
@@ -214,11 +217,29 @@ EOD;
         $handle           = opendir($folder);
         $chart_select     = esc_attr(get_post_meta( $post->ID, 'chart_select', true ));
 
+        //if there is already a chart selected, show this chart
+        if($chart_select!='' || $chart_select!='Select One') {
+
+            //only way to do this is to run some js to get ajax //chart_data = cap_map_chart_action_callback();
+            ?>
+            <script>
+                jQuery(document).ready(function($) {
+                    $( ".chart_select" ).trigger( "change" );
+                });
+            </script>
+
+
+            <?php
+            $chart_hide = '';
+        } else {
+            $chart_hide = 'h';
+        }
+
 
         wp_nonce_field( 'cap_map_meta_save', 'admin_meta_box_nonce' );
 
         ?>
-        <p class="note">If you need an svg file or a chart for this page, please insert the following short code where you want it to appear: [capmap]</p>
+        <p class="note">Place the following short code where you want a CHART to appear: [cap_chart]  <?php echo $chart_select; ?></p>
         <ul class="list">
             <li class="chart_li">
                 <p><a href="javascript:void(0);" class="create" data-type="chart_new">Create new chart</a> or select one from the list below. </p>
@@ -241,7 +262,7 @@ EOD;
 
         </ul>
 
-        <div id="chart_live" class="h">
+        <div id="chart_live" class="<?php echo $chart_hide; ?>">
             <h3>Chart Results</h3>
 
 
@@ -298,7 +319,38 @@ EOD;
 
         // sanitize and save data
         update_post_meta( $_POST['ID'], 'svg_select',  sanitize_text_field($_POST['svg_select']));
-        update_post_meta( $_POST['ID'], 'chart_select',  sanitize_text_field($_POST['chart_select']));
+
+
+
+        echo '<pre>';
+        print_r($_POST);
+        echo '</pre>';
+
+
+        //check for charts and if there is data, save!
+        $chart_select = array_key_exists('chart_select', $_POST) ? $_POST['chart_select'] : null;
+
+        //chart_select
+
+        if($chart_select) {
+
+
+            $chart_action = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
+            $chart_slug   = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
+            $chart_name   = array_key_exists('chart_name', $_POST) ? $_POST['chart_name'] : null;
+            $source       = array_key_exists('source', $_POST) ? $_POST['source'] : null;
+
+            //save chart data to json
+
+            //save ONLY TYPE in db, TODO:  not sure what to do if slug changes yet!
+            update_post_meta( $_POST['ID'], 'chart_select',  sanitize_text_field($_POST['chart_select']));
+
+        }
+
+
+        //chart_data
+
+
 
 
 
@@ -378,52 +430,104 @@ EOD;
      * @param $atts
      */
     function cap_map_chart_shortcode( $atts ){
+        $content = $legend_html = $legend_inner = $canvas_html = '';
         //TODO: think about putting every fiule, json, js, css into one "package" or in ONE folder
 
-        $cap_map  = new cap_map;
-        $id       = get_the_ID();
-        $svg_raw  = get_post_meta($id,'svg_select',true);
-        $content  = '';
+        $cap_map     = new Cap_Map();
+        $id          = get_the_ID();
+        $chart_slug  = get_post_meta($id,'chart_slug',true);
 
-        //always include front end css
+
+        //get frontend css and charts scripts
         wp_enqueue_style('capmapcss', $cap_map->plugin_uri.'assets/css/frontend.css');
+        wp_enqueue_script('charts',  $cap_map->plugin_uri.'assets/js/common/Chart.min.js','','1',true);
+        wp_enqueue_script('charts',  $cap_map->plugin_uri.'assets/js/common/charts.options.js','','1',true);
 
-        if($svg_raw != 'Select One') {
-            //include js and css IF exists
-            $svg_file     = ABSPATH.$cap_map->plugin_uri.'svg/'.$svg_raw;
-            $custom_js    = $cap_map->plugin_uri.'assets/js/svg/'.str_replace('.svg','.js',$svg_raw);
-            $custom_css   = $cap_map->plugin_uri.'assets/css/svg/'.str_replace('.svg','.css',$svg_raw);
-            if(file_exists(ABSPATH.$custom_js)) {
-                wp_enqueue_script('js-'.$id,  $custom_js,'','1',true);
+
+        /*
+         *        $('#import_export_line').appear(function() {
+                    new Chart(document.getElementById('import_export_line').getContext('2d')).Line(json.data_array,json.options);
+                },{accX: 0, accY: -200});
+         */
+
+        //not as efficient, but for total control from json pull json in php as well
+        $json_file = $cap_map->plugin_uri."charts/$chart_slug/$chart_slug.json";
+        $json      = json_decode(file_get_contents(ABSPATH.$json_file),true);
+        $legend    = $json['options']['legend'];
+
+        //print_r($json);
+
+        $canvas_html = '<canvas id="c1" width="'.$json['options']['width'].'" height="'.$json['options']['height'].'"></canvas>';
+        if($legend) {
+
+
+            foreach($json['data_array'][0]['chart_data'] as $c) {
+                $legend_inner .= '
+                        <li>
+                            <div style="background-color: '.$c['color'].'"></div>
+                            <p>'.$c['label'].'</p>
+                        </li>';
+
+
             }
 
-            if(file_exists(ABSPATH.$custom_css)) {
-                wp_enqueue_style('css-'.$id, $custom_css);
-            }
+            $legend_html = <<< EOS
 
-            $content .= '<div class="svg_wrap"><div class="svg_meta"></div>';
-            $content .=  file_get_contents($svg_file);
-            $content .=  '</div>';
+            <div class="c_1_1 $chart_slug">
+                <div class="left">$canvas_html</div>
+                <div class="left">
+                    <div class="legend">
+                        <ul>
+                            $legend_inner
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
+EOS;
+
+
+
+
+
+        } else {
+
+            $legend_html = <<< EOS
+
+            <div class="c_1_1">
+                $canvas_html
+            </div>
+
+EOS;
         }
 
+        $content = <<< EOS
 
-        $chart_page  = get_post_meta($id,'chart_select',true);
-        if($svg_raw != 'Select One') {
+        $legend_html
 
-            wp_enqueue_script('charts',  $cap_map->plugin_uri.'assets/js/common/Chart.min.js','','1',true);
-            wp_enqueue_script('charts',  $cap_map->plugin_uri.'assets/js/common/charts.options.js','','1',true);
+        <script>
+            jQuery(document).ready(function($) {
+                $.getJSON( "$json_file").done(function( json ) {
+                console.dir(json.data_array[0].chart_data);
 
-
-            //get chart type
-
-
-
-            $content .= '<canvas id="c1" height="248" width="497" style="width: 497px; height: 248px;"></canvas>';
-
+                    var str = json.options.chart_type.toString();
+                    console.log(str);
+                    new Chart(document.getElementById('c1').getContext('2d')).Doughnut(json.data_array[0].chart_data,json.options);
 
 
-        }
+
+                })
+                .fail(function( jqxhr, textStatus, error ) {
+                    var err = textStatus + ", " + error;
+                    console.log( "Request Failed: " + err );
+                });
+            });
+        </script>
+
+EOS;
+
+
+
 
 
         /*
@@ -464,17 +568,11 @@ EOD;
             $chart_name = isset($data['data_array'][0]['name']) ? $data['data_array'][0]['name'] : null;
             $chart_type = isset($data['options']['chart_type']) ? $data['options']['chart_type']  : null;
             $source     = isset($data['options']['source']) ? $data['options']['source']  : null;
+            $width      = isset($data['options']['source']) ? $data['options']['source']  : null;
+            $height     = isset($data['options']['source']) ? $data['options']['source']  : null;
+            $legend     = isset($data['options']['source']) ? $data['options']['source']  : null;
+            $chart_data = self::get_chart_data($data,$chart_type);             //need special function for getting data depending on type of chart
 
-            $disable    = 'disabled';
-            $d_place    = '';
-
-            //need special function for getting data depending on type of chart
-            $chart_data = self::get_chart_data($data,$chart_type);
-
-            //print_r($json);
-
-            //echo $json;
-            //wp_die();
 
         } else {
 
@@ -487,7 +585,7 @@ EOD;
             'Pie',
             'Line',
             'LinePie',
-            'bar',
+            'Bar',
             'Radar'
         );
 
@@ -504,36 +602,45 @@ EOD;
 
 
         $html = <<< EOS
+                        <ul class="sub">
+                            <li>
+                                <span>Chart Slug</span>
+                                <input type="text" name="chart_slug" id="chart_slug" value="$chart_slug" />
 
-                    <ul class="sub">
-                        <li>
-                            <span>Chart Slug</span>
-                            <input type="text" name="chart_slug" id="chart_slug" placeholder="$d_place" value="$chart_slug" $disable />
+                            </li>
+                            <li>
+                                <span>Chart Type</span>
+                                <select class="chart_type" name="chart_type">
+                                    <option>Select One</option>
+                                    $list
+                                </select>
+                            </li>
+                            <li>
+                                <span>Chart Name</span>
+                                <input type="text" name="chart_name" id="chart_name" placeholder="Enter a Chart Name with No Special Characters" value="$chart_name" />
 
-                        </li>
-                        <li>
-                            <span>Chart Name</span>
-                            <input type="text" name="chart_name" id="chart_name" placeholder="Enter a Chart Name with No Special Characters" value="$chart_name" />
-
-                        </li>
-                        <li>
-                            <span>Data Source</span>
-                            <input type="text" name="source" id="source" placeholder="Enter a url for the source of this data" value="$source" />
-
-                        </li>
-                        <li>
-                            <span>Chart Type</span>
-                            <select class="chart_select" name="chart_select">
-                                <option>Select One</option>
-                                $list
-                            </select>
-                        </li>
-
-
-                        <li>$chart_data</li>
-
-                        <li><input type="button" id="chart_submit" value="SAVE" class="admin_btn" /></li>
-</ul>
+                            </li>
+                            <li>
+                                <span>Data Source</span>
+                                <input type="text" name="source" id="source" placeholder="Enter a url for the source of this data" value="$source" />
+                            </li>
+                            <li>
+                                <span>Chart Width</span>
+                                <input type="number" name="width" id="width" placeholder="Enter a width for this chart (defaut: 300)" value="$width" />
+                            </li>
+                            <li>
+                                <span>Chart Height</span>
+                                <input type="number" name="height" id="height" placeholder="Enter a height for this chart (defaut: 300)" value="$height" />
+                            </li>
+                            <li class="switch">
+                                <div>Legend</div>
+                                <label class="cb-enable" data-class="710"><span>Yes</span></label> <input type="checkbox" name="tax_input[company-type][710]" value="1" id="710_enabled">
+                                <label class="cb-disable selected" data-class="710"><span>No</span></label> <input type="checkbox" name="tax_input[company-type][710]" value="0" id="710_disabled" checked="">
+                            </li>
+                            <li>The legend is only for Doughnut and Pie Charts</li>
+                            <li>$chart_data</li>
+                            <li><input type="hidden" id="chart_action" value="update" /></li>
+                        </ul>
 EOS;
 
 
@@ -583,19 +690,19 @@ EOS;
                             <ul class="chart_data_inner">
                                 <li>
                                     <span>Label</span>
-                                    <input type="text" name="label" value="{$v['label']}" />
+                                    <input type="text" name="chart_data[$k][label]" value="{$v['label']}" />
                                 </li>
                                 <li>
                                     <span>Value</span>
-                                    <input type="text" name="value" value="{$v['value']}" />
+                                    <input type="text" name="chart_data[$k][value]" value="{$v['value']}" />
                                 </li>
                                 <li>
                                     <span>Color</span>
-                                    <input type="text" name="color" value="{$v['color']}" />
+                                    <input type="text" class="colorpicker" name="chart_data[$k][color]" value="{$v['color']}" data-default-color="{$v['color']}" />
                                 </li>
                                 <li>
                                     <span>Highlight</span>
-                                    <input type="text" name="highlight" value="{$v['highlight']}" />
+                                    <input type="text" class="colorpicker" name="chart_data[$k][highlight]" value="{$v['highlight']}"  data-default-color="{$v['color']}" />
                                 </li>
                             </ul>
                         </li>
@@ -604,7 +711,7 @@ EOS;
                     $chart_data .= '</ul>';
 
                 } else {
-                    $chart_data = <<< EOS
+                    $chart_data .= <<< EOS
                         <li>
                             <span>Chart Name</span>
                             <input type="text" name="chart_name" id="chart_name" placeholder="Enter a Chart Name with No Special Characters" value="$chart_name" />
@@ -615,7 +722,12 @@ EOS;
 
 
 
-
+                $chart_data .= '
+<script>
+jQuery(document).ready(function($) {
+    $(".colorpicker").wpColorPicker();
+});
+</script>';
 
                 break;
             case 1:

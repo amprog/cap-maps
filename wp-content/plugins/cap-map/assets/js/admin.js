@@ -21,17 +21,7 @@ jQuery(document).ready(function($) {
 
     });
 
-    /**
-     * Call AJAX to create a json file from input
-     */
-    $( "#chart_submit" ).live( "click", function() {
 
-        var chart_name = $('#chart_name').val();
-        var chart_json = $('#chart_json').val();
-
-        console.log(chart_json);
-
-    });
 
 
     //charting
@@ -49,9 +39,29 @@ jQuery(document).ready(function($) {
 
                 $('#chart_new').html(response.html);
             });
-
-
         });
+    });
+
+
+    /**
+     * TODO: should i hook into form and validate?
+     */
+    $( "#chart_submit" ).live( "click", function() {
+
+        var chart_slug = $('#chart_slug').val();
+        var chart_name = $('#chart_name').val();
+        var source     = $('#source').val();
+
+
+        //chart_data
+        var labels = $("#chart_new input[name=chart_data]");
+
+        console.dir(labels);
+
+        //var chart_json = $('#chart_json').val();
+
+        //console.log(chart_json);
+
     });
 
 });
