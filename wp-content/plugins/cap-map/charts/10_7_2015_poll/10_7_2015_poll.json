@@ -1,0 +1,56 @@
+{
+  "options": {
+    "segmentStrokeColor": "#D2DFF2",
+    "animateRotate": true,
+    "source": ""
+  },
+  "data_array": [
+    {
+      "name1": "Exports to Australia",
+      "handler": 0,
+      "source1": "http://www.wisertrade.org"
+      "export_data": [
+        {
+          "label": "Industrial Machinery Including Computers",
+          "hs": "84",
+          "value": 33,
+          "dollar": 236603014,
+          "color": "#ba575a",
+          "highlight": "#a92d31"
+        },
+        {
+          "label": "Transportation",
+          "hs": "86",
+          "value": 10,
+          "dollar": 82201931,
+          "color": "#726d86",
+          "highlight": "#4f4868"
+        },
+        {
+          "label": "Miscellaneous",
+          "hs": "90",
+          "value": 9,
+          "dollar": 72306753,
+          "color": "#3883a7",
+          "highlight": "#066491"
+        },
+        {
+          "label": "Electric Machinery",
+          "hs": "85",
+          "value": 7,
+          "dollar": 57139368,
+          "color": "#388a87",
+          "highlight": "#066d69"
+        },
+        {
+          "label": "Other",
+          "hs": "",
+          "value": 41,
+          "dollar": 291736666,
+          "color": "#398c66",
+          "highlight": "#076f40"
+        }
+      ]
+    }
+  ]
+}

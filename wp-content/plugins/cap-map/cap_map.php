@@ -127,69 +127,41 @@ EOD;
             wp_enqueue_style( $cap_map->namespace.'-admin', $cap_map->plugin_uri.'assets/css/admin.css');
             wp_enqueue_script( $cap_map->namespace.'-admin', $cap_map->plugin_uri.'assets/js/admin.js');
         }
-        $title         = 'Maps and Charts';
-        $callback      = 'Cap_Map::cap_map_callback';
-        $screen        = 'page';
+        $title1        = 'SVG Maps';
+        $callback1     = 'Cap_Map::cap_map_svg_callback';
+        $title2        = 'Charts';
+        $callback2     = 'Cap_Map::cap_map_chart_callback';
         $context       = 'normal';
         $priority      = 'high';
-        add_meta_box( 'capmap-meta', $title, $callback, $screen, $context, $priority);
-        add_meta_box( 'capmap-meta', $title, $callback, 'post', $context, $priority);
+
+
+        add_meta_box( 'svg-meta-post', $title1, $callback1, 'page', $context, $priority);  //svg meta box for pages
+        add_meta_box( 'svg-meta-page', $title1, $callback1, 'post', $context, $priority); //svg meta box for posts
+
+
+        add_meta_box( 'chart-meta-post', $title2, $callback2, 'page', $context, $priority);  //chart meta box for pages
+        add_meta_box( 'chart-meta-page', $title2, $callback2, 'post', $context, $priority); //chart meta box for posts
     }
 
 
     /**
-     * Custom callback function for heros
+     * Custom callback function for svg box
      */
-    function cap_map_callback($post) {
+    function cap_map_svg_callback($post) {
 
         $cap_map          = new Cap_Map();  //this should not be necessary!!!!
         $folder           = ABSPATH.$cap_map->plugin_uri.'svg/';
         $handle           = opendir($folder);
-        $graphic_select   = esc_attr(get_post_meta( $post->ID, 'graphic_select', true ));
         $svg_select       = esc_attr(get_post_meta( $post->ID, 'svg_select', true ));
-        $chart_select     = esc_attr(get_post_meta( $post->ID, 'chart_select', true ));
 
-
-        if($graphic_select=='svg') {
-            $s0 = $s2 = $svg_h = '';
-            $s1 = 'selected';
-            $chart_h = 'h';
-        }  elseif($graphic_select=='chart') {
-            $s0 = $s1 = $chart_h = '';
-            $s2 = 'selected';
-            $svg_h = 'h';
-        }  else {
-            $s1 = $s2 = '';
-            $s0 = 'selected';
-            $svg_h = $chart_h = 'h';
-        };
 
         wp_nonce_field( 'cap_map_meta_save', 'admin_meta_box_nonce' );
 
-        $chart_types = array(
-            'Doughnut',
-            'Pie',
-            'Line',
-            'LinePie',
-            'bar',
-            'Radar'
-        );
-
         ?>
-        <p class="note">If you need an svg file or a chart for this page, please insert the following short code where you want it to appear: [capmap]</p>
+        <p class="note">Place the following short code where you want an SVG file to appear: [cap_svg]</p>
 
         <ul class="list">
-            <li>
-                <span>Graphic Type</span>
-                <select class="graphic_select" name="graphic_select">
-                    <option <?php echo $s0; ?> >Select One</option>
-                    <option value="svg" <?php echo $s1; ?> >SVG</option>
-                    <option value="chart" <?php echo $s2 ?> >Chart</option>
-                </select>
-            </li>
-            <li class="svg_li <?php echo $svg_h; ?>">
-
-                <h3>SVG File</h3>
+            <li class="svg_li">
                 <p>TODO: ALLOW A USER TO UPLOAD SVG, JS, AND JSON FILES FROM HERE!  IF THAT WERE POSSIBLE, NO ROLLS NEEDED!</p>
                 <span>Select SVG File</span>
                 <select class="svg_select" name="svg_select">
@@ -203,29 +175,6 @@ EOD;
                             <?php endif; ?>
                         <?php endif; ?>
                     <?php endwhile; closedir($handle); ?>
-                </select>
-            </li>
-            <li class="chart_li <?php echo $chart_h; ?>">
-
-                <h3>Charts</h3>
-                <p><a href="javascript:void(0);" class="create" data-type="chart_new">Create new chart</a> or select one from the list below. </p>
-                <div id="chart_new" class="h">
-                    <input type="text" name="chart_name" id="chart_name" placeholder="Enter a Chart Name" />
-
-                    <textarea id="chart_json" name="chart_json"></textarea>
-
-                    <input type="button" id="chart_submit" value="Create New Chart" />
-                </div>
-                <span>Select Chart Type</span>
-                <select class="chart_select" name="chart_select">
-                    <option>Select One</option>
-                    <?php foreach ($chart_types as $c): ?>
-                        <?php if($chart_select==$c): ?>
-                            <option selected><?php echo $c; ?></option>
-                        <?php else: ?>
-                            <option><?php echo $c; ?></option>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
                 </select>
             </li>
 
@@ -256,10 +205,108 @@ EOD;
 
 
     /**
+     * Custom callback function for CHARTS box
+     */
+    function cap_map_chart_callback($post) {
+
+        $cap_map          = new Cap_Map();  //this should not be necessary!!!!
+        $folder           = ABSPATH.$cap_map->plugin_uri.'charts/';
+        $handle           = opendir($folder);
+        $chart_select     = esc_attr(get_post_meta( $post->ID, 'chart_select', true ));
+
+
+        wp_nonce_field( 'cap_map_meta_save', 'admin_meta_box_nonce' );
+
+        $chart_types = array(
+            'Doughnut',
+            'Pie',
+            'Line',
+            'LinePie',
+            'bar',
+            'Radar'
+        );
+
+        ?>
+        <p class="note">If you need an svg file or a chart for this page, please insert the following short code where you want it to appear: [capmap]</p>
+        <ul class="list">
+            <li class="chart_li">
+                <p><a href="javascript:void(0);" class="create" data-type="chart_new">Create new chart</a> or select one from the list below. </p>
+                <span>Select Existing Chart</span>
+                <select class="chart_select" name="chart_select">
+                    <option>Select One</option>
+                    <?php while (false !== ($entry = readdir($handle))): ?>
+                        <?php  if ($entry != "." && $entry != ".." && $entry != 'starter' && is_dir($folder.$entry)): ?>
+                            <?php if($chart_select==$entry): ?>
+                                <option value="<?php echo $entry; ?>" selected><?php echo $entry; ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $entry; ?>"><?php echo $entry; ?></option>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    <?php endwhile; closedir($handle); ?>
+                </select>
+                <div id="chart_new" class="h">
+
+                    <ul>
+                        <li>
+                            <span>Chart Name</span>
+                            <input type="text" name="chart_name" id="chart_name" placeholder="Enter a Chart Name" />
+
+                        </li>
+                        <li>
+                            <span>Chart Slug</span>
+                            <input type="text" name="chart_slug" id="chart_slug" placeholder="Slug contains no spaces" />
+
+                        </li>
+
+                        <li>
+                            <span>Select Chart Type</span>
+                            <select class="chart_select" name="chart_select">
+                                <option>Select One</option>
+                                <?php foreach ($chart_types as $c): ?>
+                                    <?php if($chart_select==$c): ?>
+                                        <option selected><?php echo $c; ?></option>
+                                    <?php else: ?>
+                                        <option><?php echo $c; ?></option>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
+                            </select>
+                        </li>
+
+                        <!--
+                        <li>
+                            <span>JSON Code</span>
+                            <textarea id="chart_json" name="chart_json"></textarea>
+                        </li>
+                        -->
+                    </ul>
+
+
+
+
+                    <input type="button" id="chart_submit" value="Create New Chart" />
+                </div>
+
+            </li>
+
+        </ul>
+
+        <div id="chart_live" class="h">
+            <h3>Chart Results</h3>
+
+
+
+        </div>
+
+        <?php
+
+    }
+
+
+    /**
      * Save custom meta box
      * @param $post_id
      */
-    function cap_map_meta_save( $post ) {
+    function cap_map_meta_save() {
 
         /*
          * We need to verify this came from our screen and with proper authorization,
@@ -268,8 +315,8 @@ EOD;
 
         // Check if our nonce is set.
         if ( ! isset( $_POST['admin_meta_box_nonce'] ) ) {
-            exit;
-            //return;
+            //exit;
+            return;
         }
 
         // Verify that the nonce is valid.
@@ -299,7 +346,6 @@ EOD;
         }
 
         // sanitize and save data
-        update_post_meta( $_POST['ID'], 'graphic_select',  sanitize_text_field($_POST['graphic_select']));
         update_post_meta( $_POST['ID'], 'svg_select',  sanitize_text_field($_POST['svg_select']));
         update_post_meta( $_POST['ID'], 'chart_select',  sanitize_text_field($_POST['chart_select']));
 
@@ -308,23 +354,79 @@ EOD;
 
     }
 
-    /*
-    function bartag_func( $atts ) {
-        $a = shortcode_atts( array(
-            'foo' => 'something',
-            'bar' => 'something else',
-        ), $atts );
-
-        return "foo = {$a['foo']}";
-    }
-*/
 
     /**
-     * Return svg or chart depending on options selected for this ID
+     * Return SVG depending on options selected for this ID
      * @param $atts
      */
+    function cap_map_svg_shortcode( $atts ){
+        //TODO: think about putting every fiule, json, js, css into one "package" or in ONE folder
 
-    function cap_map_shortcode( $atts ){
+        $cap_map  = new cap_map;
+        $id       = get_the_ID();
+        $svg_raw  = get_post_meta($id,'svg_select',true);
+        $content  = '';
+
+        //always include front end css
+        wp_enqueue_style('capmapcss', $cap_map->plugin_uri.'assets/css/frontend.css');
+
+        if($svg_raw != 'Select One') {
+            //include js and css IF exists
+            $svg_file     = ABSPATH.$cap_map->plugin_uri.'svg/'.$svg_raw;
+            $custom_js    = $cap_map->plugin_uri.'assets/js/svg/'.str_replace('.svg','.js',$svg_raw);
+            $custom_css   = $cap_map->plugin_uri.'assets/css/svg/'.str_replace('.svg','.css',$svg_raw);
+            if(file_exists(ABSPATH.$custom_js)) {
+                wp_enqueue_script('js-'.$id,  $custom_js,'','1',true);
+            }
+
+            if(file_exists(ABSPATH.$custom_css)) {
+                wp_enqueue_style('css-'.$id, $custom_css);
+            }
+
+            $content .= '<div class="svg_wrap"><div class="svg_meta"></div>';
+            $content .=  file_get_contents($svg_file);
+            $content .=  '</div>';
+
+        }
+
+
+        $chart_page  = get_post_meta($id,'chart_select',true);
+        if($svg_raw != 'Select One') {
+
+            wp_enqueue_script('charts',  $cap_map->plugin_uri.'assets/js/common/Chart.min.js','','1',true);
+            wp_enqueue_script('charts',  $cap_map->plugin_uri.'assets/js/common/charts.options.js','','1',true);
+
+
+            //get chart type
+
+            $content .= '<canvas id="c1" height="248" width="497" style="width: 497px; height: 248px;"></canvas>';
+
+
+
+        }
+
+
+        /*
+        //instead of php build php here
+        if(file_exists($svg_file)) {
+            include($svg_file);
+        } else {
+            echo 'no svg file found';
+        }
+
+
+        echo $id;
+        */
+
+
+        return $content;
+    }
+
+    /**
+     * Return chart depending on options selected for this ID
+     * @param $atts
+     */
+    function cap_map_chart_shortcode( $atts ){
         //TODO: think about putting every fiule, json, js, css into one "package" or in ONE folder
 
         $cap_map  = new cap_map;
@@ -388,7 +490,6 @@ EOD;
 
         return $content;
     }
-
 }
 
 
@@ -412,7 +513,7 @@ function init_cap_map() {
 add_action('plugins_loaded', 'init_cap_map');
 add_action( 'admin_menu', 'Cap_Map::cap_map_options_admin' );
 add_action("add_meta_boxes", "Cap_Map::cap_map_meta");
-add_action( 'save_post', 'Cap_Map::cap_map_meta_save' );
-add_shortcode( 'capmap', 'Cap_Map::cap_map_shortcode' );  //register shortcode
-
+add_action( 'save_post', 'Cap_Map::cap_map_meta_save' );  //this is causing problems with new post pages
+add_shortcode( 'cap_svg', 'Cap_Map::cap_map_svg_shortcode' );  //register shortcode for svg
+add_shortcode( 'cap_chart', 'Cap_Map::cap_map_chart_shortcode' );  //register shortcode
 ?>

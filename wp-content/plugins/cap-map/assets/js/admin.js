@@ -1,9 +1,14 @@
 jQuery(document).ready(function($) {
+
+    /*
     $( ".graphic_select" ).change(function() {
         $( ".graphic_select option:selected" ).each(function() {
             $('.'+$( this ).val()+'_li').slideDown();
         });
     });
+    */
+
+
 
     $( ".create" ).live( "click", function() {
 
@@ -29,5 +34,11 @@ jQuery(document).ready(function($) {
     });
 
 
+    //charting
+    $( ".chart_select" ).change(function() {
+        $( ".chart_select option:selected" ).each(function() {
+            console.log($( this ).val());
+        });
+    });
 
 });

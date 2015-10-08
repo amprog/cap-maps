@@ -1,0 +1,45 @@
+{
+    "install":
+    {
+        "form": {
+            "attributes": {
+                "action": "/submit",
+                "method": "post",
+                "enctype": "multipart/form-data",
+                "id": "config-form",
+                "class": "config"
+            },
+            "submit": {
+                "type": "submit",
+                "class": "config-btn", 
+                "id": "config-submit", 
+                "value": "Save Settings"
+            }
+            ,
+            "options": {
+                "csrf": "1",
+                "captcha": "1"
+            }
+        },
+        "seo": {
+            "title": "Site Title",
+            "keywords": "ZEND Based CMS, Test",
+            "description": "Description"
+            
+        },
+        "database":{
+            "host": "localhost",
+            "db_name": "simple_zend",
+            "username": "root",
+            "password": "root",
+            "username": "root",
+            "port": "8889"
+        },
+        "admin": {
+            "username": "ameshkin",
+            "email": "amir.meshkin@gmail.com",
+            "display_name": "Amir Meshkin",
+            "password": "amir"
+        }
+    }
+}
