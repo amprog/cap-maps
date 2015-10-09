@@ -61,7 +61,26 @@ jQuery(document).ready(function($) {
         $('#'+myClass+'_disabled').attr('checked', true);
     });
 
+    /**
+     * Add fields
+     */
+    $( ".add_field" ).live( "click", function() {
 
+        var data = {
+            'action': 'cap_map_chart_line_action',
+            'chart_type': $(this).data('type'),
+            'number': $('.chart_data_inner').length
+        };
+        console.dir(data);
+        jQuery.post(ajaxurl, data, function(response) {
+            console.dir(response);
+
+            $(response.chart_data).prependTo( ".chart_data_wrap").fadeIn("slow");
+        });
+
+
+        //$(field).clone().prependTo( ".chart_data_wrap").fadeIn("slow");
+    });
 
     /**
      * TODO: should i hook into form and validate?

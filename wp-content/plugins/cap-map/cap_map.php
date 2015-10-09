@@ -239,7 +239,7 @@ EOD;
         wp_nonce_field( 'cap_map_meta_save', 'admin_meta_box_nonce' );
 
         ?>
-        <p class="note">Place the following short code where you want a CHART to appear: [cap_chart]  <?php echo $chart_select; ?></p>
+        <p class="note">Place the following short code where you want a CHART to appear: [cap_chart]</p>
         <ul class="list">
             <li class="chart_li">
                 <p><a href="javascript:void(0);" class="create" data-type="chart_new">Create new chart</a> or select one from the list below. </p>
@@ -809,13 +809,70 @@ EOS;
         );
 
         wp_send_json($return);
-
-        //echo $html;
-        //echo wp_send_json($json);
-
-        wp_die(); // this is required to terminate immediately and return a proper response
+        wp_die();
     }
 
+
+    /**
+     * AJAX: get a line and prepend depending on chart type
+     */
+    function cap_map_chart_action_line_callback() {
+
+        $chart_data = '';
+
+        //count current entries
+        $chart_type = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;
+        $number     = array_key_exists('number', $_POST) ? $_POST['number'] : null;
+        $new        = $number+1;
+
+        switch ($chart_type) {
+            case 'Doughnut':
+
+
+        $chart_data .= <<< EOS
+
+            <li>
+                <ul class="chart_data_inner">
+                    <li>
+                        <span>Label</span>
+                        <input type="text" name="chart_data[$new][label]" value="Enter Label" />
+                    </li>
+                    <li>
+                        <span>Value</span>
+                        <input type="text" name="chart_data[$new][value]" value="10" />
+                    </li>
+                    <li>
+                        <span>Color</span>
+                        <input type="text" class="colorpicker" name="chart_data[$new][color]" value="#ba575a" data-default-color="#ba575a" />
+                    </li>
+                    <li>
+                        <span>Highlight</span>
+                        <input type="text" class="colorpicker" name="chart_data[$new][highlight]" value="#a92d31"  data-default-color="#a92d31" />
+                    </li>
+                </ul>
+            </li>
+
+EOS;
+
+                break;
+            case 1:
+                echo "i equals 1";
+                break;
+            case 2:
+                echo "i equals 2";
+                break;
+        }
+
+
+
+        $return = array(
+            'chart_data'=>$chart_data
+        );
+
+        wp_send_json($return);
+        wp_die();
+
+    }
 
     /**
      * Depending on chart type, take data and return in form format
@@ -829,11 +886,14 @@ EOS;
         switch ($chart_type) {
             case 'Doughnut':
 
+                //always show add line to chart
+                $chart_data .= <<< EOS
+                <h4><a href="javascript:void(0);" class="add_field" data-type="$chart_type">Add Line to Chart</a></h4>
+<ul class="chart_data_wrap">
+EOS;
+
                 //if there is data, then plug it in
-
                 if($data) {
-
-                    $chart_data .= '<ul class="chart_data_wrap">';
                     foreach($data['data_array'][0]['chart_data'] as $k=>$v) {
                         $chart_data .= <<< EOS
                         <li>
@@ -871,7 +931,7 @@ EOS;
                 }
 
 
-
+                //javascript for color picker
                 $chart_data .= '
 <script>
 jQuery(document).ready(function($) {
@@ -925,6 +985,8 @@ if ( is_admin() ) {
     add_action( 'save_post', 'Cap_Map::cap_map_meta_save' );  //this is causing problems with new post pages
     add_action( 'wp_ajax_cap_map_chart_action', 'Cap_Map::cap_map_chart_action_callback' );  //ajax for new chart
     add_action( 'wp_ajax_nopriv_cap_map_chart_action', 'Cap_Map::cap_map_chart_action_callback' );   //ajax for new chart
+    add_action( 'wp_ajax_cap_map_chart_line_action', 'Cap_Map::cap_map_chart_action_line_callback' );  //ajax for adding a line to new chart
+    add_action( 'wp_ajax_nopriv_cap_map_chart_line_action', 'Cap_Map::cap_map_chart_action_line_callback' );   //ajaxfor adding a line to new chart
 
 } else {
     add_shortcode( 'cap_svg', 'Cap_Map::cap_map_svg_shortcode' );  //register shortcode for svg
