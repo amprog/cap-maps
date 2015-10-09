@@ -343,7 +343,6 @@ EOD;
             $save['options']['chart_type']         = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;
             $save['options']['chart_name']         = array_key_exists('chart_name', $_POST) ? $_POST['chart_name'] : null;
             $save['options']['segmentStrokeColor'] = array_key_exists('segmentStrokeColor', $_POST) ? $_POST['segmentStrokeColor'] : null;
-            $save['options']['animateRotate']      = array_key_exists('name', $_POST) ? true : false;
             $save['options']['chart_source']       = array_key_exists('chart_source', $_POST) ? $_POST['chart_source'] : null;
             $save['options']['legend']             = array_key_exists('legend', $_POST) ? $_POST['legend'] : null;
             $save['options']['source']             = array_key_exists('source', $_POST) ? $_POST['source'] : null;
@@ -351,8 +350,14 @@ EOD;
             $save['options']['width']              = array_key_exists('width', $_POST) ? $_POST['width'] : null;
             $save['options']['height']             = array_key_exists('height', $_POST) ? $_POST['height'] : null;
             $save['data_array'][0]['chart_data']   = $_POST['chart_data'];
-            $v                                     = explode('.', PHP_VERSION);  //JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES require php 5.4.0
 
+            if($_POST['animateRotate']=='1') {
+                $save['options']['animateRotate'] = true;
+            } else {
+                $save['options']['animateRotate'] = false;
+            }
+
+            $v                                     = explode('.', PHP_VERSION);  //JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES require php 5.4.0
             if ($v[0] == 5 && $v[1] < 2) {
                 die("You need to have at least PHP 5.2 installed to use this. You currently have " . PHP_VERSION);
             } elseif ($v[0] == 5 && $v[1] < 4) {
@@ -610,7 +615,6 @@ EOS;
             $chart_type         = isset($data['options']['chart_type']) ? $data['options']['chart_type']  : null;
             $chart_source       = isset($data['options']['chart_source']) ? $data['options']['chart_source']  : null;
             $segmentStrokeColor = isset($data['options']['segmentStrokeColor']) ? $data['options']['segmentStrokeColor']  : null;
-            $animateRotate      = isset($data['options']['animateRotate']) ? $data['options']['animateRotate']  : null;
             $width              = isset($data['options']['width']) ? $data['options']['width']  : null;
             $height             = isset($data['options']['height']) ? $data['options']['height']  : null;
             $source             = isset($data['options']['source']) ? $data['options']['source']  : null;
@@ -618,6 +622,11 @@ EOS;
             $name               = isset($data['options']['name']) ? $data['options']['name']  : null;
             $chart_data         = self::get_chart_data($data,$chart_type);  //need special function for getting data depending on type of chart
 
+            if($data['options']['animateRotate']=='1') {
+                $animateRotate = 1;
+            } else {
+                $animateRotate = 0;
+            }
 
         } else {
 
@@ -646,59 +655,83 @@ EOS;
 
         //get default values for switches
         switch ($name) {
-            case '0':
+            case 0:
                 $name_disable = 'selected';
                 $name_enable  = '';
+                $name_1        = '';
+                $name_2        = 'checked';
                 break;
-            case '1':
+            case 1:
                 $name_enable = 'selected';
                 $name_disable  = '';
+                $name_1        = 'checked';
+                $name_2        = '';
                 break;
             default:
                 $name_disable = 'selected';
                 $name_enable  = '';
+                $name_1        = '';
+                $name_2        = 'checked';
         }
 
         switch ($source) {
-            case '0':
+            case 0:
                 $source_disable  = 'selected';
                 $source_enable   = '';
+                $source_1        = '';
+                $source_2        = 'checked';
                 break;
-            case '1':
+            case 1:
                 $source_enable   = 'selected';
                 $source_disable  = '';
+                $source_1        = 'checked';
+                $source_2        = '';
                 break;
             default:
                 $source_disable  = 'selected';
                 $source_enable   = '';
+                $source_1        = '';
+                $source_2        = 'checked';
         }
 
         switch ($legend) {
-            case '0':
+            case 0:
                 $legend_disable = 'selected';
                 $legend_enable  = '';
+                $legend_1       = '';
+                $legend_2       = 'checked';
                 break;
-            case '1':
-                $legend_enable = 'selected';
-                $legend_disable  = '';
+            case 1:
+                $legend_enable  = 'selected';
+                $legend_disable = '';
+                $legend_1       = 'checked';
+                $legend_2       = '';
                 break;
             default:
                 $legend_disable = 'selected';
                 $legend_enable  = '';
+                $legend_1       = '';
+                $legend_2       = 'checked';
         }
 
         switch ($animateRotate) {
             case false:
                 $animateRotate_disable = 'selected';
                 $animateRotate_enable  = '';
+                $animateRotate_1        = '';
+                $animateRotate_2        = 'checked';
                 break;
             case true:
                 $animateRotate_enable  = 'selected';
                 $animateRotate_disable = '';
+                $animateRotate_1        = 'checked';
+                $animateRotate_2        = '';
                 break;
             default:
                 $animateRotate_disable = 'selected';
                 $animateRotate_enable  = '';
+                $animateRotate_1        = '';
+                $animateRotate_2        = 'checked';
         }
 
 
@@ -740,23 +773,23 @@ EOS;
                             </li>
                             <li class="switch">
                                 <div>Show Name</div>
-                                <label class="cb-enable $name_enable" data-class="name"><span>Yes</span></label> <input type="checkbox" name="name" value="1" id="name_enabled">
-                                <label class="cb-disable $name_disable" data-class="name"><span>No</span></label> <input type="checkbox" name="name" value="0" id="name_disabled" checked="" />
+                                <label class="cb-enable $name_enable" data-class="name"><span>Yes</span></label> <input type="checkbox" name="name" value="1" id="name_enabled" $name_1 />
+                                <label class="cb-disable $name_disable" data-class="name"><span>No</span></label> <input type="checkbox" name="name" value="0" id="name_disabled" $name_2 />
                             </li>
                             <li class="switch">
                                 <div>Show Source</div>
-                                <label class="cb-enable $source_enable" data-class="source"><span>Yes</span></label> <input type="checkbox" name="source" value="1" id="source_enabled">
-                                <label class="cb-disable $source_disable" data-class="source"><span>No</span></label> <input type="checkbox" name="source" value="0" id="source_disabled" checked="" />
+                                <label class="cb-enable $source_enable" data-class="source"><span>Yes</span></label> <input type="checkbox" name="source" value="1" id="source_enabled" $source_1 />
+                                <label class="cb-disable $source_disable" data-class="source"><span>No</span></label> <input type="checkbox" name="source" value="0" id="source_disabled" $source_2 />
                             </li>
                             <li class="switch">
                                 <div>Show Legend</div>
-                                <label class="cb-enable $legend_enable" data-class="legend"><span>Yes</span></label> <input type="checkbox" name="legend" value="1" id="legend_enabled">
-                                <label class="cb-disable $legend_disable" data-class="legend"><span>No</span></label> <input type="checkbox" name="legend" value="0" id="legend_disabled" checked="" />
+                                <label class="cb-enable $legend_enable" data-class="legend"><span>Yes</span></label> <input type="checkbox" name="legend" value="1" id="legend_enabled" $legend_1 />
+                                <label class="cb-disable $legend_disable" data-class="legend"><span>No</span></label> <input type="checkbox" name="legend" value="0" id="legend_disabled" $legend_2 />
                             </li>
                             <li class="switch">
                                 <div>Animate</div>
-                                <label class="cb-enable $animateRotate_enable" data-class="animateRotate"><span>Yes</span></label> <input type="checkbox" name="animateRotate" value="1" id="animateRotate_enabled">
-                                <label class="cb-disable $animateRotate_disable" data-class="animateRotate"><span>No</span></label> <input type="checkbox" name="animateRotate" value="0" id="animateRotate_disabled" checked="" />
+                                <label class="cb-enable $animateRotate_enable" data-class="animateRotate"><span>Yes</span></label> <input type="checkbox" name="animateRotate" value="1" id="animateRotate_enabled" $animateRotate_1 />
+                                <label class="cb-disable $animateRotate_disable" data-class="animateRotate"><span>No</span></label> <input type="checkbox" name="animateRotate" value="0" id="animateRotate_disabled" $animateRotate_2 />
                             </li>
                             <li>NOTE:  The legend is only for Doughnut and Pie Charts</li>
                             <li>$chart_data</li>
