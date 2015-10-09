@@ -156,6 +156,9 @@ ul.chart_data_wrap input {
     color: #bebebe
 }
 
+.error,.error:active,.error:focus  {
+    border: 1px solid #ff0000;
+}
 
 /* buttons */
 

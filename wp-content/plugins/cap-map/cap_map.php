@@ -243,29 +243,27 @@ EOD;
         <ul class="list">
             <li class="chart_li">
                 <p><a href="javascript:void(0);" class="create" data-type="chart_new">Create new chart</a> or select one from the list below. </p>
-                <span>Select Existing Chart</span>
-                <select class="chart_select" name="chart_select">
-                    <option>Select One</option>
-                    <?php while (false !== ($entry = readdir($handle))): ?>
-                        <?php  if ($entry != "." && $entry != ".." && $entry != 'starter' && is_dir($folder.$entry)): ?>
-                            <?php if($chart_select==$entry): ?>
-                                <option value="<?php echo $entry; ?>" selected><?php echo $entry; ?></option>
-                            <?php else: ?>
-                                <option value="<?php echo $entry; ?>"><?php echo $entry; ?></option>
+                <div  id="chart_select_wrap">
+                    <span>Select Existing Chart</span>
+                    <select class="chart_select" name="chart_select">
+                        <option>Select One</option>
+                        <?php while (false !== ($entry = readdir($handle))): ?>
+                            <?php  if ($entry != "." && $entry != ".." && $entry != 'starter' && is_dir($folder.$entry)): ?>
+                                <?php if($chart_select==$entry): ?>
+                                    <option value="<?php echo $entry; ?>" selected><?php echo $entry; ?></option>
+                                <?php else: ?>
+                                    <option value="<?php echo $entry; ?>"><?php echo $entry; ?></option>
+                                <?php endif; ?>
                             <?php endif; ?>
-                        <?php endif; ?>
-                    <?php endwhile; closedir($handle); ?>
-                </select>
+                        <?php endwhile; closedir($handle); ?>
+                    </select>
+                </div>
                 <div id="chart_new"></div>
-
             </li>
-
         </ul>
 
         <div id="chart_live" class="<?php echo $chart_hide; ?>">
             <h3>Chart Results</h3>
-
-
 
         </div>
 
@@ -323,23 +321,15 @@ EOD;
 
         $cap_map = new Cap_Map();
 
-/*
-        echo '<pre>';
-        print_r($_POST);
-        echo '</pre>';
-*/
-
-        //check for charts and if there is data, save!
-        $chart_select = array_key_exists('chart_select', $_POST) ? $_POST['chart_select'] : null;
-
-        //chart_select
-
-        if($chart_select) {
 
 
-            //turn post array into something we can save
-            $chart_action                          = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
-            $chart_slug                            = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
+
+        //if chart_action is set, then we are editing an existing chart
+        $chart_action = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
+
+        if($chart_action) {
+
+            $chart_select                          = array_key_exists('chart_select', $_POST) ? $_POST['chart_select'] : null;
             $save['options']['chart_type']         = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;
             $save['options']['chart_name']         = array_key_exists('chart_name', $_POST) ? $_POST['chart_name'] : null;
             $save['options']['segmentStrokeColor'] = array_key_exists('segmentStrokeColor', $_POST) ? $_POST['segmentStrokeColor'] : null;
@@ -350,6 +340,27 @@ EOD;
             $save['options']['width']              = array_key_exists('width', $_POST) ? $_POST['width'] : null;
             $save['options']['height']             = array_key_exists('height', $_POST) ? $_POST['height'] : null;
             $save['data_array'][0]['chart_data']   = $_POST['chart_data'];
+
+            if($chart_action=='new') {
+                $chart_slug                        = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
+                mkdir(ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/');  //make directory
+                $file                          = ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
+                update_post_meta( $_POST['ID'], 'chart_select',  sanitize_text_field($chart_slug));  //update meta so we know what chart is associated with this post
+            } else {
+                $chart_slug                        = $save['options']['chart_slug']  = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
+                //if chart slug, differs from chart_select then rename file!
+                if($chart_slug!=$chart_select) {
+                    $file                          = ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
+                    //$del                           = self::deleteDir(ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_select.'/');
+                    system("rm -rf ".escapeshellarg(ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_select.'/'));  //system works better than php
+
+                    mkdir(ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/');  //make directory
+                } else {
+                    $file                          = ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
+                }
+                update_post_meta( $_POST['ID'], 'chart_select',  sanitize_text_field($_POST['chart_select']));  //update meta so we know what chart is associated with this post
+
+            }
 
             if($_POST['animateRotate']=='1') {
                 $save['options']['animateRotate'] = true;
@@ -366,8 +377,6 @@ EOD;
                 $newdata = json_encode($save, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES  |  JSON_NUMERIC_CHECK);
             }
 
-            // $file = ABSPATH.$cap_map->plugin_uri.'/charts/test.json';
-            $file = ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
 
             $fh = fopen($file, "w");
             if ($fh == false) {
@@ -377,19 +386,12 @@ EOD;
             fputs($fh, $newdata);
             fclose($fh);
 
-            //save chart data to json
-
-            //save ONLY TYPE in db, TODO:  not sure what to do if slug changes yet!
-            update_post_meta( $_POST['ID'], 'chart_select',  sanitize_text_field($_POST['chart_select']));
 
         }
 
-
-        //chart_data
-
-
-
-
+        echo '<pre>';
+        print_r($_POST);
+        echo '</pre>';
 
 
     }
@@ -468,7 +470,6 @@ EOD;
      */
     function cap_map_chart_shortcode( $atts ){
         $content = $legend_html = $legend_inner = $canvas_html = '';
-        //TODO: think about putting every fiule, json, js, css into one "package" or in ONE folder
 
         $cap_map     = new Cap_Map();
         $id          = get_the_ID();
@@ -620,7 +621,6 @@ EOS;
             $source             = isset($data['options']['source']) ? $data['options']['source']  : null;
             $legend             = isset($data['options']['legend']) ? $data['options']['legend']  : null;
             $name               = isset($data['options']['name']) ? $data['options']['name']  : null;
-            $chart_data         = self::get_chart_data($data,$chart_type);  //need special function for getting data depending on type of chart
 
             if($data['options']['animateRotate']=='1') {
                 $animateRotate = 1;
@@ -628,10 +628,12 @@ EOS;
                 $animateRotate = 0;
             }
 
+            $chart_action       = 'update';
+            $chart_data         = self::get_chart_data($data,$chart_type,'');
         } else {
-
             //chart data should be a blank form
-
+            $segmentStrokeColor = '#ffffff';
+            $chart_action       = 'new';
         }
 
         $chart_types = array(
@@ -735,17 +737,15 @@ EOS;
         }
 
 
-
         $html = <<< EOS
                         <ul class="sub">
                             <li>
                                 <span>Chart Slug</span>
-                                <input type="text" name="chart_slug" id="chart_slug" value="$chart_slug" />
-
+                                <input type="text" name="chart_slug" id="chart_slug" value="$chart_slug" placeholder="$d_place" required />
                             </li>
                             <li>
                                 <span>Chart Type</span>
-                                <select class="chart_type" name="chart_type">
+                                <select class="chart_type" name="chart_type" id="chart_type_anchor">
                                     <option>Select One</option>
                                     $list
                                 </select>
@@ -761,7 +761,7 @@ EOS;
                             </li>
                             <li>
                                 <span>Line Color</span>
-                                <input type="text" class="colorpicker" name="segmentStrokeColor" id="segmentStrokeColor" name="segmentStrokeColor" value="$segmentStrokeColor"  />
+                                <input type="text" class="colorpicker" id="segmentStrokeColor" name="segmentStrokeColor" value="$segmentStrokeColor" required />
                             </li>
                             <li>
                                 <span>Chart Height</span>
@@ -791,14 +791,28 @@ EOS;
                                 <label class="cb-enable $animateRotate_enable" data-class="animateRotate"><span>Yes</span></label> <input type="checkbox" name="animateRotate" value="1" id="animateRotate_enabled" $animateRotate_1 />
                                 <label class="cb-disable $animateRotate_disable" data-class="animateRotate"><span>No</span></label> <input type="checkbox" name="animateRotate" value="0" id="animateRotate_disabled" $animateRotate_2 />
                             </li>
-                            <li>NOTE:  The legend is only for Doughnut and Pie Charts</li>
-                            <li>$chart_data</li>
-                            <li><input type="hidden" id="chart_action" value="update" /></li>
+                            <li><div class="note">NOTE:  The legend is only for Doughnut and Pie Charts</div><h4><a href="javascript:void(0);" class="add_field" data-type="$chart_type">Add Line to Chart</a></h4></li>
+
+                            <ul class="chart_data_wrap">
+                                <li>$chart_data</li>
+                            </ul>
+                            <li><input type="hidden" id="chart_action" name="chart_action" value="$chart_action" /></li>
                         </ul>
 EOS;
 
 
-
+        $html .= <<< EOS
+<script>
+jQuery(document).ready(function($) {
+    if(typeof myfunc == 'wpColorPicker'){
+        console.log("exist");
+    }else{
+        console.log("not exist");
+        $(".colorpicker").wpColorPicker();
+    }
+});
+</script>
+EOS;
 
         $return = array(
             'html'=>$html,
@@ -823,50 +837,9 @@ EOS;
         //count current entries
         $chart_type = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;
         $number     = array_key_exists('number', $_POST) ? $_POST['number'] : null;
-        $new        = $number+1;
+        $id         = $number+1;
 
-        switch ($chart_type) {
-            case 'Doughnut':
-
-
-        $chart_data .= <<< EOS
-
-            <li>
-                <ul class="chart_data_inner" id="data-$new">
-                    <li class="btns_data">
-                        <a href="javascript:void(0);" class="btns_delete" data-id="$new">delete</a>
-                    </li>
-                    <li>
-                        <span>Label</span>
-                        <input type="text" name="chart_data[$new][label]" value="Enter Label" />
-                    </li>
-                    <li>
-                        <span>Value</span>
-                        <input type="text" name="chart_data[$new][value]" value="10" />
-                    </li>
-                    <li>
-                        <span>Color</span>
-                        <input type="text" class="colorpicker" name="chart_data[$new][color]" value="#ba575a" data-default-color="#ba575a" />
-                    </li>
-                    <li>
-                        <span>Highlight</span>
-                        <input type="text" class="colorpicker" name="chart_data[$new][highlight]" value="#a92d31"  data-default-color="#a92d31" />
-                    </li>
-                </ul>
-            </li>
-
-EOS;
-
-                break;
-            case 1:
-                echo "i equals 1";
-                break;
-            case 2:
-                echo "i equals 2";
-                break;
-        }
-
-
+        $chart_data .= self::get_chart_data('',$chart_type,$id);
 
         $return = array(
             'chart_data'=>$chart_data
@@ -883,7 +856,7 @@ EOS;
      * @param $chart_type
      * @return mixed
      */
-    function get_chart_data($data,$chart_type) {
+    function get_chart_data($data,$chart_type,$id) {
 
         $chart_data = '';
         switch ($chart_type) {
@@ -891,8 +864,7 @@ EOS;
 
                 //always show add line to chart
                 $chart_data .= <<< EOS
-                <h4><a href="javascript:void(0);" class="add_field" data-type="$chart_type">Add Line to Chart</a></h4>
-<ul class="chart_data_wrap">
+
 EOS;
 
                 //if there is data, then plug it in
@@ -928,22 +900,34 @@ EOS;
 
                 } else {
                     $chart_data .= <<< EOS
-                        <li>
-                            <span>Chart Name</span>
-                            <input type="text" name="chart_name" id="chart_name" placeholder="Enter a Chart Name with No Special Characters" value="$chart_name" />
 
-                        </li>
+            <li>
+                <ul class="chart_data_inner" id="data-$id">
+                    <li class="btns_data">
+                        <a href="javascript:void(0);" class="btns_delete" data-id="$id">delete</a>
+                    </li>
+                    <li>
+                        <span>Label</span>
+                        <input type="text" name="chart_data[$id][label]" value="Enter Label" />
+                    </li>
+                    <li>
+                        <span>Value</span>
+                        <input type="text" name="chart_data[$id][value]" value="10" />
+                    </li>
+                    <li>
+                        <span>Color</span>
+                        <input type="text" class="colorpicker" name="chart_data[$id][color]" value="#ba575a" data-default-color="#ba575a" />
+                    </li>
+                    <li>
+                        <span>Highlight</span>
+                        <input type="text" class="colorpicker" name="chart_data[$id][highlight]" value="#a92d31"  data-default-color="#a92d31" />
+                    </li>
+                </ul>
+            </li>
+
 EOS;
+
                 }
-
-
-                //javascript for color picker
-                $chart_data .= '
-<script>
-jQuery(document).ready(function($) {
-    $(".colorpicker").wpColorPicker();
-});
-</script>';
 
                 break;
             case 1:
@@ -958,6 +942,16 @@ jQuery(document).ready(function($) {
     }
 
 
+    /**
+     * UTILITY: Delete a directory with files
+     * @param $path
+     * @return bool
+     */
+    function deleteDir($path) {
+        return is_file($path) ?
+            unlink($path) :
+            array_map(__FUNCTION__, glob($path.'/*')) == rmdir($path);
+    }
 
 
 }

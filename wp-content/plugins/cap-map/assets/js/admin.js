@@ -1,10 +1,31 @@
 jQuery(document).ready(function($) {
 
+    //creating new charts
     $( ".create" ).live( "click", function() {
-        var type = $(this).data('type');
-        console.log(type);
-        $('#'+type).slideDown();
+        $('#chart_select_wrap').remove();
+        var data = {
+            'action': 'cap_map_chart_action',
+            'chart_slug': $( this ).val()
+        };
+        jQuery.post(ajaxurl, data, function(response) {
+            $('#chart_new').html(response.html);
+        });
+    });
 
+    //new chart, needs blank form fields by chart type
+    $( ".chart_type" ).live( "change", function() {
+        if($('#chart_action').val()=='new') {
+            var chart_type = $('.chart_type option:selected').val();
+            $( ".add_field").attr('data-type',chart_type); //need to set data type now
+            var data = {
+                'action': 'cap_map_chart_line_action',
+                'chart_type': chart_type,
+                'number': 0
+            }; console.dir(data);
+            jQuery.post(ajaxurl, data, function(response) { console.dir(response);
+                $(response.chart_data).prependTo( ".chart_data_wrap").fadeIn("slow");
+            });
+        }
     });
 
     //charting
@@ -14,7 +35,6 @@ jQuery(document).ready(function($) {
                 'action': 'cap_map_chart_action',
                 'chart_slug': $( this ).val()
             };
-            // We can also pass the url value separately from ajaxurl for front end AJAX implementations
             jQuery.post(ajaxurl, data, function(response) {
                 $('#chart_new').html(response.html);
             });
@@ -43,18 +63,23 @@ jQuery(document).ready(function($) {
      * Add fields
      */
     $( ".add_field" ).live( "click", function() {
+        //var chart_type = $(this).data('type');
+        var chart_type = $('.chart_type option:selected').val();
 
-        var data = {
-            'action': 'cap_map_chart_line_action',
-            'chart_type': $(this).data('type'),
-            'number': $('.chart_data_inner').length
-        };
-        console.dir(data);
-        jQuery.post(ajaxurl, data, function(response) {
-            console.dir(response);
+        console.log(chart_type);
+        if(chart_type  && chart_type != 'Select One') {
+            var data = {
+                'action': 'cap_map_chart_line_action',
+                'chart_type': chart_type,
+                'number': $('.chart_data_inner').length
+            };console.dir(data);
+            jQuery.post(ajaxurl, data, function(response) { console.dir(response);
+                $(response.chart_data).prependTo( ".chart_data_wrap").fadeIn("slow");
+            });
+        } else {
+            alert("You must first choose a chart type before adding data!");
+        }
 
-            $(response.chart_data).prependTo( ".chart_data_wrap").fadeIn("slow");
-        });
     });
 
 
@@ -64,25 +89,16 @@ jQuery(document).ready(function($) {
     });
 
 
-    /**
-     * TODO: should i hook into form and validate?
-     */
-    $( "#chart_submit" ).live( "click", function() {
-
-        var chart_slug = $('#chart_slug').val();
-        var chart_name = $('#chart_name').val();
-        var source     = $('#source').val();
-
-
-        //chart_data
-        var labels = $("#chart_new input[name=chart_data]");
-
-        console.dir(labels);
-
-        //var chart_json = $('#chart_json').val();
-
-        //console.log(chart_json);
-
+    // form validation
+    $( "#post" ).submit(function( event ) {
+        //if there is  new chart being added, make sure select chart drop down is picked
+        console.log($('.chart_type option:selected').val());
+        if($('#chart_action').val()=='new'  && $('.chart_type option:selected').val() == 'Select One') {
+            event.preventDefault();
+            $('.chart_type').addClass('error');
+            window.location.hash='#chart_type_anchor';
+            alert("If adding a new chart please make sure to select one from the dropdown!");
+        }
+        //event.preventDefault();
     });
-
 });
