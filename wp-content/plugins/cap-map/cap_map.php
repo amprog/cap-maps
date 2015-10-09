@@ -832,7 +832,10 @@ EOS;
         $chart_data .= <<< EOS
 
             <li>
-                <ul class="chart_data_inner">
+                <ul class="chart_data_inner" id="data-$new">
+                    <li class="btns_data">
+                        <a href="javascript:void(0);" class="btns_delete" data-id="$new">delete</a>
+                    </li>
                     <li>
                         <span>Label</span>
                         <input type="text" name="chart_data[$new][label]" value="Enter Label" />
@@ -897,7 +900,10 @@ EOS;
                     foreach($data['data_array'][0]['chart_data'] as $k=>$v) {
                         $chart_data .= <<< EOS
                         <li>
-                            <ul class="chart_data_inner">
+                            <ul class="chart_data_inner" id="data-$k">
+                                <li class="btns_data">
+                                    <a href="javascript:void(0);" class="btns_delete" data-id="$k">delete</a>
+                                </li>
                                 <li>
                                     <span>Label</span>
                                     <input type="text" name="chart_data[$k][label]" value="{$v['label']}" />

@@ -156,14 +156,19 @@ ul.chart_data_wrap input {
     color: #bebebe
 }
 
-.ni {
-    font-family: "fontello";
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-size: 30px;
+
+/* buttons */
+
+.btns_data {
+    margin:0;
+    padding:0;
+    float:right;
+}
+
+.btns_delete {
     display: block;
-    width: 100%;
-    color: #093F7F;
-    padding-top: 5px;
-    height: 20px
+    width: 40px;
+    height: 40px;
+    background: url(../images/delete.png) no-repeat;
+    text-indent: -9999px;
 }

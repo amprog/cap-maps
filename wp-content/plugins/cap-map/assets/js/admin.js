@@ -1,47 +1,25 @@
 jQuery(document).ready(function($) {
 
-    /*
-    $( ".graphic_select" ).change(function() {
-        $( ".graphic_select option:selected" ).each(function() {
-            $('.'+$( this ).val()+'_li').slideDown();
-        });
-    });
-    */
-
-
-
     $( ".create" ).live( "click", function() {
-
         var type = $(this).data('type');
         console.log(type);
         $('#'+type).slideDown();
 
-
-
-
     });
-
-
-
 
     //charting
     $( ".chart_select" ).change(function() {
         $( ".chart_select option:selected" ).each(function() {
-            console.log($( this ).val());
-
             var data = {
                 'action': 'cap_map_chart_action',
                 'chart_slug': $( this ).val()
             };
             // We can also pass the url value separately from ajaxurl for front end AJAX implementations
             jQuery.post(ajaxurl, data, function(response) {
-                console.dir(response);
-
                 $('#chart_new').html(response.html);
             });
         });
     });
-
 
     //switches
     $( ".cb-enable" ).live( "click", function() {
@@ -77,10 +55,14 @@ jQuery(document).ready(function($) {
 
             $(response.chart_data).prependTo( ".chart_data_wrap").fadeIn("slow");
         });
-
-
-        //$(field).clone().prependTo( ".chart_data_wrap").fadeIn("slow");
     });
+
+
+    //delete chart data line
+    $( ".btns_delete" ).live( "click", function() {
+        $('#data-'+$(this).data('id')).remove();
+    });
+
 
     /**
      * TODO: should i hook into form and validate?
