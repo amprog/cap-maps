@@ -321,11 +321,13 @@ EOD;
         update_post_meta( $_POST['ID'], 'svg_select',  sanitize_text_field($_POST['svg_select']));
 
 
+        $cap_map = new Cap_Map();
 
+/*
         echo '<pre>';
         print_r($_POST);
         echo '</pre>';
-
+*/
 
         //check for charts and if there is data, save!
         $chart_select = array_key_exists('chart_select', $_POST) ? $_POST['chart_select'] : null;
@@ -335,10 +337,40 @@ EOD;
         if($chart_select) {
 
 
-            $chart_action = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
-            $chart_slug   = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
-            $chart_name   = array_key_exists('chart_name', $_POST) ? $_POST['chart_name'] : null;
-            $source       = array_key_exists('source', $_POST) ? $_POST['source'] : null;
+            //turn post array into something we can save
+            $chart_action                          = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
+            $chart_slug                            = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
+            $save['options']['chart_type']         = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;
+            $save['options']['chart_name']         = array_key_exists('chart_name', $_POST) ? $_POST['chart_name'] : null;
+            $save['options']['segmentStrokeColor'] = array_key_exists('segmentStrokeColor', $_POST) ? $_POST['segmentStrokeColor'] : null;
+            $save['options']['animateRotate']      = array_key_exists('name', $_POST) ? true : false;
+            $save['options']['chart_source']       = array_key_exists('chart_source', $_POST) ? $_POST['chart_source'] : null;
+            $save['options']['legend']             = array_key_exists('legend', $_POST) ? $_POST['legend'] : null;
+            $save['options']['source']             = array_key_exists('source', $_POST) ? $_POST['source'] : null;
+            $save['options']['name']               = array_key_exists('name', $_POST) ? $_POST['name'] : null;
+            $save['options']['width']              = array_key_exists('width', $_POST) ? $_POST['width'] : null;
+            $save['options']['height']             = array_key_exists('height', $_POST) ? $_POST['height'] : null;
+            $save['data_array'][0]['chart_data']   = $_POST['chart_data'];
+            $v                                     = explode('.', PHP_VERSION);  //JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES require php 5.4.0
+
+            if ($v[0] == 5 && $v[1] < 2) {
+                die("You need to have at least PHP 5.2 installed to use this. You currently have " . PHP_VERSION);
+            } elseif ($v[0] == 5 && $v[1] < 4) {
+                $newdata = json_encode($save,JSON_NUMERIC_CHECK);
+            } else {
+                $newdata = json_encode($save, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES  |  JSON_NUMERIC_CHECK);
+            }
+
+            // $file = ABSPATH.$cap_map->plugin_uri.'/charts/test.json';
+            $file = ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
+
+            $fh = fopen($file, "w");
+            if ($fh == false) {
+                error_log("write failed");
+                die('failed');
+            }
+            fputs($fh, $newdata);
+            fclose($fh);
 
             //save chart data to json
 
@@ -454,11 +486,25 @@ EOD;
         $json_file = $cap_map->plugin_uri."charts/$chart_slug/$chart_slug.json";
         $json      = json_decode(file_get_contents(ABSPATH.$json_file),true);
         $legend    = $json['options']['legend'];
+        $name      = $json['options']['name'];
+        $source    = $json['options']['source'];
+
+        if($name) {
+            $chart_name = '<h3>'.$json['options']['chart_name'].'</h3>';
+        } else {
+            $chart_name = '';
+        }
+
+        if($source) {
+            $chart_source = '<p class="chart_source">'.$json['options']['chart_source'].'</p>';
+        } else {
+            $chart_source = '';
+        }
 
         //print_r($json);
 
         $canvas_html = '<canvas id="c1" width="'.$json['options']['width'].'" height="'.$json['options']['height'].'"></canvas>';
-        if($legend) {
+        if($legend=='1') {
 
 
             foreach($json['data_array'][0]['chart_data'] as $c) {
@@ -474,7 +520,8 @@ EOD;
             $legend_html = <<< EOS
 
             <div class="c_1_1 $chart_slug">
-                <div class="left">$canvas_html</div>
+                $chart_name
+                <div class="left">$canvas_html $chart_source</div>
                 <div class="left">
                     <div class="legend">
                         <ul>
@@ -487,15 +534,14 @@ EOD;
 EOS;
 
 
-
-
-
         } else {
 
             $legend_html = <<< EOS
 
             <div class="c_1_1">
+                $chart_name
                 $canvas_html
+                $chart_source
             </div>
 
 EOS;
@@ -508,14 +554,9 @@ EOS;
         <script>
             jQuery(document).ready(function($) {
                 $.getJSON( "$json_file").done(function( json ) {
-                console.dir(json.data_array[0].chart_data);
-
                     var str = json.options.chart_type.toString();
-                    console.log(str);
-                    new Chart(document.getElementById('c1').getContext('2d')).Doughnut(json.data_array[0].chart_data,json.options);
-
-
-
+                    new Chart(document.getElementById('c1').getContext('2d'))[str](json.data_array[0].chart_data,json.options);
+                    console.dir(json);
                 })
                 .fail(function( jqxhr, textStatus, error ) {
                     var err = textStatus + ", " + error;
@@ -558,20 +599,24 @@ EOS;
 
         //if there is a chart type, then drop down selected so we grab data
         if($chart_slug) {
-            $cap_map    = new Cap_Map();
-            $package    = $cap_map->plugin_uri.'charts/'.$chart_slug;
-            $jsonfile   = $package.'/'.$chart_slug.'.json';
-            $json       = file_get_contents(ABSPATH.$jsonfile);
-            $data       = json_decode($json,true);
+            $cap_map            = new Cap_Map();
+            $package            = $cap_map->plugin_uri.'charts/'.$chart_slug;
+            $jsonfile           = $package.'/'.$chart_slug.'.json';
+            $json               = file_get_contents(ABSPATH.$jsonfile);
+            $data               = json_decode($json,true);
 
             //form values
-            $chart_name = isset($data['data_array'][0]['name']) ? $data['data_array'][0]['name'] : null;
-            $chart_type = isset($data['options']['chart_type']) ? $data['options']['chart_type']  : null;
-            $source     = isset($data['options']['source']) ? $data['options']['source']  : null;
-            $width      = isset($data['options']['source']) ? $data['options']['source']  : null;
-            $height     = isset($data['options']['source']) ? $data['options']['source']  : null;
-            $legend     = isset($data['options']['source']) ? $data['options']['source']  : null;
-            $chart_data = self::get_chart_data($data,$chart_type);             //need special function for getting data depending on type of chart
+            $chart_name         = isset($data['options']['chart_name']) ? $data['options']['chart_name'] : null;
+            $chart_type         = isset($data['options']['chart_type']) ? $data['options']['chart_type']  : null;
+            $chart_source       = isset($data['options']['chart_source']) ? $data['options']['chart_source']  : null;
+            $segmentStrokeColor = isset($data['options']['segmentStrokeColor']) ? $data['options']['segmentStrokeColor']  : null;
+            $animateRotate      = isset($data['options']['animateRotate']) ? $data['options']['animateRotate']  : null;
+            $width              = isset($data['options']['width']) ? $data['options']['width']  : null;
+            $height             = isset($data['options']['height']) ? $data['options']['height']  : null;
+            $source             = isset($data['options']['source']) ? $data['options']['source']  : null;
+            $legend             = isset($data['options']['legend']) ? $data['options']['legend']  : null;
+            $name               = isset($data['options']['name']) ? $data['options']['name']  : null;
+            $chart_data         = self::get_chart_data($data,$chart_type);  //need special function for getting data depending on type of chart
 
 
         } else {
@@ -591,13 +636,70 @@ EOS;
 
 
         foreach ($chart_types as $c) {
-          if($chart_type==$c) {
-              $list .= "<option selected>$c</option>";
-                } else {
-              $list .= "<option>$c</option>";
-           }
+            if($chart_type==$c) {
+                $list .= "<option selected>$c</option>";
+            } else {
+                $list .= "<option>$c</option>";
+            }
         }
 
+
+        //get default values for switches
+        switch ($name) {
+            case '0':
+                $name_disable = 'selected';
+                $name_enable  = '';
+                break;
+            case '1':
+                $name_enable = 'selected';
+                $name_disable  = '';
+                break;
+            default:
+                $name_disable = 'selected';
+                $name_enable  = '';
+        }
+
+        switch ($source) {
+            case '0':
+                $source_disable  = 'selected';
+                $source_enable   = '';
+                break;
+            case '1':
+                $source_enable   = 'selected';
+                $source_disable  = '';
+                break;
+            default:
+                $source_disable  = 'selected';
+                $source_enable   = '';
+        }
+
+        switch ($legend) {
+            case '0':
+                $legend_disable = 'selected';
+                $legend_enable  = '';
+                break;
+            case '1':
+                $legend_enable = 'selected';
+                $legend_disable  = '';
+                break;
+            default:
+                $legend_disable = 'selected';
+                $legend_enable  = '';
+        }
+
+        switch ($animateRotate) {
+            case false:
+                $animateRotate_disable = 'selected';
+                $animateRotate_enable  = '';
+                break;
+            case true:
+                $animateRotate_enable  = 'selected';
+                $animateRotate_disable = '';
+                break;
+            default:
+                $animateRotate_disable = 'selected';
+                $animateRotate_enable  = '';
+        }
 
 
 
@@ -622,22 +724,41 @@ EOS;
                             </li>
                             <li>
                                 <span>Data Source</span>
-                                <input type="text" name="source" id="source" placeholder="Enter a url for the source of this data" value="$source" />
+                                <input type="text" name="chart_source" id="chart_source" placeholder="Enter a url for the source of this data" value="$chart_source" />
                             </li>
                             <li>
-                                <span>Chart Width</span>
-                                <input type="number" name="width" id="width" placeholder="Enter a width for this chart (defaut: 300)" value="$width" />
+                                <span>Line Color</span>
+                                <input type="text" class="colorpicker" name="segmentStrokeColor" id="segmentStrokeColor" name="segmentStrokeColor" value="$segmentStrokeColor"  />
                             </li>
                             <li>
                                 <span>Chart Height</span>
                                 <input type="number" name="height" id="height" placeholder="Enter a height for this chart (defaut: 300)" value="$height" />
                             </li>
-                            <li class="switch">
-                                <div>Legend</div>
-                                <label class="cb-enable" data-class="710"><span>Yes</span></label> <input type="checkbox" name="tax_input[company-type][710]" value="1" id="710_enabled">
-                                <label class="cb-disable selected" data-class="710"><span>No</span></label> <input type="checkbox" name="tax_input[company-type][710]" value="0" id="710_disabled" checked="">
+                            <li>
+                                <span>Chart Width</span>
+                                <input type="number" name="width" id="width" placeholder="Enter a width for this chart (defaut: 300)" value="$width" />
                             </li>
-                            <li>The legend is only for Doughnut and Pie Charts</li>
+                            <li class="switch">
+                                <div>Show Name</div>
+                                <label class="cb-enable $name_enable" data-class="name"><span>Yes</span></label> <input type="checkbox" name="name" value="1" id="name_enabled">
+                                <label class="cb-disable $name_disable" data-class="name"><span>No</span></label> <input type="checkbox" name="name" value="0" id="name_disabled" checked="" />
+                            </li>
+                            <li class="switch">
+                                <div>Show Source</div>
+                                <label class="cb-enable $source_enable" data-class="source"><span>Yes</span></label> <input type="checkbox" name="source" value="1" id="source_enabled">
+                                <label class="cb-disable $source_disable" data-class="source"><span>No</span></label> <input type="checkbox" name="source" value="0" id="source_disabled" checked="" />
+                            </li>
+                            <li class="switch">
+                                <div>Show Legend</div>
+                                <label class="cb-enable $legend_enable" data-class="legend"><span>Yes</span></label> <input type="checkbox" name="legend" value="1" id="legend_enabled">
+                                <label class="cb-disable $legend_disable" data-class="legend"><span>No</span></label> <input type="checkbox" name="legend" value="0" id="legend_disabled" checked="" />
+                            </li>
+                            <li class="switch">
+                                <div>Animate</div>
+                                <label class="cb-enable $animateRotate_enable" data-class="animateRotate"><span>Yes</span></label> <input type="checkbox" name="animateRotate" value="1" id="animateRotate_enabled">
+                                <label class="cb-disable $animateRotate_disable" data-class="animateRotate"><span>No</span></label> <input type="checkbox" name="animateRotate" value="0" id="animateRotate_disabled" checked="" />
+                            </li>
+                            <li>NOTE:  The legend is only for Doughnut and Pie Charts</li>
                             <li>$chart_data</li>
                             <li><input type="hidden" id="chart_action" value="update" /></li>
                         </ul>
@@ -654,11 +775,7 @@ EOS;
             'chart_data' =>$chart_data
         );
 
-
-
         wp_send_json($return);
-
-
 
         //echo $html;
         //echo wp_send_json($json);

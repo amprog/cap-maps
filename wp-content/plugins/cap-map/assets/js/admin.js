@@ -43,6 +43,26 @@ jQuery(document).ready(function($) {
     });
 
 
+    //switches
+    $( ".cb-enable" ).live( "click", function() {
+        var parent = $(this).parents('.switch');
+        $('.cb-disable',parent).removeClass('selected');
+        $(this).addClass('selected');
+        var myClass = $(this).data("class");
+        $('#'+myClass+'_enabled').attr('checked', true);
+        $('#'+myClass+'_disabled').attr('checked', false);
+    });
+    $( ".cb-disable" ).live( "click", function() {
+        var parent = $(this).parents('.switch');
+        $('.cb-enable',parent).removeClass('selected');
+        $(this).addClass('selected');
+        var myClass = $(this).data("class");
+        $('#'+myClass+'_enabled').attr('checked', false);
+        $('#'+myClass+'_disabled').attr('checked', true);
+    });
+
+
+
     /**
      * TODO: should i hook into form and validate?
      */

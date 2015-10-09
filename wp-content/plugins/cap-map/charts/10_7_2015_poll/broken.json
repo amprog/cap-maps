@@ -1,21 +1,22 @@
 {
   "options": {
+    "segmentStrokeColor": "#000000",
+    "animateRotate": false,
+    "segmentShowStroke": false,
     "chart_type": "Doughnut",
     "chart_name": "Exports to Australia",
-    "segmentStrokeColor": "#0a0a0a",
-    "animateRotate": true,
-    "chart_source": "http://www.wisertrade.org",
-    "legend": "1",
-    "source": "0",
-    "name": "0",
     "width": "300",
-    "height": "300"
+    "height": "300",
+    "source": "1",
+    "legend": "1",
+    "name": "1",
+    "source": "http://www.wisertrade.org"
   },
   "data_array": [
     {
       "chart_data": [
         {
-          "label": "Industrial Machinery Including Computers",
+          "label": "Industrial Machiner SADFSADF y",
           "value": "33",
           "color": "#ba575a",
           "highlight": "#a92d31"
