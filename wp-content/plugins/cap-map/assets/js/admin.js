@@ -2,14 +2,28 @@ jQuery(document).ready(function($) {
 
     //creating new charts
     $( ".create" ).live( "click", function() {
-        $('#chart_select_wrap').remove();
-        var data = {
-            'action': 'cap_map_chart_action',
-            'chart_slug': $( this ).val()
-        };
-        jQuery.post(ajaxurl, data, function(response) {
-            $('#chart_new').html(response.html);
-        });
+
+        if($(this).data('type')=='svg') {
+            //$('#svg_select_wrap').remove();
+            var data = {
+                'action': 'cap_map_svg_action',
+                'svg_slug': $( this ).val()
+            };
+            jQuery.post(ajaxurl, data, function(response) { console.dir(response);
+                $('#svg_new').html(response.html);
+            });
+        } else if($(this).data('type')=='chart') {
+            $('#chart_select_wrap').remove();
+            var data = {
+                'action': 'cap_map_chart_action',
+                'chart_slug': $( this ).val()
+            };
+            jQuery.post(ajaxurl, data, function(response) {
+                $('#chart_new').html(response.html);
+            });
+        } else {
+
+        }
     });
 
     //new chart, needs blank form fields by chart type
@@ -29,7 +43,7 @@ jQuery(document).ready(function($) {
     });
 
     //charting
-    $( ".chart_select" ).change(function() {
+    $( "#chart_select_wrap .chart_select" ).change(function() {
         $( ".chart_select option:selected" ).each(function() {
             var data = {
                 'action': 'cap_map_chart_action',
@@ -37,6 +51,19 @@ jQuery(document).ready(function($) {
             };
             jQuery.post(ajaxurl, data, function(response) {
                 $('#chart_new').html(response.html);
+            });
+        });
+    });
+
+    //svg
+    $( "#svg_select_wrap .svg_select" ).change(function() {
+        $( ".svg_select option:selected" ).each(function() {
+            var data = {
+                'action': 'cap_map_svg_action',
+                'chart_slug': $( this ).val()
+            };
+            jQuery.post(ajaxurl, data, function(response) {
+                $('#svg_new').html(response.html); console.dir(response);
             });
         });
     });
@@ -63,10 +90,7 @@ jQuery(document).ready(function($) {
      * Add fields
      */
     $( ".add_field" ).live( "click", function() {
-        //var chart_type = $(this).data('type');
         var chart_type = $('.chart_type option:selected').val();
-
-        console.log(chart_type);
         if(chart_type  && chart_type != 'Select One') {
             var data = {
                 'action': 'cap_map_chart_line_action',

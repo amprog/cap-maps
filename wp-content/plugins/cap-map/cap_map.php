@@ -159,18 +159,20 @@ EOD;
 
 
         wp_nonce_field( 'cap_map_meta_save', 'admin_meta_box_nonce' );
-
+//      <TODO: ALLOW A USER TO UPLOAD SVG, JS, AND JSON FILES FROM HERE!  IF THAT WERE POSSIBLE, NO ROLLS NEEDED!
         ?>
         <p class="note">Place the following short code where you want an SVG file to appear: [cap_svg]</p>
 
         <ul class="list">
             <li class="svg_li">
-                <p>TODO: ALLOW A USER TO UPLOAD SVG, JS, AND JSON FILES FROM HERE!  IF THAT WERE POSSIBLE, NO ROLLS NEEDED!</p>
+
+                <p><a href="javascript:void(0);" class="create" data-type="svg">Create new SVG Graphic</a> or select one from the list below. </p>
+                <div  id="svg_select_wrap">
                 <span>Select SVG File</span>
                 <select class="svg_select" name="svg_select">
                     <option>Select One</option>
                     <?php while (false !== ($entry = readdir($handle))): ?>
-                        <?php   if ($entry != "." && $entry != ".." && !is_dir($folder.$entry)): ?>
+                        <?php  if ($entry != "." && $entry != ".." && $entry != 'starter' && is_dir($folder.$entry)): ?>
                             <?php if($svg_select==$entry): ?>
                                 <option value="<?php echo $entry; ?>" selected><?php echo $entry; ?></option>
                             <?php else: ?>
@@ -242,7 +244,7 @@ EOD;
         <p class="note">Place the following short code where you want a CHART to appear: [cap_chart]</p>
         <ul class="list">
             <li class="chart_li">
-                <p><a href="javascript:void(0);" class="create" data-type="chart_new">Create new chart</a> or select one from the list below. </p>
+                <p><a href="javascript:void(0);" class="create" data-type="chart">Create new chart</a> or select one from the list below. </p>
                 <div  id="chart_select_wrap">
                     <span>Select Existing Chart</span>
                     <select class="chart_select" name="chart_select">
@@ -403,10 +405,15 @@ EOD;
      */
     function cap_map_svg_shortcode( $atts ){
         //TODO: think about putting every fiule, json, js, css into one "package" or in ONE folder
-
         $cap_map  = new cap_map;
         $id       = get_the_ID();
-        $svg_raw  = get_post_meta($id,'svg_select',true);
+
+        //TODO: if short code is [cap_svg svg="slug"]
+        if($atts['svg']) {
+            $svg_raw  = $atts['svg'];
+        } else {
+            $svg_raw  = get_post_meta($id,'svg_select',true);
+        }
         $content  = '';
 
         //always include front end css
@@ -415,8 +422,8 @@ EOD;
         if($svg_raw != 'Select One') {
             //include js and css IF exists
             $svg_file     = ABSPATH.$cap_map->plugin_uri.'svg/'.$svg_raw;
-            $custom_js    = $cap_map->plugin_uri.'assets/js/svg/'.str_replace('.svg','.js',$svg_raw);
-            $custom_css   = $cap_map->plugin_uri.'assets/css/svg/'.str_replace('.svg','.css',$svg_raw);
+            $custom_js    = $svg_file.$svg_raw.'js';
+            $custom_css   = $svg_file.$svg_raw.'css';
             if(file_exists(ABSPATH.$custom_js)) {
                 wp_enqueue_script('js-'.$id,  $custom_js,'','1',true);
             }
@@ -803,14 +810,7 @@ EOS;
 
         $html .= <<< EOS
 <script>
-jQuery(document).ready(function($) {
-    if(typeof myfunc == 'wpColorPicker'){
-        console.log("exist");
-    }else{
-        console.log("not exist");
-        $(".colorpicker").wpColorPicker();
-    }
-});
+
 </script>
 EOS;
 
@@ -938,11 +938,49 @@ EOS;
                 break;
         }
 
+
+        $chart_data.= <<<E_ALL
+<script>
+jQuery(document).ready(function($) {
+    if(typeof myfunc == 'wpColorPicker'){
+        console.log("exist");
+    }else{
+        $(".colorpicker").wpColorPicker();
+    }
+});
+</script>
+E_ALL;
+
+
         return $chart_data;
     }
 
 
     /**
+     * AJAX: show template box, either with data or blank
+     */
+    function cap_map_svg_action_callback()
+    {
+
+        //TODO: best way to do this, no example. leave that for print preview.  show 3 boxes allow edit of json, svg, and js
+        //TODO: may need upload for svg, large ones could cause problems for text edit box
+        $html = '';
+        $html .= <<<NCURSES_KEY_EOS
+
+
+NCURSES_KEY_EOS;
+
+
+        $return = array(
+            'html'=>$html,
+        );
+
+        wp_send_json($return);
+        wp_die();
+
+;
+    }
+        /**
      * UTILITY: Delete a directory with files
      * @param $path
      * @return bool
@@ -978,11 +1016,16 @@ function init_cap_map() {
 add_action('plugins_loaded', 'init_cap_map'); //load plugin
 
 
-
 if ( is_admin() ) {
     add_action( 'admin_menu', 'Cap_Map::cap_map_options_admin' );  //options page, TODO: perhaps put chart options here
     add_action("add_meta_boxes", "Cap_Map::cap_map_meta"); //meta box
     add_action( 'save_post', 'Cap_Map::cap_map_meta_save' );  //this is causing problems with new post pages
+
+    //svg
+    add_action( 'wp_ajax_cap_map_svg_action', 'Cap_Map::cap_map_svg_action_callback' );  //ajax for new svg
+    add_action( 'wp_ajax_nopriv_cap_map_svg_action', 'Cap_Map::cap_map_svg_action_callback' );   //ajax for new svg
+
+    //charts
     add_action( 'wp_ajax_cap_map_chart_action', 'Cap_Map::cap_map_chart_action_callback' );  //ajax for new chart
     add_action( 'wp_ajax_nopriv_cap_map_chart_action', 'Cap_Map::cap_map_chart_action_callback' );   //ajax for new chart
     add_action( 'wp_ajax_cap_map_chart_line_action', 'Cap_Map::cap_map_chart_action_line_callback' );  //ajax for adding a line to new chart
