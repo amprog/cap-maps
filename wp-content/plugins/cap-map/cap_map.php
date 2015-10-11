@@ -17,12 +17,12 @@ class Cap_Map {
 
         header('Access-Control-Allow-Origin: *');
         //set variables
-        $this->plugin_name = 'CAP MAP';
-        $this->slug        = 'cap_map';
-        $this->namespace   = dirname(basename(__FILE__));
-        $this->plugin_uri  = '/wp-content/plugins/cap-map/'; //get this from constant set in main class
-        $this->svg_folder  = $this->plugin_uri.'svg/';
-
+        $this->plugin_name   = 'CAP MAP';
+        $this->slug          = 'cap_map';
+        $this->namespace     = dirname(basename(__FILE__));
+        $this->plugin_uri    = '/wp-content/plugins/cap-map/'; //get this from constant set in main class
+        $this->svg_folder    = $this->plugin_uri.'svg/';
+        $this->chart_folder  = $this->plugin_uri.'chart/';
 
         // PHP5 only
         if(!version_compare(PHP_VERSION, '5.0.0', '>=')) {
@@ -180,19 +180,21 @@ EOD;
                 <p><a href="javascript:void(0);" class="create" data-type="svg">Create new SVG Graphic</a> or select one from the list below. </p>
                 <div id="svg_select_wrap">
                     <span class="loading h"></span>
-                    <span>Select SVG Graphic</span>
-                    <select class="svg_select" name="svg_select">
-                        <option>Select One</option>
-                        <?php while (false !== ($entry = readdir($handle))): ?>
-                            <?php  if ($entry != "." && $entry != ".." && $entry != 'starter' && is_dir($folder.$entry)): ?>
-                                <?php if($svg_select==$entry): ?>
-                                    <option value="<?php echo $entry; ?>" selected><?php echo $entry; ?></option>
-                                <?php else: ?>
-                                    <option value="<?php echo $entry; ?>"><?php echo $entry; ?></option>
+                    <span id="svg_select_inner">
+                        <span>Select SVG Graphic</span>
+                        <select class="svg_select" name="svg_select">
+                            <option>Select One</option>
+                            <?php while (false !== ($entry = readdir($handle))): ?>
+                                <?php  if ($entry != "." && $entry != ".." && $entry != 'starter' && is_dir($folder.$entry)): ?>
+                                    <?php if($svg_select==$entry): ?>
+                                        <option value="<?php echo $entry; ?>" selected><?php echo $entry; ?></option>
+                                    <?php else: ?>
+                                        <option value="<?php echo $entry; ?>"><?php echo $entry; ?></option>
+                                    <?php endif; ?>
                                 <?php endif; ?>
-                            <?php endif; ?>
-                        <?php endwhile; closedir($handle); ?>
-                    </select>
+                            <?php endwhile; closedir($handle); ?>
+                        </select>
+                    </span>
                 </div>
                 <div id="svg_new"></div>
             </li>
@@ -208,7 +210,7 @@ EOD;
     function cap_map_chart_callback($post) {
 
         $cap_map          = new Cap_Map();  //this should not be necessary!!!!
-        $folder           = ABSPATH.$cap_map->plugin_uri.'charts/';
+        $folder           = ABSPATH.$cap_map->chart_folder;
         $handle           = opendir($folder);
         $chart_select     = esc_attr(get_post_meta( $post->ID, 'chart_select', true ));
 
@@ -322,11 +324,13 @@ EOD;
 
             if($chart_action=='new') {
                 $chart_slug                        = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
-                mkdir(ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/');  //make directory
+                mkdir(ABSPATH.$cap_map->chart_folder.$chart_slug.'/');  //make directory
                 $file                          = ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
                 update_post_meta( $_POST['ID'], 'chart_select',  sanitize_text_field($chart_slug));  //update meta so we know what chart is associated with this post
             } else {
                 $chart_slug                        = $save['options']['chart_slug']  = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
+                $chart_select                      = $save['options']['chart_select']  = array_key_exists('chart_select', $_POST) ? $_POST['chart_select'] : null;
+
                 //if chart slug, differs from chart_select then rename file!
                 if($chart_slug!=$chart_select) {
                     $file                          = ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
@@ -433,8 +437,6 @@ EOD;
         $cap_map  = new Cap_Map();
         $id       = get_the_ID();
 
-
-
         //TODO: if short code is [cap_svg svg="slug"]
         if($atts['svg']) {
             $svg_raw  = $atts['svg'];
@@ -466,7 +468,7 @@ EOD;
                 wp_enqueue_style('css-' . $id, $custom_css);
             }
 
-            $content .= '<div class="svg_wrap"><div class="svg_meta"></div>'.$svg_file;
+            $content .= '<div class="svg_wrap"><div class="svg_meta"></div>';
             $content .= $svg_data;
             $content .= '</div>';
 
@@ -966,7 +968,7 @@ E_ALL;
     {
         //TODO: best way to do this, no example. leave that for print preview.  show 3 boxes allow edit of json, svg, and js
         //TODO: may need upload for svg, large ones could cause problems for text edit box
-
+        $time_start = self::timer();
         $html       = '';
         $cap_map    = new Cap_Map();
         $svg_slug   = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
@@ -974,7 +976,6 @@ E_ALL;
 
 
         if($svg_slug) {
-
             $svg_action = 'update';
 
             $js_file = $folder.$svg_slug.'.js';
@@ -1035,10 +1036,11 @@ E_ALL;
 </ul>
 
 NCURSES_KEY_EOS;
-
+        $time_end = self::timer();
 
         $return = array(
             'html'=>$html,
+            'loading' => $time_end - $time_start
         );
 
         wp_send_json($return);
@@ -1070,6 +1072,7 @@ NCURSES_KEY_EOS;
         $time_end = self::timer();
         $return   = array(
             'result'=> $result,
+            'file'=> $filename,
             'timer'=> $time_end - $time_start
         );
 

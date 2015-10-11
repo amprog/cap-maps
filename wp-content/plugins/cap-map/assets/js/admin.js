@@ -4,7 +4,10 @@ jQuery(document).ready(function($) {
     $( ".create" ).live( "click", function() {
 
         if($(this).data('type')=='svg') {
-            //$('#svg_select_wrap').remove();
+            console.log($( this ).val());
+
+            $('#svg_select_wrap #svg_select_inner').addClass('h');
+            $('#svg_select_wrap').append('<input type="text" name="svg_input" id="svg_input" placeholder="Enter a slug for this SVG Graphic" />');
             var data = {
                 'action': 'cap_map_svg_action',
                 'svg_slug': $( this ).val()
@@ -120,12 +123,19 @@ jQuery(document).ready(function($) {
     $( ".btn.save" ).live( "click", function() {
         $(this).addClass('loading');
         file =  $(this).data('file');
+        if($('#svg_input').val()) {
+            var svg_slug = $('.svg_select').val();
+        } else if($('.svg_select').val()) {
+            var svg_slug = $('.svg_select option:selected').val();
+        } else {
+            alert("Please enter a slug for this SVG Graphic");
+        }
         var data = {
             'action': 'cap_map_file_save_action',
             'file': file,
-            'svg_slug': $('.svg_select option:selected').val(),
+            'svg_slug': svg_slug,
             'data': $("textarea[name='"+$(this).data('file')+"']").val()
-        };
+        };console.dir(data);
         $.post(ajaxurl, data, function(response) { console.dir(response);
             $('#btn_'+file).removeClass('loading');
         });
