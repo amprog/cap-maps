@@ -69,6 +69,13 @@ ul.chart_data_wrap input {
     font-size:20px;
 }
 
+.loading {
+    background: url('../images/ajax-loader.gif') no-repeat;
+    width:30px;
+    height: 30px;
+    display: block;
+}
+
 /* switch */
 .switch {
     clear: both;
@@ -185,4 +192,8 @@ ul.chart_data_wrap input {
     height: 40px;
     background: url(../images/delete.png) no-repeat;
     text-indent: -9999px;
+}
+
+.h {
+    display: none;
 }

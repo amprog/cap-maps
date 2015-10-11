@@ -46,12 +46,14 @@ jQuery(document).ready(function($) {
     $( "#chart_select_wrap .chart_select" ).change(function() {
         var chart_select =    $( this ).val()
         if(chart_select!='Select One') {
+            $('#chart_select_wrap .loading').removeClass('h');
             var data = {
                 'action': 'cap_map_chart_action',
                 'chart_slug': chart_select
             };
             jQuery.post(ajaxurl, data, function(response) {
                 $('#chart_new').html(response.html);
+                $('#chart_select_wrap .loading').addClass('h');
             });
         }
     });
@@ -60,12 +62,14 @@ jQuery(document).ready(function($) {
     $( "#svg_select_wrap .svg_select" ).change(function() {
         var svg_select =    $( this ).val()
         if(svg_select!='Select One') {
+            $('#svg_select_wrap .loading').removeClass('h');
             var data = {
                 'action': 'cap_map_svg_action',
                 'svg_slug': svg_select
             };
             jQuery.post(ajaxurl, data, function(response) {
                 $('#svg_new').html(response.html);
+                $('#svg_select_wrap .loading').addClass('h');
             });
         }
     });

@@ -167,25 +167,25 @@ EOD;
         <ul class="list">
             <li class="svg_li">
                 <p><a href="javascript:void(0);" class="create" data-type="svg">Create new SVG Graphic</a> or select one from the list below. </p>
-                <div  id="svg_select_wrap">
-                <span>Select SVG Graphic</span>
-                <select class="svg_select" name="svg_select">
-                    <option>Select One</option>
-                    <?php while (false !== ($entry = readdir($handle))): ?>
-                        <?php  if ($entry != "." && $entry != ".." && $entry != 'starter' && is_dir($folder.$entry)): ?>
-                            <?php if($svg_select==$entry): ?>
-                                <option value="<?php echo $entry; ?>" selected><?php echo $entry; ?></option>
-                            <?php else: ?>
-                                <option value="<?php echo $entry; ?>"><?php echo $entry; ?></option>
+                <div id="svg_select_wrap">
+                    <span class="loading h"></span>
+                    <span>Select SVG Graphic</span>
+                    <select class="svg_select" name="svg_select">
+                        <option>Select One</option>
+                        <?php while (false !== ($entry = readdir($handle))): ?>
+                            <?php  if ($entry != "." && $entry != ".." && $entry != 'starter' && is_dir($folder.$entry)): ?>
+                                <?php if($svg_select==$entry): ?>
+                                    <option value="<?php echo $entry; ?>" selected><?php echo $entry; ?></option>
+                                <?php else: ?>
+                                    <option value="<?php echo $entry; ?>"><?php echo $entry; ?></option>
+                                <?php endif; ?>
                             <?php endif; ?>
-                        <?php endif; ?>
-                    <?php endwhile; closedir($handle); ?>
-                </select>
+                        <?php endwhile; closedir($handle); ?>
+                    </select>
+                </div>
+                <div id="svg_new"></div>
             </li>
         </ul>
-
-        <div id="svg_new"></div>
-
         <?php
 
     }
@@ -228,6 +228,7 @@ EOD;
             <li class="chart_li">
                 <p><a href="javascript:void(0);" class="create" data-type="chart">Create new chart</a> or select one from the list below. </p>
                 <div id="chart_select_wrap">
+                    <span class="loading h"></span>
                     <span>Select Existing Chart</span>
                     <select class="chart_select" name="chart_select">
                         <option>Select One</option>
