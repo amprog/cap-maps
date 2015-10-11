@@ -44,28 +44,30 @@ jQuery(document).ready(function($) {
 
     //charting
     $( "#chart_select_wrap .chart_select" ).change(function() {
-        $( ".chart_select option:selected" ).each(function() {
+        var chart_select =    $( this ).val()
+        if(chart_select!='Select One') {
             var data = {
                 'action': 'cap_map_chart_action',
-                'chart_slug': $( this ).val()
+                'chart_slug': chart_select
             };
             jQuery.post(ajaxurl, data, function(response) {
                 $('#chart_new').html(response.html);
             });
-        });
+        }
     });
 
     //svg
     $( "#svg_select_wrap .svg_select" ).change(function() {
-        $( ".svg_select option:selected" ).each(function() {
+        var svg_select =    $( this ).val()
+        if(svg_select!='Select One') {
             var data = {
                 'action': 'cap_map_svg_action',
-                'chart_slug': $( this ).val()
+                'svg_slug': svg_select
             };
             jQuery.post(ajaxurl, data, function(response) {
-                $('#svg_new').html(response.html); console.dir(response);
+                $('#svg_new').html(response.html);
             });
-        });
+        }
     });
 
     //switches

@@ -21,6 +21,8 @@ class Cap_Map {
         $this->slug        = 'cap_map';
         $this->namespace   = dirname(basename(__FILE__));
         $this->plugin_uri  = '/wp-content/plugins/cap-map/'; //get this from constant set in main class
+        $this->svg_folder  = $this->plugin_uri.'svg/';
+
 
         // PHP5 only
         if(!version_compare(PHP_VERSION, '5.0.0', '>=')) {
@@ -153,22 +155,20 @@ EOD;
     function cap_map_svg_callback($post) {
 
         $cap_map          = new Cap_Map();  //this should not be necessary!!!!
-        $folder           = ABSPATH.$cap_map->plugin_uri.'svg/';
-        $handle           = opendir($folder);
+        $folder           = ABSPATH.$cap_map->svg_folder;
         $svg_select       = esc_attr(get_post_meta( $post->ID, 'svg_select', true ));
+        $handle           = opendir($folder);
 
-
-        wp_nonce_field( 'cap_map_meta_save', 'admin_meta_box_nonce' );
+        //wp_nonce_field( 'cap_map_meta_save', 'admin_meta_box_nonce' );
 //      <TODO: ALLOW A USER TO UPLOAD SVG, JS, AND JSON FILES FROM HERE!  IF THAT WERE POSSIBLE, NO ROLLS NEEDED!
         ?>
         <p class="note">Place the following short code where you want an SVG file to appear: [cap_svg]</p>
 
         <ul class="list">
             <li class="svg_li">
-
                 <p><a href="javascript:void(0);" class="create" data-type="svg">Create new SVG Graphic</a> or select one from the list below. </p>
                 <div  id="svg_select_wrap">
-                <span>Select SVG File</span>
+                <span>Select SVG Graphic</span>
                 <select class="svg_select" name="svg_select">
                     <option>Select One</option>
                     <?php while (false !== ($entry = readdir($handle))): ?>
@@ -182,27 +182,9 @@ EOD;
                     <?php endwhile; closedir($handle); ?>
                 </select>
             </li>
-
-
-
-            <!--
-            <li>
-                <span>Header</span>
-                <input type="text" id="header" name="header" placeholder="Enter Header Text" value="<?php echo $header; ?>" />
-            </li>
-            <li>
-                <span>Paragraph</span>
-                <textarea id="text" name="text"><?php echo $text; ?></textarea>
-            </li>
-            -->
         </ul>
 
-        <div id="chart_live" class="h">
-            <h3>Chart Results</h3>
-
-
-
-        </div>
+        <div id="svg_new"></div>
 
         <?php
 
@@ -245,7 +227,7 @@ EOD;
         <ul class="list">
             <li class="chart_li">
                 <p><a href="javascript:void(0);" class="create" data-type="chart">Create new chart</a> or select one from the list below. </p>
-                <div  id="chart_select_wrap">
+                <div id="chart_select_wrap">
                     <span>Select Existing Chart</span>
                     <select class="chart_select" name="chart_select">
                         <option>Select One</option>
@@ -264,11 +246,6 @@ EOD;
             </li>
         </ul>
 
-        <div id="chart_live" class="<?php echo $chart_hide; ?>">
-            <h3>Chart Results</h3>
-
-        </div>
-
         <?php
 
     }
@@ -276,7 +253,7 @@ EOD;
 
     /**
      * Save custom meta box
-     * @param $post_id
+     * @internal param $post_id
      */
     function cap_map_meta_save() {
 
@@ -398,10 +375,10 @@ EOD;
 
     }
 
-
     /**
      * Return SVG depending on options selected for this ID
      * @param $atts
+     * @return string
      */
     function cap_map_svg_shortcode( $atts ){
         //TODO: think about putting every fiule, json, js, css into one "package" or in ONE folder
@@ -961,12 +938,38 @@ E_ALL;
      */
     function cap_map_svg_action_callback()
     {
-
         //TODO: best way to do this, no example. leave that for print preview.  show 3 boxes allow edit of json, svg, and js
         //TODO: may need upload for svg, large ones could cause problems for text edit box
-        $html = '';
-        $html .= <<<NCURSES_KEY_EOS
 
+        $html       = '';
+        $cap_map    = new Cap_Map();
+        $svg_slug   = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
+        $folder     = ABSPATH.$cap_map->svg_folder.$svg_slug.'/';
+
+        $js         = file_get_contents($folder.$svg_slug.'.js');
+        $css        = file_get_contents($folder.$svg_slug.'.css');
+        $svg        = file_get_contents($folder.$svg_slug.'.svg');
+        $json       = file_get_contents($folder.$svg_slug.'.json');
+
+        $html .= <<<NCURSES_KEY_EOS
+              <ul class="sub svg_edit">
+<li>
+    <span>SVG File</span>
+    <textarea name="svg">$svg</textarea>
+</li>
+<li>
+    <span>Javascript Code</span>
+    <textarea name="js">$js</textarea>
+</li>
+<li>
+    <span>CSS Styles</span>
+    <textarea name="css">$css</textarea>
+</li>
+<li>
+    <span>JSON Data</span>
+    <textarea name="json">$json</textarea>
+</li>
+</ul>
 
 NCURSES_KEY_EOS;
 
@@ -977,8 +980,6 @@ NCURSES_KEY_EOS;
 
         wp_send_json($return);
         wp_die();
-
-;
     }
         /**
      * UTILITY: Delete a directory with files
@@ -990,7 +991,6 @@ NCURSES_KEY_EOS;
             unlink($path) :
             array_map(__FUNCTION__, glob($path.'/*')) == rmdir($path);
     }
-
 
 }
 

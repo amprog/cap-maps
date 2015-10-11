@@ -50,6 +50,17 @@ ul.chart_data_wrap input {
     width:50%;
 }
 
+#svg_new .svg_edit span {
+    display: block;
+    margin:27px 0 10px 0;
+}
+
+#svg_new .svg_edit textarea {
+    display: block;
+    width: 90%;
+    height: 200px;
+}
+
 
 .admin_btn {
     padding: 17px;
