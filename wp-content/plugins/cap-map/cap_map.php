@@ -90,9 +90,7 @@ class Cap_Map {
                     <div class="meta-box-sortables">
                         <form action="options.php" method="post">
                             <p>namespace:<?php //echo $this->this_plugin; ?></p>
-
                             <p>plugin url: <?php echo $cap_map->plugin_uri; ?></p>
-
 
                         </form>
                     </div>
@@ -159,6 +157,19 @@ EOD;
         $svg_select       = esc_attr(get_post_meta( $post->ID, 'svg_select', true ));
         $handle           = opendir($folder);
 
+        //if there is already a chart selected, show this chart
+        if($svg_select!='' || $svg_select!='Select One') {
+
+            //only way to do this is to run some js to get ajax //chart_data = cap_map_chart_action_callback();
+            ?>
+            <script>
+                jQuery(document).ready(function($) {
+                    $( ".svg_select" ).trigger( "change" );
+                });
+            </script>
+            <?php
+        }
+
         //wp_nonce_field( 'cap_map_meta_save', 'admin_meta_box_nonce' );
 //      <TODO: ALLOW A USER TO UPLOAD SVG, JS, AND JSON FILES FROM HERE!  IF THAT WERE POSSIBLE, NO ROLLS NEEDED!
         ?>
@@ -211,12 +222,7 @@ EOD;
                     $( ".chart_select" ).trigger( "change" );
                 });
             </script>
-
-
             <?php
-            $chart_hide = '';
-        } else {
-            $chart_hide = 'h';
         }
 
 
@@ -295,21 +301,14 @@ EOD;
             }
         }
 
-        // sanitize and save data
-        update_post_meta( $_POST['ID'], 'svg_select',  sanitize_text_field($_POST['svg_select']));
-
-
         $cap_map = new Cap_Map();
-
-
-
 
         //if chart_action is set, then we are editing an existing chart
         $chart_action = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
 
         if($chart_action) {
 
-            $chart_select                          = array_key_exists('chart_select', $_POST) ? $_POST['chart_select'] : null;
+
             $save['options']['chart_type']         = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;
             $save['options']['chart_name']         = array_key_exists('chart_name', $_POST) ? $_POST['chart_name'] : null;
             $save['options']['segmentStrokeColor'] = array_key_exists('segmentStrokeColor', $_POST) ? $_POST['segmentStrokeColor'] : null;
@@ -348,34 +347,82 @@ EOD;
                 $save['options']['animateRotate'] = false;
             }
 
-            $v                                     = explode('.', PHP_VERSION);  //JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES require php 5.4.0
-            if ($v[0] == 5 && $v[1] < 2) {
-                die("You need to have at least PHP 5.2 installed to use this. You currently have " . PHP_VERSION);
-            } elseif ($v[0] == 5 && $v[1] < 4) {
-                $newdata = json_encode($save,JSON_NUMERIC_CHECK);
-            } else {
-                $newdata = json_encode($save, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES  |  JSON_NUMERIC_CHECK);
-            }
-
-
-            $fh = fopen($file, "w");
-            if ($fh == false) {
-                error_log("write failed");
-                die('failed');
-            }
-            fputs($fh, $newdata);
-            fclose($fh);
-
-
+            $save_result = self::cap_map_save_file($file,$save);
         }
+
+        //if svg_action then save files
+        $svg_action = array_key_exists('svg_action', $_POST) ? $_POST['svg_action'] : null;
+        $svg_select                          = array_key_exists('svg_select', $_POST) ? $_POST['svg_select'] : null;
+
+        if($svg_select) {
+            update_post_meta( $_POST['ID'], 'svg_select',  sanitize_text_field($_POST['svg_select']));
+        }
+
+
+        echo "<h1>svgaction: $svg_action</h1>";
+
+        echo "<h1>svg_select: $svg_select</h1>";
 
         echo '<pre>';
         print_r($_POST);
         echo '</pre>';
 
+        exit;
+
+        if($svg_action) {
+
+            if($svg_action=='new') {
+                $chart_slug                        = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
+                mkdir(ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/');  //make directory
+                $file                          = ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
+                update_post_meta( $_POST['ID'], 'chart_select',  sanitize_text_field($chart_slug));  //update meta so we know what chart is associated with this post
+            } else {
+                $chart_slug                        = $save['options']['chart_slug']  = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
+                //if chart slug, differs from chart_select then rename file!
+                if($chart_slug!=$chart_select) {
+                    $file                          = ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
+                    //$del                           = self::deleteDir(ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_select.'/');
+                    system("rm -rf ".escapeshellarg(ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_select.'/'));  //system works better than php
+
+                    mkdir(ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/');  //make directory
+                } else {
+                    $file                          = ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
+                }
+                update_post_meta( $_POST['ID'], 'chart_select',  sanitize_text_field($_POST['chart_select']));  //update meta so we know what chart is associated with this post
+
+            }
+            $save_result = self::cap_map_save_file($file,$save);
+        }
+
+
 
     }
 
+    /**
+     * UTILITY: save file
+     * @param $file
+     * @param $save
+     * @return int
+     */
+    function cap_map_save_file($file,$save) {
+        $v = explode('.', PHP_VERSION);  //JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES require php 5.4.0
+        if ($v[0] == 5 && $v[1] < 2) {
+            die("You need to have at least PHP 5.2 installed to use this. You currently have " . PHP_VERSION);
+        } elseif ($v[0] == 5 && $v[1] < 4) {
+            $newdata = json_encode($save,JSON_NUMERIC_CHECK);
+        } else {
+            $newdata = json_encode($save, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES  |  JSON_NUMERIC_CHECK);
+        }
+
+        $fh = fopen($file, "w");
+        if ($fh == false) {
+            return 0;
+        } else {
+            fputs($fh, $newdata);
+            fclose($fh);
+            return 1;
+        }
+    }
     /**
      * Return SVG depending on options selected for this ID
      * @param $atts
@@ -852,7 +899,7 @@ EOS;
                         <li>
                             <ul class="chart_data_inner" id="data-$k">
                                 <li class="btns_data">
-                                    <a href="javascript:void(0);" class="btns_delete" data-id="$k">delete</a>
+                                    <a href="javascript:void(0);" class="btn delete" data-id="$k">delete</a>
                                 </li>
                                 <li>
                                     <span>Label</span>
@@ -882,7 +929,7 @@ EOS;
             <li>
                 <ul class="chart_data_inner" id="data-$id">
                     <li class="btns_data">
-                        <a href="javascript:void(0);" class="btns_delete" data-id="$id">delete</a>
+                        <a href="javascript:void(0);" class="btn delete" data-id="$id">delete</a>
                     </li>
                     <li>
                         <span>Label</span>
@@ -947,29 +994,66 @@ E_ALL;
         $svg_slug   = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
         $folder     = ABSPATH.$cap_map->svg_folder.$svg_slug.'/';
 
-        $js         = file_get_contents($folder.$svg_slug.'.js');
-        $css        = file_get_contents($folder.$svg_slug.'.css');
-        $svg        = file_get_contents($folder.$svg_slug.'.svg');
-        $json       = file_get_contents($folder.$svg_slug.'.json');
 
+        if($svg_slug) {
+
+            $svg_action = 'update';
+
+            $js_file = $folder.$svg_slug.'.js';
+            if(file_exists($js_file)) {
+                $js = file_get_contents($js_file);
+            }
+
+            $css_file = $folder.$svg_slug.'.css';
+            if(file_exists($css_file)) {
+                $css = file_get_contents($css_file);
+            }
+
+            $svg_file = $folder.$svg_slug.'.svg';
+            if(file_exists($svg_file)) {
+                $svg = file_get_contents($svg_file);
+            }
+
+            $json_file = $folder.$svg_slug.'.json';
+            if(file_exists($json_file)) {
+                $json = file_get_contents($json_file);
+            }
+
+        } else {
+
+            $svg_action = 'new';
+        }
         $html .= <<<NCURSES_KEY_EOS
               <ul class="sub svg_edit">
 <li>
     <span>SVG File</span>
+     <div class="btns_data">
+        <a href="javascript:void(0);" class="btn save" data-file="svg">save</a>
+    </div>
     <textarea name="svg">$svg</textarea>
 </li>
 <li>
     <span>Javascript Code</span>
+    <div class="btns_data">
+        <a href="javascript:void(0);" class="btn save" data-file="js">save</a>
+    </div>
     <textarea name="js">$js</textarea>
 </li>
 <li>
     <span>CSS Styles</span>
+    <div class="btns_data">
+        <a href="javascript:void(0);" class="btn save" data-file="css">save</a>
+    </div>
     <textarea name="css">$css</textarea>
 </li>
 <li>
     <span>JSON Data</span>
+    <div class="btns_data">
+        <a href="javascript:void(0);" class="btn save" data-file="json">save</a>
+    </div>
     <textarea name="json">$json</textarea>
 </li>
+<li><input type="hidden" id="svg_action" name="svg_action" value="$svg_action" /></li>
 </ul>
 
 NCURSES_KEY_EOS;
@@ -982,6 +1066,40 @@ NCURSES_KEY_EOS;
         wp_send_json($return);
         wp_die();
     }
+
+
+
+    /**
+     * AJAX: save file from textarea
+     */
+    function cap_map_file_save_action_callback()
+    {
+
+        $cap_map    = new Cap_Map();
+        $svg_slug   = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
+        $data       = array_key_exists('data', $_POST) ? $_POST['data'] : null;
+        $file       = array_key_exists('file', $_POST) ? $_POST['file'] : null;
+        $filename   = ABSPATH.$cap_map->svg_folder.$svg_slug.'/'.$svg_slug.'.'.$file;
+
+        $fh = fopen($filename, "w");
+        if ($fh == false) {
+            $result = 0;
+        } else {
+            fputs($fh, $data);
+            fclose($fh);
+            $result = 1;
+        }
+
+        $return = array(
+            'html'=>$filename,
+            'result' =>$result
+        );
+
+        wp_send_json($return);
+        wp_die();
+
+    }
+
         /**
      * UTILITY: Delete a directory with files
      * @param $path
@@ -994,10 +1112,6 @@ NCURSES_KEY_EOS;
     }
 
 }
-
-
-
-
 
 
 /**
@@ -1025,6 +1139,8 @@ if ( is_admin() ) {
     //svg
     add_action( 'wp_ajax_cap_map_svg_action', 'Cap_Map::cap_map_svg_action_callback' );  //ajax for new svg
     add_action( 'wp_ajax_nopriv_cap_map_svg_action', 'Cap_Map::cap_map_svg_action_callback' );   //ajax for new svg
+    add_action( 'wp_ajax_cap_map_file_save_action', 'Cap_Map::cap_map_file_save_action_callback' );  //ajax for saving files
+    add_action( 'wp_ajax_nopriv_cap_map_file_save_action', 'Cap_Map::cap_map_file_save_action_callback' );   //ajax for saving files
 
     //charts
     add_action( 'wp_ajax_cap_map_chart_action', 'Cap_Map::cap_map_chart_action_callback' );  //ajax for new chart

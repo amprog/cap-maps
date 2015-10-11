@@ -109,26 +109,38 @@ jQuery(document).ready(function($) {
         } else {
             alert("You must first choose a chart type before adding data!");
         }
-
     });
 
-
     //delete chart data line
-    $( ".btns_delete" ).live( "click", function() {
+    $( ".btn.delete" ).live( "click", function() {
         $('#data-'+$(this).data('id')).remove();
     });
 
+    //file save
+    $( ".btn.save" ).live( "click", function() {
+        $(this).addClass('loading');
+        var data = {
+            'action': 'cap_map_file_save_action',
+            'file': $(this).data('file'),
+            'svg_slug': $('.svg_select option:selected').val(),
+            'data': $("textarea[name='"+$(this).data('file')+"']").val()
+        };console.dir(data);
+        jQuery.post(ajaxurl, data, function(response) { console.dir(response);
+            $(this).removeClass('loading');
+        });
+    });
 
     // form validation
     $( "#post" ).submit(function( event ) {
-        //if there is  new chart being added, make sure select chart drop down is picked
-        console.log($('.chart_type option:selected').val());
         if($('#chart_action').val()=='new'  && $('.chart_type option:selected').val() == 'Select One') {
             event.preventDefault();
             $('.chart_type').addClass('error');
             window.location.hash='#chart_type_anchor';
             alert("If adding a new chart please make sure to select one from the dropdown!");
         }
+
+        console.log($('.svg_action').val());
+
         //event.preventDefault();
     });
 });

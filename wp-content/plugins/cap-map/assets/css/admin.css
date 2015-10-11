@@ -70,7 +70,7 @@ ul.chart_data_wrap input {
 }
 
 .loading {
-    background: url('../images/ajax-loader.gif') no-repeat;
+    background: url('../images/ajax-loader.gif') no-repeat!important;
     width:30px;
     height: 30px;
     display: block;
@@ -186,12 +186,23 @@ ul.chart_data_wrap input {
     float:right;
 }
 
-.btns_delete {
+.btn {
     display: block;
     width: 40px;
     height: 40px;
-    background: url(../images/delete.png) no-repeat;
     text-indent: -9999px;
+}
+
+.btn a:focus {
+    outline: none;
+}
+
+.btn.delete {
+    background: url(../images/delete.png) no-repeat;
+}
+
+.btn.save {
+    background: url(../images/save.png) no-repeat;
 }
 
 .h {
