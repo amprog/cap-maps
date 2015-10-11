@@ -194,7 +194,7 @@ ul.chart_data_wrap input {
 }
 
 .btn a:focus {
-    outline: none;
+    outline: none!important;
 }
 
 .btn.delete {

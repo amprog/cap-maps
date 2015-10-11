@@ -430,8 +430,10 @@ EOD;
      */
     function cap_map_svg_shortcode( $atts ){
         //TODO: think about putting every fiule, json, js, css into one "package" or in ONE folder
-        $cap_map  = new cap_map;
+        $cap_map  = new Cap_Map();
         $id       = get_the_ID();
+
+
 
         //TODO: if short code is [cap_svg svg="slug"]
         if($atts['svg']) {
@@ -445,54 +447,30 @@ EOD;
         wp_enqueue_style('capmapcss', $cap_map->plugin_uri.'assets/css/frontend.css');
 
         if($svg_raw != 'Select One') {
+
+            $svg_file   = $cap_map->svg_folder.$svg_raw.'/'.$svg_raw.'.svg';
+            $custom_js  = $svg_file . $svg_raw . 'js';
+            $custom_css = $svg_file . $svg_raw . 'css';
+
+            //if no svg, error out
+            if (file_exists(ABSPATH . $svg_file)) {
+                $svg_data =  file_get_contents(ABSPATH.$svg_file);
+            }
+
             //include js and css IF exists
-            $svg_file     = ABSPATH.$cap_map->plugin_uri.'svg/'.$svg_raw;
-            $custom_js    = $svg_file.$svg_raw.'js';
-            $custom_css   = $svg_file.$svg_raw.'css';
-            if(file_exists(ABSPATH.$custom_js)) {
-                wp_enqueue_script('js-'.$id,  $custom_js,'','1',true);
+            if (file_exists(ABSPATH . $custom_js)) {
+                wp_enqueue_script('js-' . $id, $custom_js, '', '1', true);
             }
 
-            if(file_exists(ABSPATH.$custom_css)) {
-                wp_enqueue_style('css-'.$id, $custom_css);
+            if (file_exists(ABSPATH . $custom_css)) {
+                wp_enqueue_style('css-' . $id, $custom_css);
             }
 
-            $content .= '<div class="svg_wrap"><div class="svg_meta"></div>';
-            $content .=  file_get_contents($svg_file);
-            $content .=  '</div>';
+            $content .= '<div class="svg_wrap"><div class="svg_meta"></div>'.$svg_file;
+            $content .= $svg_data;
+            $content .= '</div>';
 
         }
-
-
-        $chart_page  = get_post_meta($id,'chart_select',true);
-        if($svg_raw != 'Select One') {
-
-            wp_enqueue_script('charts',  $cap_map->plugin_uri.'assets/js/common/Chart.min.js','','1',true);
-            wp_enqueue_script('charts',  $cap_map->plugin_uri.'assets/js/common/charts.options.js','','1',true);
-
-
-            //get chart type
-
-            $content .= '<canvas id="c1" height="248" width="497" style="width: 497px; height: 248px;"></canvas>';
-
-
-
-        }
-
-
-        /*
-        //instead of php build php here
-        if(file_exists($svg_file)) {
-            include($svg_file);
-        } else {
-            echo 'no svg file found';
-        }
-
-
-        echo $id;
-        */
-
-
         return $content;
     }
 
@@ -1028,28 +1006,28 @@ E_ALL;
 <li>
     <span>SVG File</span>
      <div class="btns_data">
-        <a href="javascript:void(0);" class="btn save" data-file="svg">save</a>
+        <a href="javascript:void(0);" class="btn save" data-file="svg" id="btn_svg">save</a>
     </div>
     <textarea name="svg">$svg</textarea>
 </li>
 <li>
     <span>Javascript Code</span>
     <div class="btns_data">
-        <a href="javascript:void(0);" class="btn save" data-file="js">save</a>
+        <a href="javascript:void(0);" class="btn save" data-file="js" id="btn_js">save</a>
     </div>
     <textarea name="js">$js</textarea>
 </li>
 <li>
     <span>CSS Styles</span>
     <div class="btns_data">
-        <a href="javascript:void(0);" class="btn save" data-file="css">save</a>
+        <a href="javascript:void(0);" class="btn save" data-file="css" id="btn_css">save</a>
     </div>
     <textarea name="css">$css</textarea>
 </li>
 <li>
     <span>JSON Data</span>
     <div class="btns_data">
-        <a href="javascript:void(0);" class="btn save" data-file="json">save</a>
+        <a href="javascript:void(0);" class="btn save" data-file="json" id="btn_json">save</a>
     </div>
     <textarea name="json">$json</textarea>
 </li>
@@ -1074,10 +1052,10 @@ NCURSES_KEY_EOS;
      */
     function cap_map_file_save_action_callback()
     {
-
+        $time_start = self::timer();
         $cap_map    = new Cap_Map();
         $svg_slug   = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
-        $data       = array_key_exists('data', $_POST) ? $_POST['data'] : null;
+        $data       = array_key_exists('data', $_POST) ? stripslashes($_POST['data']) : null;  //use strip slashes because of MAGIC QUOTES
         $file       = array_key_exists('file', $_POST) ? $_POST['file'] : null;
         $filename   = ABSPATH.$cap_map->svg_folder.$svg_slug.'/'.$svg_slug.'.'.$file;
 
@@ -1089,15 +1067,14 @@ NCURSES_KEY_EOS;
             fclose($fh);
             $result = 1;
         }
-
-        $return = array(
-            'html'=>$filename,
-            'result' =>$result
+        $time_end = self::timer();
+        $return   = array(
+            'result'=> $result,
+            'timer'=> $time_end - $time_start
         );
 
         wp_send_json($return);
         wp_die();
-
     }
 
         /**
@@ -1109,6 +1086,16 @@ NCURSES_KEY_EOS;
         return is_file($path) ?
             unlink($path) :
             array_map(__FUNCTION__, glob($path.'/*')) == rmdir($path);
+    }
+
+    /**
+     * UTILITY: timer script
+     * @return float
+     */
+    function timer()
+    {
+        list($usec, $sec) = explode(" ", microtime());
+        return ((float)$usec + (float)$sec);
     }
 
 }

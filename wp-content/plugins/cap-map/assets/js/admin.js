@@ -103,7 +103,7 @@ jQuery(document).ready(function($) {
                 'chart_type': chart_type,
                 'number': $('.chart_data_inner').length
             };console.dir(data);
-            jQuery.post(ajaxurl, data, function(response) { console.dir(response);
+            $.post(ajaxurl, data, function(response) { console.dir(response);
                 $(response.chart_data).prependTo( ".chart_data_wrap").fadeIn("slow");
             });
         } else {
@@ -119,14 +119,15 @@ jQuery(document).ready(function($) {
     //file save
     $( ".btn.save" ).live( "click", function() {
         $(this).addClass('loading');
+        file =  $(this).data('file');
         var data = {
             'action': 'cap_map_file_save_action',
-            'file': $(this).data('file'),
+            'file': file,
             'svg_slug': $('.svg_select option:selected').val(),
             'data': $("textarea[name='"+$(this).data('file')+"']").val()
-        };console.dir(data);
-        jQuery.post(ajaxurl, data, function(response) { console.dir(response);
-            $(this).removeClass('loading');
+        };
+        $.post(ajaxurl, data, function(response) { console.dir(response);
+            $('#btn_'+file).removeClass('loading');
         });
     });
 
@@ -138,9 +139,6 @@ jQuery(document).ready(function($) {
             window.location.hash='#chart_type_anchor';
             alert("If adding a new chart please make sure to select one from the dropdown!");
         }
-
-        console.log($('.svg_action').val());
-
         //event.preventDefault();
     });
 });
