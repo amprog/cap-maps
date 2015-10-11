@@ -124,7 +124,7 @@ jQuery(document).ready(function($) {
         $(this).addClass('loading');
         file =  $(this).data('file');
         if($('#svg_input').val()) {
-            var svg_slug = $('.svg_select').val();
+            var svg_slug = $('#svg_input').val();
         } else if($('.svg_select').val()) {
             var svg_slug = $('.svg_select option:selected').val();
         } else {
