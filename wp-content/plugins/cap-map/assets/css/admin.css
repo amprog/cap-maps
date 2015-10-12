@@ -50,6 +50,10 @@ ul.chart_data_wrap input {
     width:50%;
 }
 
+#svg_new,#chart_new {
+    padding-top:17px;
+}
+
 #svg_new .svg_edit span {
     display: block;
     margin:27px 0 10px 0;
@@ -59,6 +63,11 @@ ul.chart_data_wrap input {
     display: block;
     width: 90%;
     height: 200px;
+}
+
+#svg_select_wrap {
+    clear: both;
+    padding: 17px 0;
 }
 
 
@@ -209,7 +218,15 @@ ul.chart_data_wrap input {
     display: none;
 }
 
+.r {
+    text-align: right;
+}
+
 .left {
     float: left;
     width: 50%;
+}
+
+.create {
+    padding: 10px;
 }

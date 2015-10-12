@@ -1,25 +1,25 @@
 {
-  "charts": [
+  "svg": [
     {
-      "slug": "10_7_2015_poll",
-      "label": "Poll Chart Test",
+      "slug": "electoral",
+      "label": "US Electoral Map",
       "description": "Test description",
       "status": 1
     },
     {
-      "slug": "10_7_2015_poll",
-      "label": "Poll Chart Test",
+      "slug": "electoral_districts",
+      "label": "Electoral Districts with Reps",
       "description": "Test description",
       "status": 1
     },
     {
-      "slug": "10_7_2015_poll",
-      "label": "Poll Chart Test",
+      "slug": "northeast",
+      "label": "northeast",
       "description": "Test description",
       "status": 1
     },
     {
-      "slug": "10_7_2015_poll",
+      "slug": "test",
       "label": "Poll Chart Test",
       "description": "Test description",
       "status": 1

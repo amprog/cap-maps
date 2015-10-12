@@ -149,14 +149,13 @@ EOD;
      * Custom callback function for svg box
      */
     function cap_map_svg_callback($post) {
-        $time_start = self::timer();
         $cap_map          = new Cap_Map();  //this should not be necessary!!!!
         $folder           = ABSPATH.$cap_map->svg_folder;
         $svg_select       = esc_attr(get_post_meta( $post->ID, 'svg_select', true ));
 
         //      TODO: READING DIRECTORIES IS WHAT CAUSES SPINNING, NEED TO WRITE TO JSON
         $package_json     = file_get_contents($folder.'svg.json');
-
+        $packages         = json_decode($package_json);
         //if there is already a chart selected, show this chart
         if($svg_select!='' || $svg_select!='Select One') {
 
@@ -165,8 +164,7 @@ EOD;
             $js           = file_get_contents($folder.$svg_select.'/'.$svg_select.'.js', "w");
             $css          = file_get_contents($folder.$svg_select.'/'.$svg_select.'.css', "w");
             $json         = file_get_contents($folder.$svg_select.'/'.$svg_select.'.json', "w");
-
-            $svg_new = $cap_map->cap_map_svg_tpl('update',$svg,$js,$css,$json);
+            $svg_new      = $cap_map->cap_map_svg_tpl('update',$svg,$js,$css,$json);
         }
 
         /*
@@ -184,21 +182,26 @@ EOD;
         //wp_nonce_field( 'cap_map_meta_save', 'admin_meta_box_nonce' );
 
         ?>
-        <p class="note">Place the following short code where you want an SVG file to appear: [cap_svg]</p>
         <ul class="list">
             <li class="svg_li">
                 <div id="svg_select_wrap">
                     <div class="left">
                         <span class="loading h"></span>
                         <span id="svg_select_inner">
-                            <span>Select SVG Graphic</span>
+                            <span><strong>Select SVG Graphic</strong></span>
                             <select class="svg_select" name="svg_select">
                                 <option>Select One</option>
-
+                                <?php foreach($packages->svg as $package): ?>
+                                    <?php if($svg_select==$package->slug): ?>
+                                        <option value="<?php echo $package->slug; ?>" selected><?php echo $package->label; ?></option>
+                                    <?php else: ?>
+                                        <option value="<?php echo $package->slug; ?>"><?php echo $package->label; ?></option>
+                                    <?php endif; ?>
+                                <?php endforeach; ?>
                             </select>
                         </span>
                     </div>
-                    <div class="left">
+                    <div class="left r">
                         <button class="create" data-type="svg">NEW SVG GRAPHIC</button>
                     </div>
 
@@ -207,9 +210,11 @@ EOD;
                 <input type="hidden" id="ID" value="<?php echo $post->ID; ?>" />
             </li>
         </ul>
+        <div class="note">
+            <p>Place the following short code where you want an SVG file to appear: [cap_svg]</p>
+            <p>Place multiple charts on the page by using the svg slug: [cap_svg svg="PACKAGE_SLUG"]</p>
+        </div>
         <?php
-        $time_end = self::timer();
-        echo $time_end - $time_start;
     }
 
 
@@ -220,24 +225,16 @@ EOD;
 
         $cap_map          = new Cap_Map();  //this should not be necessary!!!!
         $folder           = ABSPATH.$cap_map->chart_folder;
-        $handle           = opendir($folder);
+        $package_json     = file_get_contents($folder.'charts.json');
+        $packages         = json_decode($package_json);
         $chart_select     = esc_attr(get_post_meta( $post->ID, 'chart_select', true ));
         echo $folder;
+
         //if there is already a chart selected, show this chart
         if($chart_select!='' || $chart_select!='Select One') {
 
-            //only way to do this is to run some js to get ajax //chart_data = cap_map_chart_action_callback();
-            ?>
-            <script>
+            //TODO: get data here instead of javascript
 
-                console.log('226 befotre ready');
-                jQuery(document).ready(function($) {
-                    console.log('document ready');
-                    $( ".chart_select" ).trigger( "change" );
-                });
-
-            </script>
-            <?php
         }
 
 
@@ -253,15 +250,13 @@ EOD;
                     <span>Select Existing Chart</span>
                     <select class="chart_select" name="chart_select">
                         <option>Select One</option>
-                        <?php while (false !== ($entry = readdir($handle))): ?>
-                            <?php  if ($entry != "." && $entry != ".." && $entry != 'starter' && is_dir($folder.$entry)): ?>
-                                <?php if($chart_select==$entry): ?>
-                                    <option value="<?php echo $entry; ?>" selected><?php echo $entry; ?></option>
-                                <?php else: ?>
-                                    <option value="<?php echo $entry; ?>"><?php echo $entry; ?></option>
-                                <?php endif; ?>
+                        <?php foreach($packages->charts as $package): ?>
+                            <?php if($chart_select==$package->slug): ?>
+                                <option value="<?php echo $package->slug; ?>" selected><?php echo $package->label; ?></option>
+                            <?php else: ?>
+                                <option value="<?php echo $package->slug; ?>"><?php echo $package->label; ?></option>
                             <?php endif; ?>
-                        <?php endwhile; closedir($handle); ?>
+                        <?php endforeach; ?>
                     </select>
                 </div>
                 <div id="chart_new"><?php echo $chart_new; ?></div>
@@ -1217,12 +1212,13 @@ if ( is_admin() ) {
 }
 
 function my_the_post_action( $post ) {
-
+/*
     $post->blah = 'wtf';
 
     echo '<pre>';
     print_r($post);
     echo '</pre>';
+*/
 }
 add_action( 'the_post', 'my_the_post_action' );
 

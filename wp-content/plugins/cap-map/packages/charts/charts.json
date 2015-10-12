@@ -7,20 +7,20 @@
       "status": 1
     },
     {
-      "slug": "10_7_2015_poll",
+      "slug": "10_7_2015_poll_test",
       "label": "Poll Chart Test",
       "description": "Test description",
       "status": 1
     },
     {
-      "slug": "10_7_2015_poll",
+      "slug": "linepie",
       "label": "Poll Chart Test",
       "description": "Test description",
       "status": 1
     },
     {
-      "slug": "10_7_2015_poll",
-      "label": "Poll Chart Test",
+      "slug": "bar",
+      "label": "Bar Chart Test",
       "description": "Test description",
       "status": 1
     }
