@@ -1,5 +1,5 @@
 jQuery(document).ready(function($) {
-
+    svg_wrap = $('#svg_select_wrap');
     //creating new charts
     $( ".create" ).live( "click", function() {
 
@@ -7,7 +7,7 @@ jQuery(document).ready(function($) {
             console.log($( this ).val());
 
             $('#svg_select_wrap #svg_select_inner').addClass('h');
-            $('#svg_select_wrap').append('<input type="text" name="svg_input" id="svg_input" placeholder="Enter a slug for this SVG Graphic" />');
+            svg_wrap.append('<input type="text" name="svg_slug" id="svg_slug" placeholder="Enter a slug for this SVG Graphic" />');
             var data = {
                 'action': 'cap_map_svg_action',
                 'svg_slug': $( this ).val()
@@ -62,17 +62,19 @@ jQuery(document).ready(function($) {
     });
 
     //svg
-    $( "#svg_select_wrap .svg_select" ).change(function() {
-        var svg_select =    $( this ).val()
+    $( "#svg_select_wrap .svg_select" ).live( "change", function() {
+    //$( "#svg_select_wrap .svg_select" ).change(function() {
+        var svg_select =  $( this ).val(); console.log(svg_select);
+        var loading    =  $('#svg_select_wrap .loading');
         if(svg_select!='Select One') {
-            $('#svg_select_wrap .loading').removeClass('h');
+            loading.removeClass('h');
             var data = {
                 'action': 'cap_map_svg_action',
                 'svg_slug': svg_select
             };
             jQuery.post(ajaxurl, data, function(response) {
                 $('#svg_new').html(response.html);
-                $('#svg_select_wrap .loading').addClass('h');
+                loading.addClass('h');
             });
         }
     });
@@ -122,9 +124,10 @@ jQuery(document).ready(function($) {
     //file save
     $( ".btn.save" ).live( "click", function() {
         $(this).addClass('loading');
-        file =  $(this).data('file');
-        if($('#svg_input').val()) {
-            var svg_slug = $('#svg_input').val();
+        file     =  $(this).data('file');
+
+        if($('#svg_slug').val()) {
+            var svg_slug = $('#svg_slug').val();
         } else if($('.svg_select').val()) {
             var svg_slug = $('.svg_select option:selected').val();
         } else {

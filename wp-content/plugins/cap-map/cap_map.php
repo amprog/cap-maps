@@ -174,7 +174,7 @@ EOD;
 //      <TODO: ALLOW A USER TO UPLOAD SVG, JS, AND JSON FILES FROM HERE!  IF THAT WERE POSSIBLE, NO ROLLS NEEDED!
         ?>
         <p class="note">Place the following short code where you want an SVG file to appear: [cap_svg]</p>
-
+        <p>svg_select: <?php echo $svg_select; ?></p>
         <ul class="list">
             <li class="svg_li">
                 <p><a href="javascript:void(0);" class="create" data-type="svg">Create new SVG Graphic</a> or select one from the list below. </p>
@@ -282,8 +282,6 @@ EOD;
             return;
         }
 
-
-
         // autosave
         if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
             return;
@@ -351,35 +349,52 @@ EOD;
                 $save['options']['animateRotate'] = false;
             }
 
-            $save_result = self::cap_map_save_file($file,$save);
+            $save_result = self::cap_map_save_json_file($file,$save);
         }
 
         //if svg_action then save files
         $svg_action = array_key_exists('svg_action', $_POST) ? $_POST['svg_action'] : null;
-        $svg_select                          = array_key_exists('svg_select', $_POST) ? $_POST['svg_select'] : null;
-
-        if($svg_select) {
-            update_post_meta( $_POST['ID'], 'svg_select',  sanitize_text_field($_POST['svg_select']));
-        }
+        $svg_select = array_key_exists('svg_select', $_POST) ? $_POST['svg_select'] : null;
+        $svg_slug   = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
 
 
         echo "<h1>svgaction: $svg_action</h1>";
 
         echo "<h1>svg_select: $svg_select</h1>";
+        echo "<h1>svg_slug: $svg_slug</h1>";
 
-        echo '<pre>';
-        print_r($_POST);
-        echo '</pre>';
 
-        exit;
 
         if($svg_action) {
 
-            if($svg_action=='new') {
-                $chart_slug                        = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
-                mkdir(ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/');  //make directory
-                $file                          = ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
-                update_post_meta( $_POST['ID'], 'chart_select',  sanitize_text_field($chart_slug));  //update meta so we know what chart is associated with this post
+            if($svg_action=='new') { //new svg file
+                mkdir(ABSPATH.$cap_map->svg_folder.$svg_slug.'/');  //make directory
+                $svg       = array_key_exists('svg', $_POST) ? $_POST['svg'] : null;
+                $js        = array_key_exists('js', $_POST) ? $_POST['js'] : null;
+                $css       = array_key_exists('css', $_POST) ? $_POST['css'] : null;
+                $json      = array_key_exists('json', $_POST) ? $_POST['json'] : null;
+
+                $file  = ABSPATH.$cap_map->svg_folder.$svg_slug.'/'.$svg_slug;
+
+                //need to save all files, if there is content
+                if($svg) {
+                    $svg_save  = self::cap_map_save_file($file.'.svg',$svg);
+                }
+
+                if($js) {
+                    $js_save   = self::cap_map_save_file($file.'.js',$js);
+                }
+
+                if($css) {
+                    $css_save  = self::cap_map_save_file($file.'.css',$css);
+                }
+
+                if($json) {
+                    $json_save = self::cap_map_save_file($file.'.json',$json);
+                }
+
+                update_post_meta( $_POST['ID'], 'svg_select',  sanitize_text_field($svg_slug));
+
             } else {
                 $chart_slug                        = $save['options']['chart_slug']  = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
                 //if chart slug, differs from chart_select then rename file!
@@ -398,7 +413,11 @@ EOD;
             $save_result = self::cap_map_save_file($file,$save);
         }
 
+        echo '<pre>';
+        print_r($_POST);
+        echo '</pre>';
 
+        exit;
 
     }
 
@@ -408,7 +427,7 @@ EOD;
      * @param $save
      * @return int
      */
-    function cap_map_save_file($file,$save) {
+    function cap_map_save_json_file($file,$save) {
         $v = explode('.', PHP_VERSION);  //JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES require php 5.4.0
         if ($v[0] == 5 && $v[1] < 2) {
             die("You need to have at least PHP 5.2 installed to use this. You currently have " . PHP_VERSION);
@@ -427,6 +446,23 @@ EOD;
             return 1;
         }
     }
+
+    /**
+     * @param $file
+     * @param $save
+     * @return int
+     */
+    function cap_map_save_file($file,$save) {
+        $fh = fopen($file, "w");
+        if ($fh == false) {
+            return 0;
+        } else {
+            fputs($fh, $save);
+            fclose($fh);
+            return 1;
+        }
+    }
+
     /**
      * Return SVG depending on options selected for this ID
      * @param $atts
@@ -1059,7 +1095,12 @@ NCURSES_KEY_EOS;
         $svg_slug   = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
         $data       = array_key_exists('data', $_POST) ? stripslashes($_POST['data']) : null;  //use strip slashes because of MAGIC QUOTES
         $file       = array_key_exists('file', $_POST) ? $_POST['file'] : null;
-        $filename   = ABSPATH.$cap_map->svg_folder.$svg_slug.'/'.$svg_slug.'.'.$file;
+        $folder     = ABSPATH.$cap_map->svg_folder.$svg_slug.'/';
+        $filename   = $folder.$svg_slug.'.'.$file;
+
+        if(!file_exists($folder)) {
+            mkdir($folder);
+        }
 
         $fh = fopen($filename, "w");
         if ($fh == false) {
