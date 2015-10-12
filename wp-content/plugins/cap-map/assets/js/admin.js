@@ -71,9 +71,9 @@ jQuery(document).ready(function($) {
             var data = {
                 'action': 'cap_map_svg_action',
                 'svg_slug': svg_select
-            };
+            };console.dir(data);
             jQuery.post(ajaxurl, data, function(response) {
-                $('#svg_new').html(response.html);
+                $('#svg_new').html(response.html);console.dir(response);
                 loading.addClass('h');
             });
         }
@@ -135,6 +135,7 @@ jQuery(document).ready(function($) {
         }
         var data = {
             'action': 'cap_map_file_save_action',
+            'ID': $('.svg_li #ID').val(),
             'file': file,
             'svg_slug': svg_slug,
             'data': $("textarea[name='"+$(this).data('file')+"']").val()

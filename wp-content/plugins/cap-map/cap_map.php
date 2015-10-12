@@ -21,8 +21,8 @@ class Cap_Map {
         $this->slug          = 'cap_map';
         $this->namespace     = dirname(basename(__FILE__));
         $this->plugin_uri    = '/wp-content/plugins/cap-map/'; //get this from constant set in main class
-        $this->svg_folder    = $this->plugin_uri.'svg/';
-        $this->chart_folder  = $this->plugin_uri.'chart/';
+        $this->svg_folder    = $this->plugin_uri.'packages/svg/';
+        $this->chart_folder  = $this->plugin_uri.'packages/charts/';
 
         // PHP5 only
         if(!version_compare(PHP_VERSION, '5.0.0', '>=')) {
@@ -108,7 +108,7 @@ class Cap_Map {
     function configuration() {
 
         $html = <<<EOD
-	<h4>CAP MAP HELP</h4>
+	<h4>CAP MAP and SVG Help Page</h4>
 
 EOD;
         return $html;
@@ -128,7 +128,6 @@ EOD;
             wp_enqueue_script( 'wp-color-picker');
             wp_enqueue_style( $cap_map->namespace.'-admin', $cap_map->plugin_uri.'assets/css/admin.css');
             wp_enqueue_script( $cap_map->namespace.'-admin', $cap_map->plugin_uri.'assets/js/admin.js');
-
         }
         $title1        = 'SVG Maps';
         $callback1     = 'Cap_Map::cap_map_svg_callback';
@@ -141,7 +140,6 @@ EOD;
         add_meta_box( 'svg-meta-post', $title1, $callback1, 'page', $context, $priority);  //svg meta box for pages
         add_meta_box( 'svg-meta-page', $title1, $callback1, 'post', $context, $priority); //svg meta box for posts
 
-
         add_meta_box( 'chart-meta-post', $title2, $callback2, 'page', $context, $priority);  //chart meta box for pages
         add_meta_box( 'chart-meta-page', $title2, $callback2, 'post', $context, $priority); //chart meta box for posts
     }
@@ -151,56 +149,67 @@ EOD;
      * Custom callback function for svg box
      */
     function cap_map_svg_callback($post) {
-
+        $time_start = self::timer();
         $cap_map          = new Cap_Map();  //this should not be necessary!!!!
         $folder           = ABSPATH.$cap_map->svg_folder;
         $svg_select       = esc_attr(get_post_meta( $post->ID, 'svg_select', true ));
-        $handle           = opendir($folder);
+
+        //      TODO: READING DIRECTORIES IS WHAT CAUSES SPINNING, NEED TO WRITE TO JSON
+        $package_json     = file_get_contents($folder.'svg.json');
 
         //if there is already a chart selected, show this chart
         if($svg_select!='' || $svg_select!='Select One') {
 
-            //only way to do this is to run some js to get ajax //chart_data = cap_map_chart_action_callback();
-            ?>
-            <script>
-                jQuery(document).ready(function($) {
-                    $( ".svg_select" ).trigger( "change" );
-                });
-            </script>
-            <?php
+            //instead of using javascript to pull existing data, get that data here
+            $svg          = file_get_contents($folder.$svg_select.'/'.$svg_select.'.svg', "w");
+            $js           = file_get_contents($folder.$svg_select.'/'.$svg_select.'.js', "w");
+            $css          = file_get_contents($folder.$svg_select.'/'.$svg_select.'.css', "w");
+            $json         = file_get_contents($folder.$svg_select.'/'.$svg_select.'.json', "w");
+
+            $svg_new = $cap_map->cap_map_svg_tpl('update',$svg,$js,$css,$json);
         }
 
+        /*
+         *    <?php while (false !== ($entry = readdir($handle))): ?>
+                                    <?php  if ($entry != "." && $entry != ".." && $entry != 'starter' && is_dir($folder.$entry)): ?>
+                                        <?php if($svg_select==$entry): ?>
+                                            <option value="<?php echo $entry; ?>" selected><?php echo $entry; ?></option>
+                                        <?php else: ?>
+                                            <option value="<?php echo $entry; ?>"><?php echo $entry; ?></option>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                <?php endwhile; closedir($handle); ?>
+         */
+
         //wp_nonce_field( 'cap_map_meta_save', 'admin_meta_box_nonce' );
-//      <TODO: ALLOW A USER TO UPLOAD SVG, JS, AND JSON FILES FROM HERE!  IF THAT WERE POSSIBLE, NO ROLLS NEEDED!
+
         ?>
         <p class="note">Place the following short code where you want an SVG file to appear: [cap_svg]</p>
-        <p>svg_select: <?php echo $svg_select; ?></p>
         <ul class="list">
             <li class="svg_li">
-                <p><a href="javascript:void(0);" class="create" data-type="svg">Create new SVG Graphic</a> or select one from the list below. </p>
                 <div id="svg_select_wrap">
-                    <span class="loading h"></span>
-                    <span id="svg_select_inner">
-                        <span>Select SVG Graphic</span>
-                        <select class="svg_select" name="svg_select">
-                            <option>Select One</option>
-                            <?php while (false !== ($entry = readdir($handle))): ?>
-                                <?php  if ($entry != "." && $entry != ".." && $entry != 'starter' && is_dir($folder.$entry)): ?>
-                                    <?php if($svg_select==$entry): ?>
-                                        <option value="<?php echo $entry; ?>" selected><?php echo $entry; ?></option>
-                                    <?php else: ?>
-                                        <option value="<?php echo $entry; ?>"><?php echo $entry; ?></option>
-                                    <?php endif; ?>
-                                <?php endif; ?>
-                            <?php endwhile; closedir($handle); ?>
-                        </select>
-                    </span>
+                    <div class="left">
+                        <span class="loading h"></span>
+                        <span id="svg_select_inner">
+                            <span>Select SVG Graphic</span>
+                            <select class="svg_select" name="svg_select">
+                                <option>Select One</option>
+
+                            </select>
+                        </span>
+                    </div>
+                    <div class="left">
+                        <button class="create" data-type="svg">NEW SVG GRAPHIC</button>
+                    </div>
+
                 </div>
-                <div id="svg_new"></div>
+                <div id="svg_new"><?php echo $svg_new; ?></div>
+                <input type="hidden" id="ID" value="<?php echo $post->ID; ?>" />
             </li>
         </ul>
         <?php
-
+        $time_end = self::timer();
+        echo $time_end - $time_start;
     }
 
 
@@ -213,16 +222,20 @@ EOD;
         $folder           = ABSPATH.$cap_map->chart_folder;
         $handle           = opendir($folder);
         $chart_select     = esc_attr(get_post_meta( $post->ID, 'chart_select', true ));
-
+        echo $folder;
         //if there is already a chart selected, show this chart
         if($chart_select!='' || $chart_select!='Select One') {
 
             //only way to do this is to run some js to get ajax //chart_data = cap_map_chart_action_callback();
             ?>
             <script>
+
+                console.log('226 befotre ready');
                 jQuery(document).ready(function($) {
+                    console.log('document ready');
                     $( ".chart_select" ).trigger( "change" );
                 });
+
             </script>
             <?php
         }
@@ -251,7 +264,7 @@ EOD;
                         <?php endwhile; closedir($handle); ?>
                     </select>
                 </div>
-                <div id="chart_new"></div>
+                <div id="chart_new"><?php echo $chart_new; ?></div>
             </li>
         </ul>
 
@@ -1038,8 +1051,34 @@ E_ALL;
 
             $svg_action = 'new';
         }
-        $html .= <<<NCURSES_KEY_EOS
-              <ul class="sub svg_edit">
+
+        $html = $cap_map->cap_map_svg_tpl($svg_action,$svg,$js,$css,$json);
+        $time_end = self::timer();
+
+        $return = array(
+            'html'=>$html,
+            'loading' => $time_end - $time_start
+        );
+
+        wp_send_json($return);
+        wp_die();
+    }
+
+    /**
+     * Template for svg edit boxes
+     * @param $svg_action
+     * @param $svg
+     * @param $js
+     * @param $css
+     * @param $json
+     * @return string
+     */
+    function cap_map_svg_tpl($svg_action,$svg,$js,$css,$json) {
+        return <<<NCURSES_KEY_EOS
+
+
+
+        <ul class="sub svg_edit">
 <li>
     <span>SVG File</span>
      <div class="btns_data">
@@ -1070,28 +1109,18 @@ E_ALL;
 </li>
 <li><input type="hidden" id="svg_action" name="svg_action" value="$svg_action" /></li>
 </ul>
-
 NCURSES_KEY_EOS;
-        $time_end = self::timer();
 
-        $return = array(
-            'html'=>$html,
-            'loading' => $time_end - $time_start
-        );
-
-        wp_send_json($return);
-        wp_die();
     }
-
-
 
     /**
      * AJAX: save file from textarea
      */
-    function cap_map_file_save_action_callback()
+    function cap_map_file_save_action_callback($post)
     {
         $time_start = self::timer();
         $cap_map    = new Cap_Map();
+        $ID         = array_key_exists('ID', $_POST) ? $_POST['ID'] : null;
         $svg_slug   = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
         $data       = array_key_exists('data', $_POST) ? stripslashes($_POST['data']) : null;  //use strip slashes because of MAGIC QUOTES
         $file       = array_key_exists('file', $_POST) ? $_POST['file'] : null;
@@ -1108,13 +1137,16 @@ NCURSES_KEY_EOS;
         } else {
             fputs($fh, $data);
             fclose($fh);
+            update_post_meta($ID, 'svg_select',  sanitize_text_field($svg_slug));
             $result = 1;
         }
         $time_end = self::timer();
         $return   = array(
             'result'=> $result,
             'file'=> $filename,
-            'timer'=> $time_end - $time_start
+            'svg_slug'=> $svg_slug,
+            'timer'=> $time_end - $time_start,
+            'ID'=>$ID
         );
 
         wp_send_json($return);
@@ -1183,5 +1215,15 @@ if ( is_admin() ) {
     add_shortcode( 'cap_svg', 'Cap_Map::cap_map_svg_shortcode' );  //register shortcode for svg
     add_shortcode( 'cap_chart', 'Cap_Map::cap_map_chart_shortcode' );  //register shortcode
 }
+
+function my_the_post_action( $post ) {
+
+    $post->blah = 'wtf';
+
+    echo '<pre>';
+    print_r($post);
+    echo '</pre>';
+}
+add_action( 'the_post', 'my_the_post_action' );
 
 ?>

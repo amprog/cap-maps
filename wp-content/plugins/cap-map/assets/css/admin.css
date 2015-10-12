@@ -208,3 +208,8 @@ ul.chart_data_wrap input {
 .h {
     display: none;
 }
+
+.left {
+    float: left;
+    width: 50%;
+}
