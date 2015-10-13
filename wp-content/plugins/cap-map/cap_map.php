@@ -202,10 +202,10 @@ EOD;
                         </span>
                     </div>
                     <div class="left r">
-                        <button class="create" data-type="svg">NEW SVG GRAPHIC</button>
+                        <button type="button" class="create" data-type="svg">NEW SVG GRAPHIC</button>
                     </div>
-
                 </div>
+                <div id="svg_slug_wrap"></div>
                 <div id="svg_new"><?php echo $svg_new; ?></div>
                 <input type="hidden" id="ID" value="<?php echo $post->ID; ?>" />
             </li>
@@ -228,11 +228,9 @@ EOD;
         $package_json     = file_get_contents($folder.'charts.json');
         $packages         = json_decode($package_json);
         $chart_select     = esc_attr(get_post_meta( $post->ID, 'chart_select', true ));
-        echo $folder;
 
         //if there is already a chart selected, show this chart
         if($chart_select!='' || $chart_select!='Select One') {
-
             //TODO: get data here instead of javascript
 
         }
@@ -241,27 +239,34 @@ EOD;
         wp_nonce_field( 'cap_map_meta_save', 'admin_meta_box_nonce' );
 
         ?>
-        <p class="note">Place the following short code where you want a CHART to appear: [cap_chart]</p>
+
         <ul class="list">
             <li class="chart_li">
-                <p><a href="javascript:void(0);" class="create" data-type="chart">Create new chart</a> or select one from the list below. </p>
                 <div id="chart_select_wrap">
-                    <span class="loading h"></span>
-                    <span>Select Existing Chart</span>
-                    <select class="chart_select" name="chart_select">
-                        <option>Select One</option>
-                        <?php foreach($packages->charts as $package): ?>
-                            <?php if($chart_select==$package->slug): ?>
-                                <option value="<?php echo $package->slug; ?>" selected><?php echo $package->label; ?></option>
-                            <?php else: ?>
-                                <option value="<?php echo $package->slug; ?>"><?php echo $package->label; ?></option>
-                            <?php endif; ?>
-                        <?php endforeach; ?>
-                    </select>
+                    <div class="left">
+                        <span class="loading h"></span>
+                        <span>Select Existing Chart</span>
+                        <select class="chart_select" name="chart_select">
+                            <option>Select One</option>
+                            <?php foreach($packages->charts as $package): ?>
+                                <?php if($chart_select==$package->slug): ?>
+                                    <option value="<?php echo $package->slug; ?>" selected><?php echo $package->label; ?></option>
+                                <?php else: ?>
+                                    <option value="<?php echo $package->slug; ?>"><?php echo $package->label; ?></option>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="left r">
+                        <button type="button" class="create" data-type="chart">NEW CHART</button>
+                    </div>
                 </div>
                 <div id="chart_new"><?php echo $chart_new; ?></div>
             </li>
         </ul>
+        <div  class="note">
+            <p>Place the following short code where you want a CHART to appear: [cap_chart]</p>
+        </div>
 
         <?php
 
@@ -309,13 +314,11 @@ EOD;
             }
         }
 
-        $cap_map = new Cap_Map();
-
-        //if chart_action is set, then we are editing an existing chart
+        $cap_map      = new Cap_Map();
         $chart_action = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
 
+        //if chart_action is set, then we are editing an existing chart
         if($chart_action) {
-
 
             $save['options']['chart_type']         = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;
             $save['options']['chart_name']         = array_key_exists('chart_name', $_POST) ? $_POST['chart_name'] : null;
@@ -329,10 +332,16 @@ EOD;
             $save['data_array'][0]['chart_data']   = $_POST['chart_data'];
 
             if($chart_action=='new') {
-                $chart_slug                        = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
+                $chart_slug  = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
+                $file        = ABSPATH.$cap_map->chart_folder.$chart_slug.'/'.$chart_slug.'.json';
                 mkdir(ABSPATH.$cap_map->chart_folder.$chart_slug.'/');  //make directory
-                $file                          = ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
                 update_post_meta( $_POST['ID'], 'chart_select',  sanitize_text_field($chart_slug));  //update meta so we know what chart is associated with this post
+                //TODO: rewrite json file of packages
+                $charts_json =  json_decode(file_get_contents(ABSPATH.$cap_map->chart_folder.'/charts.json'),true);
+
+                //TODO: add new chart to array and rewrite
+
+
             } else {
                 $chart_slug                        = $save['options']['chart_slug']  = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
                 $chart_select                      = $save['options']['chart_select']  = array_key_exists('chart_select', $_POST) ? $_POST['chart_select'] : null;

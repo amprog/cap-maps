@@ -1,13 +1,13 @@
 jQuery(document).ready(function($) {
     svg_wrap = $('#svg_select_wrap');
     //creating new charts
-    $( ".create" ).live( "click", function() {
+    $( ".create" ).live( "click", function(e) {
 
         if($(this).data('type')=='svg') {
             console.log($( this ).val());
-
-            $('#svg_select_wrap #svg_select_inner').addClass('h');
-            svg_wrap.append('<input type="text" name="svg_slug" id="svg_slug" placeholder="Enter a slug for this SVG Graphic" />');
+            $('#svg_select_wrap').remove();
+            //$('#svg_select_wrap #svg_select_inner').addClass('h');
+            $('#svg_slug_wrap').html('<span>SVG Package Name</span>  <input type="text" name="svg_slug" id="svg_slug" placeholder="Enter a slug for this SVG Graphic" />');
             var data = {
                 'action': 'cap_map_svg_action',
                 'svg_slug': $( this ).val()
@@ -27,6 +27,7 @@ jQuery(document).ready(function($) {
         } else {
 
         }
+        e.preventDefault();
     });
 
     //new chart, needs blank form fields by chart type

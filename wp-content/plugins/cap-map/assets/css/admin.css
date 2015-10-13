@@ -214,6 +214,10 @@ ul.chart_data_wrap input {
     background: url(../images/save.png) no-repeat;
 }
 
+#svg_slug,#chart_slug {
+    width: 240px;
+}
+
 .h {
     display: none;
 }
