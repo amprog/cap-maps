@@ -152,10 +152,9 @@ EOD;
         $cap_map          = new Cap_Map();  //this should not be necessary!!!!
         $folder           = ABSPATH.$cap_map->svg_folder;
         $svg_select       = esc_attr(get_post_meta( $post->ID, 'svg_select', true ));
-
-        //      TODO: READING DIRECTORIES IS WHAT CAUSES SPINNING, NEED TO WRITE TO JSON
         $package_json     = file_get_contents($folder.'svg.json');
         $packages         = json_decode($package_json);
+
         //if there is already a chart selected, show this chart
         if($svg_select!='' || $svg_select!='Select One') {
 
@@ -320,8 +319,8 @@ EOD;
         //if chart_action is set, then we are editing an existing chart
         if($chart_action) {
 
-            $save['options']['chart_type']         = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;
-            $save['options']['chart_name']         = array_key_exists('chart_name', $_POST) ? $_POST['chart_name'] : null;
+            $save['options']['chart_type']         = array_key_exists('chart_type', $_POST) ? sanitize_text_field($_POST['chart_type']) : null;
+            $save['options']['chart_name']         = array_key_exists('chart_name', $_POST) ? sanitize_text_field($_POST['chart_name']) : null;
             $save['options']['segmentStrokeColor'] = array_key_exists('segmentStrokeColor', $_POST) ? $_POST['segmentStrokeColor'] : null;
             $save['options']['chart_source']       = array_key_exists('chart_source', $_POST) ? $_POST['chart_source'] : null;
             $save['options']['legend']             = array_key_exists('legend', $_POST) ? $_POST['legend'] : null;
@@ -332,19 +331,25 @@ EOD;
             $save['data_array'][0]['chart_data']   = $_POST['chart_data'];
 
             if($chart_action=='new') {
-                $chart_slug  = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
-                $file        = ABSPATH.$cap_map->chart_folder.$chart_slug.'/'.$chart_slug.'.json';
-                mkdir(ABSPATH.$cap_map->chart_folder.$chart_slug.'/');  //make directory
-                update_post_meta( $_POST['ID'], 'chart_select',  sanitize_text_field($chart_slug));  //update meta so we know what chart is associated with this post
+                $chart_slug   = array_key_exists('chart_slug', $_POST) ? sanitize_text_field($_POST['chart_slug']) : null;
+                $file         = ABSPATH.$cap_map->chart_folder.$chart_slug.'/'.$chart_slug.'.json';
                 //TODO: rewrite json file of packages
-                $charts_json =  json_decode(file_get_contents(ABSPATH.$cap_map->chart_folder.'/charts.json'),true);
+                $package_file = ABSPATH.$cap_map->chart_folder.'/charts.json';
+                $charts_json  = json_decode(file_get_contents($package_file),true);
+
+                mkdir(ABSPATH.$cap_map->chart_folder.$chart_slug.'/');  //make directory
+                update_post_meta( $_POST['ID'], 'chart_select',  $chart_slug);  //update meta so we know what chart is associated with this post
 
                 //TODO: add new chart to array and rewrite
+                $charts_json['charts'][]['slug']        = $chart_slug;
+                $charts_json['charts'][]['label']       = $save['options']['chart_name'];
+                $charts_json['charts'][]['description'] =  'New Chart: '.$save['options']['chart_type'];
 
-
+                //rewrite json file
+                $cap_map->cap_map_save_json_file($package_file,$charts_json);
             } else {
-                $chart_slug                        = $save['options']['chart_slug']  = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
-                $chart_select                      = $save['options']['chart_select']  = array_key_exists('chart_select', $_POST) ? $_POST['chart_select'] : null;
+                $chart_slug   = $save['options']['chart_slug']  = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
+                $chart_select = $save['options']['chart_select']  = array_key_exists('chart_select', $_POST) ? $_POST['chart_select'] : null;
 
                 //if chart slug, differs from chart_select then rename file!
                 if($chart_slug!=$chart_select) {
