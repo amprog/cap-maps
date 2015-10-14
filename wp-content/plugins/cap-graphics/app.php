@@ -141,25 +141,25 @@ if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
     error_log(__FILE__.':'.__LINE__);
 
     if ( is_admin() ) {
-        add_action( 'admin_menu', 'Cap_Graphics_Frontend::cap_map_options_admin' );  //options page, TODO: perhaps put chart options here
-        add_action("add_meta_boxes", "Cap_Graphics_Frontend::cap_map_meta"); //meta box
-        add_action( 'save_post', 'Cap_Graphics_Frontend::cap_map_meta_save' );  //this is causing problems with new post pages
+        add_action( 'admin_menu', 'Cap_Graphics_Frontend::gc_options_admin' );  //options page, TODO: perhaps put chart options here
+        add_action("add_meta_boxes", "Cap_Graphics_Frontend::gc_meta"); //meta box
+        add_action( 'save_post', 'Cap_Graphics_Frontend::gc_meta_save' );  //this is causing problems with new post pages
 
         //svg
-        add_action( 'wp_ajax_cap_map_svg_action', 'Cap_Graphics_Frontend::cap_map_svg_action_callback' );  //ajax for new svg
-        add_action( 'wp_ajax_nopriv_cap_map_svg_action', 'Cap_Graphics_Frontend::cap_map_svg_action_callback' );   //ajax for new svg
-        add_action( 'wp_ajax_cap_map_file_save_action', 'Cap_Graphics_Frontend::cap_map_file_save_action_callback' );  //ajax for saving files
-        add_action( 'wp_ajax_nopriv_cap_map_file_save_action', 'Cap_Graphics_Frontend::cap_map_file_save_action_callback' );   //ajax for saving files
+        add_action( 'wp_ajax_cap_map_svg_action', 'Cap_Graphics_Frontend::gc_svg_action_callback' );  //ajax for new svg
+        add_action( 'wp_ajax_nopriv_cap_map_svg_action', 'Cap_Graphics_Frontend::gc_svg_action_callback' );   //ajax for new svg
+        add_action( 'wp_ajax_cap_map_file_save_action', 'Cap_Graphics_Frontend::gc_file_save_action_callback' );  //ajax for saving files
+        add_action( 'wp_ajax_nopriv_cap_map_file_save_action', 'Cap_Graphics_Frontend::gc_file_save_action_callback' );   //ajax for saving files
 
         //charts
-        add_action( 'wp_ajax_cap_map_chart_action', 'Cap_Graphics_Frontend::cap_map_chart_action_callback' );  //ajax for new chart
-        add_action( 'wp_ajax_nopriv_cap_map_chart_action', 'Cap_Graphics_Frontend::cap_map_chart_action_callback' );   //ajax for new chart
-        add_action( 'wp_ajax_cap_map_chart_line_action', 'Cap_Graphics_Frontend::cap_map_chart_action_line_callback' );  //ajax for adding a line to new chart
-        add_action( 'wp_ajax_nopriv_cap_map_chart_line_action', 'Cap_Graphics_Frontend::cap_map_chart_action_line_callback' );   //ajaxfor adding a line to new chart
+        add_action( 'wp_ajax_cap_map_chart_action', 'Cap_Graphics_Frontend::gc_chart_action_callback' );  //ajax for new chart
+        add_action( 'wp_ajax_nopriv_cap_map_chart_action', 'Cap_Graphics_Frontend::gc_chart_action_callback' );   //ajax for new chart
+        add_action( 'wp_ajax_cap_map_chart_line_action', 'Cap_Graphics_Frontend::gc_chart_action_line_callback' );  //ajax for adding a line to new chart
+        add_action( 'wp_ajax_nopriv_cap_map_chart_line_action', 'Cap_Graphics_Frontend::gc_chart_action_line_callback' );   //ajaxfor adding a line to new chart
 
     } else {
-        add_shortcode( 'cap_svg', 'Cap_Graphics_Frontend::cap_map_svg_shortcode' );  //register shortcode for svg
-        add_shortcode( 'cap_chart', 'Cap_Graphics_Frontend::cap_map_chart_shortcode' );  //register shortcode
+        add_shortcode( 'cap_svg', 'Cap_Graphics_Frontend::gc_svg_shortcode' );  //register shortcode for svg
+        add_shortcode( 'cap_chart', 'Cap_Graphics_Frontend::gc_chart_shortcode' );  //register shortcode
     }
 
 }

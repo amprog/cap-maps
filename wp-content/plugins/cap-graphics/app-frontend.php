@@ -8,11 +8,11 @@ if (!class_exists("Cap_Graphics_Frontend")) {
 
         /**
          *
-         */
+
         function settings_init() {
             register_setting( 'wp_cap_map', 'cap_map_options', array(&$this, 'sanitize_settings') );
         }
-
+         */
         /**
          * @param $input
          *
@@ -40,16 +40,16 @@ if (!class_exists("Cap_Graphics_Frontend")) {
 
         /**
          *
-         */
+
         function gc_options_admin() {
             add_options_page('Cap Map', 'Cap Map', 'administrator', 'cap_map_options','Cap_Map::cap_map_admin');
         }
-
+         */
         /**
          *
          */
         function gc_admin() {
-            $cap_map = new Cap_Map();  //this should not be necessary!!!!
+            //$gc = new Cap_Map();  //this should not be necessary!!!!
             ?>
             <div class="wrap">
                 <h2>CAP MAP - Settings and Options</h2>
@@ -58,14 +58,12 @@ if (!class_exists("Cap_Graphics_Frontend")) {
                         <div class="meta-box-sortables">
                             <form action="options.php" method="post">
                                 <p>namespace:<?php //echo $this->this_plugin; ?></p>
-                                <p>plugin url: <?php echo $cap_map->plugin_uri; ?></p>
+                                <p>plugin url: <?php echo $cap_graphics->plugin_uri; ?></p>
 
                             </form>
                         </div>
                     </div>
                 </div>
-
-
             </div>
             <?php
         }
@@ -89,13 +87,13 @@ EOD;
         function gc_meta()
         {
 
-            $cap_map = new Cap_Map();  //this should not be necessary!!!!
+            //$gc = new Cap_Map();  //this should not be necessary!!!!
 
             if (is_admin() ) {
                 wp_enqueue_style( 'wp-color-picker' );
                 wp_enqueue_script( 'wp-color-picker');
-                wp_enqueue_style( $cap_map->namespace.'-admin', $cap_map->plugin_uri.'assets/css/admin.css');
-                wp_enqueue_script( $cap_map->namespace.'-admin', $cap_map->plugin_uri.'assets/js/admin.js');
+                wp_enqueue_style( $cap_graphics->namespace.'-admin', $cap_graphics->plugin_uri.'assets/css/admin.css');
+                wp_enqueue_script( $cap_graphics->namespace.'-admin', $cap_graphics->plugin_uri.'assets/js/admin.js');
             }
             $title1        = 'SVG Maps';
             $callback1     = 'Cap_Map::cap_map_svg_callback';
@@ -117,8 +115,8 @@ EOD;
          * Custom callback function for svg box
          */
         function gc_svg_callback($post) {
-            $cap_map          = new Cap_Map();  //this should not be necessary!!!!
-            $folder           = ABSPATH.$cap_map->svg_folder;
+            $gc          = new Cap_Map();  //this should not be necessary!!!!
+            $folder           = ABSPATH.$cap_graphics->svg_folder;
             $svg_select       = esc_attr(get_post_meta( $post->ID, 'svg_select', true ));
             $package_json     = file_get_contents($folder.'svg.json');
             $packages         = json_decode($package_json);
@@ -131,7 +129,7 @@ EOD;
                 $js           = file_get_contents($folder.$svg_select.'/'.$svg_select.'.js', "w");
                 $css          = file_get_contents($folder.$svg_select.'/'.$svg_select.'.css', "w");
                 $json         = file_get_contents($folder.$svg_select.'/'.$svg_select.'.json', "w");
-                $svg_new      = $cap_map->cap_map_svg_tpl('update',$svg,$js,$css,$json);
+                $svg_new      = $cap_graphics->cap_map_svg_tpl('update',$svg,$js,$css,$json);
             }
 
             /*
@@ -190,8 +188,8 @@ EOD;
          */
         function gc_chart_callback($post) {
 
-            $cap_map          = new Cap_Map();  //this should not be necessary!!!!
-            $folder           = ABSPATH.$cap_map->chart_folder;
+            $gc          = new Cap_Map();  //this should not be necessary!!!!
+            $folder           = ABSPATH.$cap_graphics->chart_folder;
             $package_json     = file_get_contents($folder.'charts.json');
             $packages         = json_decode($package_json);
             $chart_select     = esc_attr(get_post_meta( $post->ID, 'chart_select', true ));
@@ -281,7 +279,7 @@ EOD;
                 }
             }
 
-            $cap_map      = new Cap_Map();
+            $gc      = new Cap_Map();
             $chart_action = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
 
             //if chart_action is set, then we are editing an existing chart
@@ -300,12 +298,12 @@ EOD;
 
                 if($chart_action=='new') {
                     $chart_slug   = array_key_exists('chart_slug', $_POST) ? sanitize_text_field($_POST['chart_slug']) : null;
-                    $file         = ABSPATH.$cap_map->chart_folder.$chart_slug.'/'.$chart_slug.'.json';
+                    $file         = ABSPATH.$cap_graphics->chart_folder.$chart_slug.'/'.$chart_slug.'.json';
                     //TODO: rewrite json file of packages
-                    $package_file = ABSPATH.$cap_map->chart_folder.'/charts.json';
+                    $package_file = ABSPATH.$cap_graphics->chart_folder.'/charts.json';
                     $charts_json  = json_decode(file_get_contents($package_file),true);
 
-                    mkdir(ABSPATH.$cap_map->chart_folder.$chart_slug.'/');  //make directory
+                    mkdir(ABSPATH.$cap_graphics->chart_folder.$chart_slug.'/');  //make directory
                     update_post_meta( $_POST['ID'], 'chart_select',  $chart_slug);  //update meta so we know what chart is associated with this post
 
                     //TODO: add new chart to array and rewrite
@@ -314,20 +312,20 @@ EOD;
                     $charts_json['charts'][]['description'] =  'New Chart: '.$save['options']['chart_type'];
 
                     //rewrite json file
-                    $cap_map->cap_map_save_json_file($package_file,$charts_json);
+                    $cap_graphics->cap_map_save_json_file($package_file,$charts_json);
                 } else {
                     $chart_slug   = $save['options']['chart_slug']  = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
                     $chart_select = $save['options']['chart_select']  = array_key_exists('chart_select', $_POST) ? $_POST['chart_select'] : null;
 
                     //if chart slug, differs from chart_select then rename file!
                     if($chart_slug!=$chart_select) {
-                        $file                          = ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
-                        //$del                           = self::deleteDir(ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_select.'/');
-                        system("rm -rf ".escapeshellarg(ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_select.'/'));  //system works better than php
+                        $file                          = ABSPATH.$cap_graphics->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
+                        //$del                           = self::deleteDir(ABSPATH.$cap_graphics->plugin_uri.'/charts/'.$chart_select.'/');
+                        system("rm -rf ".escapeshellarg(ABSPATH.$cap_graphics->plugin_uri.'/charts/'.$chart_select.'/'));  //system works better than php
 
-                        mkdir(ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/');  //make directory
+                        mkdir(ABSPATH.$cap_graphics->plugin_uri.'/charts/'.$chart_slug.'/');  //make directory
                     } else {
-                        $file                          = ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
+                        $file                          = ABSPATH.$cap_graphics->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
                     }
                     update_post_meta( $_POST['ID'], 'chart_select',  sanitize_text_field($_POST['chart_select']));  //update meta so we know what chart is associated with this post
 
@@ -358,13 +356,13 @@ EOD;
             if($svg_action) {
 
                 if($svg_action=='new') { //new svg file
-                    mkdir(ABSPATH.$cap_map->svg_folder.$svg_slug.'/');  //make directory
+                    mkdir(ABSPATH.$cap_graphics->svg_folder.$svg_slug.'/');  //make directory
                     $svg       = array_key_exists('svg', $_POST) ? $_POST['svg'] : null;
                     $js        = array_key_exists('js', $_POST) ? $_POST['js'] : null;
                     $css       = array_key_exists('css', $_POST) ? $_POST['css'] : null;
                     $json      = array_key_exists('json', $_POST) ? $_POST['json'] : null;
 
-                    $file  = ABSPATH.$cap_map->svg_folder.$svg_slug.'/'.$svg_slug;
+                    $file  = ABSPATH.$cap_graphics->svg_folder.$svg_slug.'/'.$svg_slug;
 
                     //need to save all files, if there is content
                     if($svg) {
@@ -389,13 +387,13 @@ EOD;
                     $chart_slug                        = $save['options']['chart_slug']  = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
                     //if chart slug, differs from chart_select then rename file!
                     if($chart_slug!=$chart_select) {
-                        $file                          = ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
-                        //$del                           = self::deleteDir(ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_select.'/');
-                        system("rm -rf ".escapeshellarg(ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_select.'/'));  //system works better than php
+                        $file                          = ABSPATH.$cap_graphics->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
+                        //$del                           = self::deleteDir(ABSPATH.$cap_graphics->plugin_uri.'/charts/'.$chart_select.'/');
+                        system("rm -rf ".escapeshellarg(ABSPATH.$cap_graphics->plugin_uri.'/charts/'.$chart_select.'/'));  //system works better than php
 
-                        mkdir(ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/');  //make directory
+                        mkdir(ABSPATH.$cap_graphics->plugin_uri.'/charts/'.$chart_slug.'/');  //make directory
                     } else {
-                        $file                          = ABSPATH.$cap_map->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
+                        $file                          = ABSPATH.$cap_graphics->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
                     }
                     update_post_meta( $_POST['ID'], 'chart_select',  sanitize_text_field($_POST['chart_select']));  //update meta so we know what chart is associated with this post
 
@@ -460,7 +458,7 @@ EOD;
          */
         function gc_svg_shortcode( $atts ){
             //TODO: think about putting every fiule, json, js, css into one "package" or in ONE folder
-            $cap_map  = new Cap_Map();
+            $gc  = new Cap_Map();
             $id       = get_the_ID();
 
             //TODO: if short code is [cap_svg svg="slug"]
@@ -472,11 +470,11 @@ EOD;
             $content  = '';
 
             //always include front end css
-            wp_enqueue_style('capmapcss', $cap_map->plugin_uri.'assets/css/frontend.css');
+            wp_enqueue_style('capmapcss', $cap_graphics->plugin_uri.'assets/css/frontend.css');
 
             if($svg_raw != 'Select One') {
 
-                $svg_file   = $cap_map->svg_folder.$svg_raw.'/'.$svg_raw.'.svg';
+                $svg_file   = $cap_graphics->svg_folder.$svg_raw.'/'.$svg_raw.'.svg';
                 $custom_js  = $svg_file . $svg_raw . 'js';
                 $custom_css = $svg_file . $svg_raw . 'css';
 
@@ -509,15 +507,15 @@ EOD;
         function gc_chart_shortcode( $atts ){
             $content = $legend_html = $legend_inner = $canvas_html = '';
 
-            $cap_map     = new Cap_Map();
+            $gc     = new Cap_Map();
             $id          = get_the_ID();
             $chart_slug  = get_post_meta($id,'chart_slug',true);
 
 
             //get frontend css and charts scripts
-            wp_enqueue_style('capmapcss', $cap_map->plugin_uri.'assets/css/frontend.css');
-            wp_enqueue_script('charts',  $cap_map->plugin_uri.'assets/js/common/Chart.min.js','','1',true);
-            wp_enqueue_script('charts',  $cap_map->plugin_uri.'assets/js/common/charts.options.js','','1',true);
+            wp_enqueue_style('capmapcss', $cap_graphics->plugin_uri.'assets/css/frontend.css');
+            wp_enqueue_script('charts',  $cap_graphics->plugin_uri.'assets/js/common/Chart.min.js','','1',true);
+            wp_enqueue_script('charts',  $cap_graphics->plugin_uri.'assets/js/common/charts.options.js','','1',true);
 
 
             /*
@@ -527,7 +525,7 @@ EOD;
              */
 
             //not as efficient, but for total control from json pull json in php as well
-            $json_file = $cap_map->plugin_uri."charts/$chart_slug/$chart_slug.json";
+            $json_file = $cap_graphics->plugin_uri."charts/$chart_slug/$chart_slug.json";
             $json      = json_decode(file_get_contents(ABSPATH.$json_file),true);
             $legend    = $json['options']['legend'];
             $name      = $json['options']['name'];
@@ -643,8 +641,8 @@ EOS;
 
             //if there is a chart type, then drop down selected so we grab data
             if($chart_slug) {
-                $cap_map            = new Cap_Map();
-                $package            = $cap_map->plugin_uri.'charts/'.$chart_slug;
+                $gc            = new Cap_Map();
+                $package            = $cap_graphics->plugin_uri.'charts/'.$chart_slug;
                 $jsonfile           = $package.'/'.$chart_slug.'.json';
                 $json               = file_get_contents(ABSPATH.$jsonfile);
                 $data               = json_decode($json,true);
@@ -997,9 +995,9 @@ E_ALL;
             //TODO: may need upload for svg, large ones could cause problems for text edit box
             $time_start = self::timer();
             $html       = '';
-            $cap_map    = new Cap_Map();
+            $gc    = new Cap_Map();
             $svg_slug   = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
-            $folder     = ABSPATH.$cap_map->svg_folder.$svg_slug.'/';
+            $folder     = ABSPATH.$cap_graphics->svg_folder.$svg_slug.'/';
 
 
             if($svg_slug) {
@@ -1030,11 +1028,11 @@ E_ALL;
                 $svg_action = 'new';
             }
 
-            $html = $cap_map->cap_map_svg_tpl($svg_action,$svg,$js,$css,$json);
+            $html = $cap_graphics->cap_map_svg_tpl($svg_action,$svg,$js,$css,$json);
 
 
 
-            //$html = $cap_map->cap_map_svg_tpl($svg_action,$svg,$js,$css,$json);
+            //$html = $cap_graphics->cap_map_svg_tpl($svg_action,$svg,$js,$css,$json);
             $time_end = self::timer();
 
             $return = array(
@@ -1103,12 +1101,12 @@ NCURSES_KEY_EOS;
         function gc_file_save_action_callback($post)
         {
             $time_start = self::timer();
-            $cap_map    = new Cap_Map();
+            $gc    = new Cap_Map();
             $ID         = array_key_exists('ID', $_POST) ? $_POST['ID'] : null;
             $svg_slug   = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
             $data       = array_key_exists('data', $_POST) ? stripslashes($_POST['data']) : null;  //use strip slashes because of MAGIC QUOTES
             $file       = array_key_exists('file', $_POST) ? $_POST['file'] : null;
-            $folder     = ABSPATH.$cap_map->svg_folder.$svg_slug.'/';
+            $folder     = ABSPATH.$cap_graphics->svg_folder.$svg_slug.'/';
             $filename   = $folder.$svg_slug.'.'.$file;
 
             if(!file_exists($folder)) {
