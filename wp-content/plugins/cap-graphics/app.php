@@ -126,9 +126,11 @@ if (!class_exists(APP_CLASS_NAME)) {
         {
  
             //convention over configuration, assume menu.png is name of menu icon
-            add_menu_page(self::APP_NAME, self::APP_NAME, 'manage_options', self::APP_SLUG, self::APP_OPTION_CLASS_NAME.'::option_function',  WP_CONTENT_URL.self::PLUGIN_DIR.self::APP_DIR .'/images/menu.png');
-
+            add_menu_page(self::APP_NAME, self::APP_NAME, 'manage_options', self::APP_SLUG, self::APP_OPTION_CLASS_NAME.'::option_function',  WP_CONTENT_URL.self::PLUGIN_DIR.self::APP_DIR .'/assets/images/icon.png');
+            add_submenu_page( self::APP_SLUG, 'Charts', 'Charts', 'manage_options', self::APP_SLUG.'-charts', self::APP_OPTION_CLASS_NAME.'::charts_submenu' );
+            add_submenu_page( self::APP_SLUG, 'SVG', 'SVG', 'manage_options', self::APP_SLUG.'-svg', self::APP_OPTION_CLASS_NAME.'::svg_submenu' );
             add_submenu_page( self::APP_SLUG, 'Instructions', 'Instructions', 'manage_options', self::APP_SLUG.'-help', self::APP_OPTION_CLASS_NAME.'::instruction_submenu' );
+
             //add_plugins_page( self::APP_NAME, "Instructions", 'manage_options', 'pdf-instructions', self::APP_OPTION_CLASS_NAME.'::instruction_submenu');
         }
     }

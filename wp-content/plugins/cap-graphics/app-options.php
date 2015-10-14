@@ -78,8 +78,8 @@ if (!class_exists("Cap_Graphics_Options")) {
         </div>
         <?php
         }
-        
-        
+
+
         /**
         * Instructions page
          */
@@ -93,6 +93,22 @@ if (!class_exists("Cap_Graphics_Options")) {
             </div>
             <?php
         }
+
+        /**
+         *
+         */
+        function svg_submenu() {
+            //TODO:  use templating system here in admin folder
+            ?>
+            <div class="wrap">
+                <h2>SVG Maps and Graphics</h2>
+                <p></p>
+
+            </div>
+            <?php
+        }
+
+
     }
 }
 ?>
