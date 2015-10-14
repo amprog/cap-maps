@@ -23,7 +23,7 @@ if (!class_exists("Cap_Graphics_Options")) {
         {
             if (!current_user_can('update_plugins'))
                 return;
-            
+
             // Add a new submenu
             /*
             $this->page = $page = add_options_page(
@@ -34,10 +34,10 @@ if (!class_exists("Cap_Graphics_Options")) {
 
             //$this->page = $page = add_options_page(
              //   __(parent::SETTINGS_PAGE_TITLE, parent::APP_SLUG), __(parent::SETTINGS_PAGE_TITLE, parent::APP_SLUG), 'administrator', parent::APP_SLUG, array($this, 'option_function'));
-            
-            
+
+
         }
-        
+
         /**
          * Build options page
          */
@@ -102,6 +102,20 @@ if (!class_exists("Cap_Graphics_Options")) {
             ?>
             <div class="wrap">
                 <h2>SVG Maps and Graphics</h2>
+                <p></p>
+
+            </div>
+            <?php
+        }
+
+        /**
+         *
+         */
+        function charts_submenu() {
+            //TODO:  use templating system here in admin folder
+            ?>
+            <div class="wrap">
+                <h2>Charts</h2>
                 <p></p>
 
             </div>

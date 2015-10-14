@@ -133,6 +133,22 @@ if (!class_exists(APP_CLASS_NAME)) {
 
             //add_plugins_page( self::APP_NAME, "Instructions", 'manage_options', 'pdf-instructions', self::APP_OPTION_CLASS_NAME.'::instruction_submenu');
         }
+
+        function _e($input) {
+
+            if(self::APP_DEBUG) {
+                if(is_object($input) || is_array($input)) {
+                    echo '<pre>';
+                    print_r($input);
+                    echo '</pre>';
+                } else {
+                    error_log($input);
+                }
+            }
+
+
+
+        }
     }
 }
 
@@ -144,7 +160,7 @@ if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
 
     if ( is_admin() ) {
         add_action( 'admin_menu', 'Cap_Graphics_Frontend::gc_options_admin' );  //options page, TODO: perhaps put chart options here
-        add_action("add_meta_boxes", "Cap_Graphics_Frontend::gc_meta"); //meta box
+        add_action( 'add_meta_boxes', "Cap_Graphics_Frontend::gc_meta"); //meta box
         add_action( 'save_post', 'Cap_Graphics_Frontend::gc_meta_save' );  //this is causing problems with new post pages
 
         //svg

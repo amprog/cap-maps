@@ -66,7 +66,7 @@ if (!class_exists("Cap_Graphics_Settings")) {
             //wp_register_script('custom_js', plugin_dir_url(__FILE__) . 'js/custom.js');
             //wp_enqueue_script('custom_js');
 
-            wp_register_style('custom_css', plugin_dir_url(__FILE__) . 'css/custom.css');
+            wp_register_style('custom_css', plugin_dir_url(__FILE__) . 'assets/css/frontend.css');
             wp_enqueue_style('custom_css');
         }
 
