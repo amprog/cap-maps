@@ -1,0 +1,38 @@
+{
+    "form": {
+        "attributes": {
+            "action": "demo.php",
+            "method": "post",
+            "id": "config-form",
+            "class": "config"
+        },
+        "submit": {
+            "type": "submit",
+            "class": "config-btn", 
+            "id": "config-submit", 
+            "value": "Save Settings"
+        }
+        ,
+        "options": {
+            "csrf": "1",
+            "csrf_timeout": "15",
+            "csrf_key": "testkey",
+            "captcha": "1"
+        }
+    },
+    "fieldset_1": {
+        "title": "Test Title",
+        "keywords": "Test Keywords",
+        "description": "Test Description"
+    },
+    "fieldset_2":{
+        "host": "localhost",
+        "site": "portfolio site",
+        "url": "http://portfolio.amir-meshkin.com"
+    },
+    "fieldset_3": {
+        "username": "ameshkin",
+        "email": "amir.meshkin@gmail.com",
+        "display_name": "Amir Meshkin"
+    }
+}

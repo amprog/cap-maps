@@ -1,0 +1,105 @@
+{
+  "options": {
+    "segmentStrokeColor": "#D2DFF2",
+    "animateRotate": true,
+    "responsive": false
+  },
+  "regions" : {
+    "prep1" : {
+      "charts" : {
+        "chart1" : {
+          "data": [
+            {
+              "label": "Chemicals",
+              "value": 10,
+              "color": "#B93A43",
+              "highlight": "#111"
+            },
+            {
+              "label": "Machinery",
+              "value": 70,
+              "color": "#f5989c",
+              "highlight": "#000"
+            },
+            {
+              "label": "Electronics",
+              "value": 20,
+              "color": "#35394A",
+              "highlight": "#7491C6"
+            }
+          ]
+        },
+        "chart2" : {
+          "data": [
+            {
+              "label": "blah",
+              "value": 30,
+              "color": "#B93A43",
+              "highlight": "#111"
+            },
+            {
+              "label": "asdfasdf",
+              "value": 60,
+              "color": "#f5989c",
+              "highlight": "#000"
+            },
+            {
+              "label": "sadfasdf",
+              "value": 10,
+              "color": "#35394A",
+              "highlight": "#7491C6"
+            }
+          ]
+        }
+      }
+    },
+    "prep2" : {
+      "charts" : {
+        "chart1" : {
+          "data": [
+            {
+              "label": "Chemicals",
+              "value": 10,
+              "color": "#B93A43",
+              "highlight": "#111"
+            },
+            {
+              "label": "Machinery",
+              "value": 70,
+              "color": "#f5989c",
+              "highlight": "#000"
+            },
+            {
+              "label": "Electronics",
+              "value": 20,
+              "color": "#35394A",
+              "highlight": "#7491C6"
+            }
+          ]
+        },
+        "chart2" : {
+          "data": [
+            {
+              "label": "blah",
+              "value": 30,
+              "color": "#B93A43",
+              "highlight": "#111"
+            },
+            {
+              "label": "asdfasdf",
+              "value": 60,
+              "color": "#f5989c",
+              "highlight": "#000"
+            },
+            {
+              "label": "sadfasdf",
+              "value": 10,
+              "color": "#35394A",
+              "highlight": "#7491C6"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

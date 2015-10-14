@@ -1,0 +1,25 @@
+{
+    "title": "JSON 2 Form",
+    "image": "json2form",
+    "class": "json2form.class.php",
+    "desc" : "A PHP Class for turning json config files into forms, Very simple and easy to use, Built to automatically install ZEND Framework",
+    "system": "custom",
+    "skill": "json,php,html",   
+    "url" : "/scripts/json2form",
+    "github" : "http://www.github.com",
+    "dev" : "0",
+    "author" : "Amir Meshkin",
+    "version" : "1.0",
+    "released" : "2-10-2013",
+    "files": ["readme.md","demo.php"],
+    "menu": 
+    [{
+        "title" : "home",
+        "page" : "index.php"
+    },
+    {
+        "title" : "demo",
+        "page" : "demo.php"  
+    }]
+}
+

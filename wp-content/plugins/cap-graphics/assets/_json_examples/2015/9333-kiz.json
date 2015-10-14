@@ -1,0 +1,1169 @@
+{
+  "regions": {
+    "kiz1": {
+      "data": {
+        "contact": {
+          "id": "i1",
+          "counties": [
+            "Montgomery",
+            "Philadelphia"
+          ],
+          "zone_name": "611 Corridor KIZ/also known as BioLaunch611+ KIZ",
+          "grantee": "BioStrategy Partners",
+          "name": "Maureen Waddington",
+          "email": "admin@biostrategypartners.org",
+          "street1": "P.O. Box 187",
+          "street2": "",
+          "city": "Montgomeryville",
+          "zip_code": "18936",
+          "phone_number": "215.393.3144",
+          "website": "http://www.biostrategypartners.org/KIZ/index.php",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Temple University",
+            "Lasalle University",
+            "Pennsylvania College of Optometry",
+            "Montgomery County Community College",
+            "Lankenau Institute for Medical Research",
+            "Fox Chase Cancer Center"
+          ],
+          "industries": [
+            "Life Sciences",
+            "Oncology",
+            "Cardiovascular",
+            "Diabetes and Aging",
+            "Information Technology",
+            "Advanced Manufacturing"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 10000,
+          "y": 5204,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 0
+        }
+      }
+    },
+   "kiz2": {
+      "data": {
+        "contact": {
+          "id": "i2",
+          "counties": [
+            "Beaver"
+          ],
+          "zone_name": "Beaver County",
+          "grantee": "StartingGate",
+          "name": "Sue Hage",
+          "email": "sue@starting-gate.com",
+          "street1": "2750 Constitution Blvd.",
+          "street2": "",
+          "city": "Beaver Falls",
+          "zip_code": "15010",
+          "phone_number": "724.847.6440",
+          "website": "http://www.starting-gate.com",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Geneva College",
+            "Robert Morris College",
+            "Penn State New Kensington",
+            "Beaver County Community College"
+          ],
+          "industries": [
+            "Medical Devices"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 300,
+          "y": 3900,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz3": {
+      "data": {
+        "contact": {
+          "id": "i3",
+          "counties": [
+            "Bucks"
+          ],
+          "zone_name": "Bucks County Biotechnology",
+          "grantee": "The Pennsylvania Biotechnology Center, Inc.",
+          "name": "Lou Kassa",
+          "email": "lou.kassa@bblumberg.org",
+          "street1": "3805 Old Easton Road",
+          "street2": "",
+          "city": "Doylestown",
+          "zip_code": "18902-8400",
+          "phone_number": "215.489.4916",
+          "website": "http://www.pabiotechbc.org/",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Delaware Valley - College of Science and Agriculture",
+            "Drexel University - Institute for Biotechnology/Virology Research",
+            "Bucks County Community College",
+            "Institute for Hepatitis and Virus Research"
+          ],
+          "industries": [
+            "Life Sciences",
+            "Cancer Research",
+            "Information Technology",
+            "Advanced & Diversified Manufacturing"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 10100,
+          "y": 4600,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz4": {
+      "data": {
+        "contact": {
+          "id": "i4",
+           	"counties": [
+            "Chester",
+            "Delaware"
+          ],
+	"zone_name": "i2n-Ideas",
+          "grantee": "Chester County Economic Development Council",
+          "name": "Mary Fuchs or Marianne Stack",
+          "email": "mfuchs@cceconomicdevelopment",
+          "street1": "737 Constitution Drive",
+          "street2": "",
+          "city": "Exton",
+          "zip_code": "19341",
+          "phone_number": "610.458.5700",
+          "website": "http://www.i2npa.org",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Penn State-Great Valley",
+            "West Chester University",
+            "Villanova University",
+            "Widener University",
+            "Delaware County Community College"
+          ],
+          "industries": [
+            "Life Sciences",
+            "Biotech",
+            "Information Technology",
+            "Homeland Security IT",
+            "National Defense IT",
+            "Performance Materials & Manufacturing",
+            "Advanced Communications",
+            "Information Technology",
+            "Environmental Engineering",
+            "Health Care"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 9100,
+          "y": 5400,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz5": {
+      "data": {
+        "contact": {
+          "id": "i5",
+           	"counties": [
+            "Erie"
+          ],
+		"zone_name": "Erie",
+          "grantee": "Tech Council of Northwest Pennsylvania",
+          "name": "Sean Fedorko",
+          "email": "sfedorko@technwpa.org",
+          "street1": "900 State Street",
+          "street2": "",
+          "city": "Erie",
+          "zip_code": "16501",
+          "phone_number": "814.397.5203",
+          "website": "http://www.technwpa.org",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Gannon University",
+            "Mercyhurst College",
+            "Penn State Behrend",
+            "Edinboro University"
+          ],
+          "industries": [
+            "Information Technology",
+            "Advanced Manufacturing",
+            "Life Sciences",
+            "Homeland Security"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 1280,
+          "y": 850,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz6": {
+      "data": {
+        "contact": {
+          "id": "i6",
+           	"counties": [
+            "Fayette",
+            "Washington"
+          	],
+		"zone_name": "Fayette-Washington",
+          "grantee": "Fay-Penn Economic Development Council",
+          "name": "Jennifer Kooser",
+          "email": "jenniferk@faypenn.org",
+          "street1": "1040 Eberly Way",
+          "street2": "Suite 200",
+          "city": "Lemont Furnace",
+          "zip_code": "15456",
+          "phone_number": "724.437.7913  x212",
+          "website": "http://www.faypenn.org",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Washington & Jefferson College",
+            "California University of Pennsylvania",
+            "Penn State University - Fayette"
+          ],
+          "industries": [
+            "Energy",
+            "Defense",
+            "Information Technology"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 1650,
+          "y": 5800,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz7": {
+      "data": {
+        "contact": {
+          "id": "i7",
+           	"counties": [
+            "Cambria"
+          	],
+		  "zone_name": "Greater Johnstown",
+          "grantee": "Johnstown Area Regional Industries (JARI)",
+          "name": "Joette Watson",
+          "email": "jwatson@jari.com",
+          "street1": "245 Market Street",
+          "street2": "",
+          "city": "Johnstown",
+          "zip_code": "15901",
+          "phone_number": "814.262.8372",
+          "website": "http://www.jari.com/index.php?page=incentive-zone-locator",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "University of Pittsburgh at Johnstown",
+            "Mount Aloysius College",
+            "Penn Highland Community College (three campuses)",
+            "Saint Francis University"
+          ],
+          "industries": [
+            "Life Sciences",
+            "Environmental Technologies",
+            "Information Systems & Technology",
+            "Advanced Manufacturing"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 3100,
+          "y": 4700,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz8": {
+      "data": {
+        "contact": {
+          "id": "i8",
+           	"counties": [
+            "Allegheny"
+            ],
+		  "zone_name": "Greater Oakland",
+          "grantee": "Pittsburgh Technology Council",
+          "name": "Justin Driscoll",
+          "email": " jdriscoll@pghtech.org",
+          "street1": "2000 Technology Drive",
+          "street2": "Suite 100",
+          "city": "Pittsburgh",
+          "zip_code": "15219",
+          "phone_number": "412.977.2128",
+          "website": "",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "University of Pittsburgh",
+            "Carneige Mellon University"
+          ],
+          "industries": [
+            "Life Sciences",
+            "Speciality Chemicals",
+            "Information Technology",
+            "Robotics",
+            "Horizon Technologies",
+            "Nanotech",
+            "MEMS"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 950,
+          "y": 4450,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz9": {
+      "data": {
+        "contact": {
+          "id": "i9",
+          "counties": [
+            "Berks",
+            "Lehigh"
+          ],
+          "zone_name": "Greater Reading",
+          "grantee": "Greater Reading Chamber of Commerce and Industry",
+          "name": "Gail Landis",
+          "email": " glandis@GreaterReadingChamber.org",
+          "street1": "201 Penn Street",
+          "street2": "Suite 501",
+          "city": "Reading",
+          "zip_code": "19601",
+          "phone_number": "610.376.6766",
+          "website": "",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "PSU Berks",
+            "Kutztown University",
+            "Albright College",
+            "Alvernia College",
+            "Reading Area Community College"
+          ],
+          "industries": [
+            "AMDM",
+            "Business Services",
+            "Life Science",
+            "High Tech"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 8500,
+          "y": 4800,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz10": {
+      "data": {
+        "contact": {
+          "id": "i10",
+           	"counties": [
+            "Columbia",
+            "Montour",
+            "Union",
+            "Northumberland"
+            ],
+		  "zone_name": "Greater Susquehanna",
+          "grantee": "Rural Business innovation Corporation (RBI)",
+          "name": "Kelly O'Brien-Gavin",
+          "email": "kelly@gskiz.org",
+          "street1": "240 Market Street",
+          "street2": "",
+          "city": "Bloomsburg",
+          "zip_code": "17815",
+          "phone_number": "570.245.0096",
+          "website": "http://www.gskiz.org",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Bucknell University",
+            "Susquehanna University",
+            "Bloomsburg University"
+          ],
+          "industries": [
+            "Information Technology (e-learning)",
+            "Life Sciences",
+            "Health Care",
+            "Wood Products",
+            "Diversified Manufacturing"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 7700,
+          "y": 3250,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz11": {
+      "data": {
+        "contact": {
+          "id": "i11",
+          "counties": [
+            "Dauphin"
+          ],
+          "zone_name": "Harrisburg Market",
+          "grantee": "Capital Region Economic Development Corporation",
+          "name": "Linda Goldstein",
+          "email": "lgoldstein@hbgrc.org",
+          "street1": "3211 North Front Street",
+          "street2": "Suite 201",
+          "city": "Harrisburg",
+          "zip_code": "17110",
+          "phone_number": "717.213.5031",
+          "website": "http://credcpa.org/keystone-innovation-zone/",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Hershey Medical Center",
+            "Penn State Harrisburg",
+            "Messiah College",
+            "Central Pennsylvania College",
+            "Harrisburg University",
+            "Harrisburg Area Community College",
+            "Dickinson College",
+            "Shippensburg"
+          ],
+          "industries": [
+            "Life Sciences",
+            "Advanced Manufacturing.",
+            "Business Technology Solutions"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 6920,
+          "y": 4850,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz12": {
+      "data": {
+        "contact": {
+          "id": "i12",
+           	"counties": [
+            "Huntingdon"
+            ],
+		  "zone_name": "Huntingdon County",
+          "grantee": "Huntingdon County Business & Industry, Inc.",
+          "name": "Amy Wise",
+          "email": "awise@hcbi.com",
+          "street1": "Sill Business Incubator",
+          "street2": "419 14th Street",
+          "city": "Huntingdon",
+          "zip_code": "16652",
+          "phone_number": "814.506.8287",
+          "website": "http://www.hcbi.com",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Juniata College"
+          ],
+          "industries": [
+            "Life Sciences",
+            "Information Technology"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 4700,
+          "y": 4500,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz13": {
+      "data": {
+        "contact": {
+          "id": "i13",
+          "counties": [
+            "Blair",
+            "Bedford",
+            "Centre"
+          ],
+          "zone_name": "I-99 Innovation Corridor",
+          "grantee": "Centre County Industrial Development Corporation",
+          "name": "Mary Resides",
+          "email": "mresides@cbicc.org",
+          "street1": "200 Innovation Boulevard",
+          "street2": "Suite 150",
+          "city": "State College",
+          "zip_code": "16803",
+          "phone_number": "814.234.1829",
+          "website": "http://www.i99corridor.org/incentives/keystone-innovation-zones/",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Penn State University"
+          ],
+          "industries": [
+            "Materials Science & Nanotechnology",
+            "Biotechnology & Life Sciences",
+            "Information Sciences & Technology",
+            "Additive Manufacturing"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 4720,
+          "y": 3400,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz14": {
+      "data": {
+        "contact": {
+          "id": "i14",
+           	"counties": [
+            "Indiana"
+            ],
+		  "zone_name": "Indiana County",
+          "grantee": "Indiana County Office of Planning and Development",
+          "name": "Byron G. Stauffer, Jr.",
+          "email": "byronjr@ceo.co.indiana.pa.us",
+          "street1": "801 Water Street ",
+          "street2": "",
+          "city": "Indiana",
+          "zip_code": "15701-1705",
+          "phone_number": "724.465.3870",
+          "website": "http://www.indianacountyceo.com",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Indiana University of Pennsylvania",
+            "Indiana County Campus of Westmoreland CC",
+            "Indiana County Technology Center"
+          ],
+          "industries": [
+            "Advanced/Diversified Manufactoring",
+            "Advanced Sustainable Energy",
+            "Homeland Security and National Defense",
+            "Information Technology",
+            "Life Sciences"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 2650,
+          "y": 3850,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz15": {
+      "data": {
+        "contact": {
+          "id": "i15",
+          "counties": [
+            "Lackawanna"
+          ],
+          "zone_name": "Lackawanna County",
+          "grantee": "Northeastern Pennsylvania Technology Institute dba TecBridge",
+          "name": "Tiffany Cross-Luciani",
+          "email": "Tluciani@tecbridgepa.org",
+          "street1": "201 Lackawanna Avenue",
+          "street2": "2nd Floor",
+          "city": "Scranton",
+          "zip_code": "18503",
+          "phone_number": "570.341.8099",
+          "website": "http://www.nepati.com/kiz/aboutkiz.htm",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Lackawanna College",
+            "University of Scranton",
+            "The Commonwealth Medical College (TCMC)",
+            "Marywood University",
+            "Johnson College",
+            "Keystone College",
+            "Penn State University - Scranton"
+          ],
+          "industries": [
+            "Healthcare",
+            "Life Sciences",
+            "Nanotechnology",
+            "Advanced Manufacturing & Plastics",
+            "Information Technology",
+            "New Media",
+            "Back Office/Finance"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 9125,
+          "y": 1800,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz16": {
+      "data": {
+        "contact": {
+          "id": "i16",
+           	"counties": [
+            "Luzerne"
+            ],
+		  "zone_name": "Luzerne County",
+          "grantee": "Northeastern Pennsylvania Technology Institute dba TecBridge",
+          "name": "Tiffany Cross-Luciani",
+          "email": "Tluciani@tecbridgepa.org",
+          "street1": "201 Lackawanna Avenue, ",
+          "street2": "2nd Floor",
+          "city": "Scranton",
+          "zip_code": "18503",
+          "phone_number": "570.341.8099",
+          "website": "http://www.nepati.com/kiz/aboutkiz.htm",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "King's College",
+            "Wilkes University",
+            "Misericordia University",
+            "Luzerne County Community College",
+            "Penn State University - Hazelton",
+            "Penn State University - Wilkes-Barre"
+          ],
+          "industries": [
+            "Healthcare",
+            "Life Sciences",
+            "Nanotechnology",
+            "Advanced Manufacturing & Plastics",
+            "Information Technology/New Media",
+            "Back Office/Finance"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 9400,
+          "y": 1800,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz17": {
+      "data": {
+        "contact": {
+          "id": "i17",
+          "counties": [
+            "Philadelphia"
+          ],
+          "zone_name": "Navy Yard",
+          "grantee": "Philadelphia Industrial Development Corporation (PIDC)",
+          "name": "Amy Schulz",
+          "email": "aschulz@PIDCphila.com",
+          "street1": "4747 South Broad Street",
+          "street2": "Building 101, Suite 120",
+          "city": "Philadelphia",
+          "zip_code": "19112",
+          "phone_number": "215.218.2850",
+          "website": "http://www.navyyard.org/real-estate/financing-and-incentives/keystone-innovation-zone",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Penn State University"
+          ],
+          "industries": [
+            "Power &",
+            "Nanotechnology",
+            "Advanced Manufacturing",
+            "Communications & IT",
+            "Homeland Security",
+            "Life Sciences"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 10200,
+          "y": 5800,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz18": {
+      "data": {
+        "contact": {
+          "id": "i18",
+           	"counties": [
+            "Lancaster"
+            ],
+		  "zone_name": "Northwest Lancaster City",
+          "grantee": "James Street Improvement District",
+          "name": "Kelly O'Brien-Gavin",
+          "email": "kelly@gskiz.org",
+          "street1": "354 N. Prince Street",
+          "street2": "Suite 110",
+          "city": "Lancaster",
+          "zip_code": "17603",
+          "phone_number": "717.394.0783",
+          "website": "http://www.lancasterchamber.com/KIZ",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Franklin & Marshall College"
+          ],
+          "industries": [
+            "Life Sciences",
+            "Communications & Information Technology",
+            "Agriculture & Food Processing"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 8000,
+          "y": 5500,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz19": {
+      "data": {
+        "contact": {
+          "id": "i19",
+          "counties": [
+            "Clarion",
+            "Crawford",
+            "Mercer",
+            "Warren"
+          ],
+          "zone_name": "Northwest PA",
+          "grantee": "Northwest PA regional Planning & Development Commission ",
+          "name": "Jo Cramer",
+          "email": "joc@northwestpa.org",
+          "street1": "395 Seneca Street",
+          "street2": "Suite 206",
+          "city": "Oil City",
+          "zip_code": "16301",
+          "phone_number": "814.677.4800  x113",
+          "website": "http://northwestpa.org/keystone-innovation-zone/",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Allegheny College",
+            "Clarion University",
+            "University of Pittsburgh - Titusville",
+            "Thiel College",
+            "Edinboro University of Pennsylvania"
+          ],
+          "industries": [
+            "Clean Technology",
+            "Energy Conversion",
+            "Environmental Sustainability",
+            "Advanced Manufacturing",
+            "Information Technology",
+            "Life Sciences"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 1600,
+          "y": 2050,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz20": {
+      "data": {
+        "contact": {
+          "id": "i20",
+           	"counties": [
+            "Allegheny"
+            ],
+		  "zone_name": "Pittsburgh Central",
+          "grantee": "Urban Innovation 21 (Formerly: The Hill House Economic Development Corporation)",
+          "name": "Alyssa Boehringer",
+          "email": "aboehringer@urbaninnovation21.org",
+          "street1": "1901 Centre Avenue",
+          "street2": "",
+          "city": "Pittsburgh",
+          "zip_code": "15219",
+          "phone_number": "412.281.0102",
+          "website": "http://www.urbaninnovation21.org/pittsburgh-central-kiz/",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Community College of Allegheny County",
+            "Carlow University",
+            "Duquesne University",
+            "Point Park University"
+          ],
+          "industries": [
+            "Life Sciences",
+            "Information Technology",
+            "Advanced Materials"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 1300,
+          "y": 4400,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz21": {
+      "data": {
+        "contact": {
+          "id": "i21",
+          "counties": [
+            "Monroe"
+          ],
+          "zone_name": "Pocono Mountains",
+          "grantee": "Center for Research and Economic Development",
+          "name": "Mike Gildea",
+          "email": "mgildea1@esu.edu",
+          "street1": "562 Independence Road",
+          "street2": "",
+          "city": "East Stroudsburg",
+          "zip_code": "18301-2999",
+          "phone_number": "570.422.7953",
+          "website": "http://www3.esu.edu/cfred/kiz.asp",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "East Stroudsburg University"
+          ],
+          "industries": [
+            "Homeland Security",
+            "Life Sciences",
+            "Biotechnology",
+            "Healthcare",
+            "Information Technology and Advanced Manufacturing"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 9800,
+          "y": 3350,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz22": {
+      "data": {
+        "contact": {
+          "id": "i22",
+           	"counties": [
+            "Lehigh"
+            ],
+		  "zone_name": "Southside Bethlehem",
+          "grantee": "Bethlehem Economic Development Corporation",
+          "name": "Asher Schiavone",
+          "email": "ASchiavone@bethlehem-pa.gov",
+          "street1": "10 East Church Street",
+          "street2": "",
+          "city": "Bethlehem",
+          "zip_code": "18018",
+          "phone_number": "610.865.4347",
+          "website": "https://www.bethlehem-pa.gov/econdev/",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Lehigh University",
+            "Northampton Community College"
+          ],
+          "industries": [
+            "Financial Services/Information Technology",
+            "Opto/Micro Electronics",
+            "Advanced Materials/Nanotechnology",
+            "Life Sciences",
+            "Energy"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 9750,
+          "y": 4050,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz23": {
+      "data": {
+        "contact": {
+          "id": "i23",
+          "counties": [
+            "Jefferson",
+            "Elk",
+            "Clearfield"
+          ],
+          "zone_name": "Tri-County",
+          "grantee": "North Central Pennsylvania Regional Planning & Development Commission",
+          "name": "Eric Bridges",
+          "email": "ebridges@ncentral.com",
+          "street1": "49 Ridgmont Drive",
+          "street2": "",
+          "city": "Ridgeway",
+          "zip_code": "15853",
+          "phone_number": "814.773.3162",
+          "website": "http://www.ncentral.com",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "PSU DuBois",
+            "DuBois Business College",
+            "Jeff Tech"
+          ],
+          "industries": [
+            "Advanced & Diversified Manufacturing",
+            "Energy/Biomass",
+            "Information Technology"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 3750,
+          "y": 2000,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz24": {
+      "data": {
+        "contact": {
+          "id": "i24",
+          "counties": [
+            "Philadelphia"
+            ],
+		  "zone_name": "University City",
+          "grantee": "University City Science Center",
+          "name": "Kristen Fitch",
+          "email": "kristenfitch@sciencecenter.org",
+          "street1": "3711 Market Street",
+          "street2": "Suite 800",
+          "city": "Philadelphia",
+          "zip_code": "19104",
+          "phone_number": "215.966.6156",
+          "website": "https://www.sciencecenter.org/programs/university-city-keystone-innovation-zone",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "University of Pennsylvania",
+            "Drexel University",
+            "Thomas Jefferson University",
+            "University of the Sciences in Philadelphia",
+            "Wistar Institute"
+          ],
+          "industries": [
+            "Life Sciences Innovation",
+            "Information Technology",
+            "Nanotechnology"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 10000,
+          "y": 5850,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz25": {
+      "data": {
+        "contact": {
+          "id": "i25",
+          "counties": [
+            "Greene"
+          ],
+          "zone_name": "Waynesburg",
+          "grantee": "Greene County Industrial Development Corporation",
+          "name": "Barb Kirby",
+          "email": "bkirby@waynesburg.edu ",
+          "street1": "51 West College Street",
+          "street2": "",
+          "city": "Waynesburg",
+          "zip_code": "15370",
+          "phone_number": "724.852.2965",
+          "website": "",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Waynesburg College",
+            "University of Pittsburgh Small Business Development Center",
+            "Pittsburgh Supercomputing Center"
+          ],
+          "industries": [
+            "Energy & Environmental Technologies",
+            "Advanced Materials & Diversified Manufacturing",
+            "Defense & Homeland Security",
+            "Information Technology & Communications"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 800,
+          "y": 5900,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz26": {
+      "data": {
+        "contact": {
+          "id": "i26",
+           	"counties": [
+            "Westmoreland"
+            ],
+		  "zone_name": "Westmoreland",
+          "grantee": "Economic Growth Connection",
+          "name": "James Smith",
+          "email": "jsmith@egcw.org",
+          "street1": "40 North Pennsylvania Ave.",
+          "street2": "5th Floor, Suite 510",
+          "city": "Greensburg",
+          "zip_code": "15601",
+          "phone_number": "724.830.3604",
+          "website": "http://www.egcw.org/KIZ.aspx",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Saint Vincent College",
+            "Seton Hill University",
+            "Penn State University - New Kensington",
+            "University of Pittsburgh -- Greensburg",
+            "Westmoreland Community College"
+          ],
+          "industries": [
+            "Advanced Materials & Diversified Manufacturing",
+            "Life Sciences",
+            "Bio-Medical",
+            "Information Technology"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 1800,
+          "y": 5000,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz27": {
+      "data": {
+        "contact": {
+          "id": "i27",
+          "counties": [
+            "Lycoming"
+          ],
+          "zone_name": "Williamsport/Lycoming",
+          "grantee": "Innovative Manufacturer's Center (IMC)",
+          "name": "Beth Bittenbender",
+          "email": "bethb@imcpa.com",
+          "street1": "One College Avenue",
+          "street2": "DIF 32",
+          "city": "Williamsport",
+          "zip_code": "17701",
+          "phone_number": "570.329.3200 x8080",
+          "website": "http://www.imcpa.com/williamsportlycoming-keystone-innovation-zone/",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "Lycoming College",
+            "Penn College of Technology"
+          ],
+          "industries": [
+            "Advanced Manufacturing",
+            "Plastics",
+            "Wood",
+            "Information Technology"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 6400,
+          "y": 2525,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    },
+    "kiz28": {
+      "data": {
+        "contact": {
+          "id": "i28",
+           	"counties": [
+            "York"
+            ],
+		  "zone_name": "York",
+          "grantee": "York Economic Development Corporation",
+          "name": "Aeman Bashir",
+          "email": "abashir@ycea-pa.org",
+          "street1": "144 Roosevelt Avenue",
+          "street2": "Suite 115",
+          "city": "York",
+          "zip_code": "17401",
+          "phone_number": "717.846.8310",
+          "website": "http://www.yorkkiz.org",
+          "icon": "http://newpa.com/wp-content/plugins/svg_map/svg/icon.svg",
+          "education": [
+            "York College",
+            "PSU York",
+            "Harrisburg Area Community College - York Campus"
+          ],
+          "industries": [
+            "Advanced Materials & Diversified Manufacturing",
+            "Life Sciences",
+            "Information Sciences",
+            "Food Sciences"
+          ],
+          "name_x": 600,
+          "name_y": 320,
+          "x": 7100,
+          "y": 6050,
+          "size": 100,
+          "fill": "#ff0000",
+          "stroke": "#222945",
+          "strokeWidth": 1
+        }
+      }
+    }
+  }
+}
+

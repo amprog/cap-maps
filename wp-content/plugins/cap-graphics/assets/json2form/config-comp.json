@@ -1,0 +1,51 @@
+{
+    "install":
+    {
+        "form": {
+            "action": "/submit",
+            "method": "post",
+            "enctype": "multipart/form-data",
+            "id": "config-form",
+            "class": "config",
+            "ajax": "1", //TO DO: if set to true, then this form will be submitted inline, ajax, to DB
+            "submit_type": "submit",  //button, submit
+            "submit_class": "config-submit", 
+            "submit_id": "1", 
+            "submit_value": "1",
+            "submit_extra": "" //TO DO: enter any extra attribute here
+        },
+        "elements": {
+            "seo": {
+                "title": {
+                    "attributes" : {
+                        "type" : "text",
+                        "value" : "Site Title",
+                        "autocomplete" : "true"
+                    }
+                },
+                "keywords": "ZEND Based CMS, Test",
+                "description": "Description"
+            
+            },
+            "database":{
+                "host": "localhost",
+                "db_name": "simple_zend",
+                "username": "root",
+                "password": "root",
+                "username": "root",
+                "port": {
+                    "attributes" : {
+                        "type" : "number",
+                        "value" : "8889"
+                    }
+                },
+                "admin": {
+                    "username": "ameshkin",
+                    "email": "amir.meshkin@gmail.com",
+                    "display_name": "Amir Meshkin",
+                    "password": "amir"
+                }
+            }
+        }
+    }
+}

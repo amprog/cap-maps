@@ -1,0 +1,133 @@
+{
+  "options": {
+    "segmentStrokeColor": "#D2DFF2",
+    "animateRotate": true,
+    "source": ""
+  },
+  "data_array": [
+    {
+      "name1": "Exports - Top 5 Countries",
+      "source1": "http://www.census.gov/foreign-trade/statistics/state/data/pa.html",
+      "export_data": [
+        {
+          "label": "Canada",
+          "value": 55,
+          "dollar": 12078000,
+          "color": "#b33a44",
+          "highlight": "#98232b"
+        },
+        {
+          "label": "Mexico",
+          "value": 17,
+          "dollar": 3732000,
+          "color": "#953c4a",
+          "highlight": "#76252f"
+        },
+        {
+          "label": "China",
+          "value": 11,
+          "dollar": 2384000,
+          "color": "#713e51",
+          "highlight": "#512635"
+        },
+        {
+          "label": "United Kingdom",
+          "value": 9,
+          "dollar": 1901000,
+          "color": "#4b3f58",
+          "highlight": "#30273b"
+        },
+        {
+          "label": "Netherlands",
+          "value": 8,
+          "dollar": 1892000,
+          "color": "#2d415e",
+          "highlight": "#1a2940"
+        }
+      ],
+      "name2": "Exports - Top Industries ",
+      "source2": "http://www.census.gov/foreign-trade/statistics/state/data/pa.html",
+      "import_data": [
+        {
+          "label": "Coal",
+          "value": 28,
+          "dollar": 1580000,
+          "color": "#b33a44",
+          "highlight": "#98232b"
+        },
+        {
+          "label": "Oil",
+          "value": 22,
+          "dollar": 1213000,
+          "color": "#953c4a",
+          "highlight": "#76252f"
+        },
+        {
+          "label": "Aerospace",
+          "value": 20,
+          "dollar": 1059000,
+          "color": "#713e51",
+          "highlight": "#512635"
+        },
+        {
+          "label": "Vaccines",
+          "value": 18,
+          "dollar": 1040000,
+          "color": "#4b3f58",
+          "highlight": "#30273b"
+        },
+        {
+          "label": "Medicine",
+          "value": 12,
+          "dollar": 675000,
+          "color": "#2d415e",
+          "highlight": "#1a2940"
+        }
+      ],
+      "name3": "Foreign Investments - Top 5 Countries ",
+      "source3": "wiser",
+      "fdi_stats": [
+        {
+          "label": "England",
+          "hs": "",
+          "value": 36,
+          "dollar": 1422,
+          "color": "#b75356",
+          "highlight": "#a5282c"
+        },
+        {
+          "label": "Germany",
+          "hs": "",
+          "value": 21,
+          "dollar": 815,
+          "color": "#656780",
+          "highlight": "#3e4160"
+        },
+        {
+          "label": "Canada",
+          "hs": "",
+          "value": 17,
+          "dollar": 665,
+          "color": "#337ea2",
+          "highlight": "#005e8b"
+        },
+        {
+          "label": "Japan",
+          "hs": "",
+          "value": 14,
+          "dollar": 539,
+          "color": "#339aa5",
+          "highlight": "#00818e"
+        },
+        {
+          "label": "France",
+          "hs": "",
+          "value": 13,
+          "dollar": 492,
+          "color": "#49b0a2",
+          "highlight": "#1b9c8b"
+        }
+      ]
+    }
+  ]
+}

@@ -1191,7 +1191,7 @@ NCURSES_KEY_EOS;
  */
 function init_cap_map() {
 
-    $cap_cap = new Cap_Map();
+    //$cap_cap = new Cap_Map();
 
     /*
     if(method_exists('Cap_Map', 'Cap_Map')) {
