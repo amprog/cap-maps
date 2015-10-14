@@ -1,58 +1,50 @@
 <?php
+
 if ( !defined( 'ABSPATH' ) ) die(); //keep from direct access
 
-// Pre-2.6 compatibility
-if (!defined('WP_CONTENT_URL'))
-    define('WP_CONTENT_URL', get_option('siteurl') . '/wp-content');
-if (!defined('WP_CONTENT_DIR'))
-    define('WP_CONTENT_DIR', ABSPATH . 'wp-content');
-
-define('APP_CLASS_NAME', 'Cap_Map');
+define('APP_CLASS_NAME', 'Cap_Graphics');
 
 if (!class_exists(APP_CLASS_NAME)) {
 
-    class Pdf_Generator
+    class Cap_Graphics
     {
-        const APP_VERSION = '1.0';
-        const APP_DEBUG = 0;
-
-        const APP_LOADER = 'pdf-generator/app-loader.php';
-        const APP_NAME = 'PDF Generator';
-        const APP_SLUG = 'pdf-generator';
-        const APP_DIR = '/pdf-generator';
-        const PLUGIN_DIR = '/plugins';
-        const PDF_TPL_LOCATION = 'plugin';
-        const PDF_TPL_DIR = 'pdf-templates';
-        const SETTINGS_SECTION_ID = 'app_main';
-        const OPTIONS_PAGE = 'app_options';
-        const OPTIONS_PREFIX = 'pdf_options';
-        const APP_OPTION_CLASS_NAME = 'Pdf_Generator_Options';
-
-        //settings
-        const SETTINGS_PAGE_TITLE = 'PDF Generator';
-
-        const SETTINGS_PAGE1 = 'app_settings_page1';
-        const SETTINGS_PAGE_SUBTITLE1 = 'PDF Generation Options';
+        const APP_VERSION             = '1.0';
+        const APP_DEBUG               = 1;
+        const APP_LOADER              = 'cap-graphics/app-loader.php';
+        const APP_NAME                = 'CAP Graphics';
+        const APP_SLUG                = 'cap-graphics';
+        const PLUGIN_DIR              = '/plugins';
+        //const APP_DIR                 = ABSPATH.self::PLUGIN_DIR.'/cap-graphics';
+        const APP_DIR                 = '/cap-graphics';
+        const SETTINGS_SECTION_ID     = 'cg_main';
+        const OPTIONS_PAGE            = 'cg_options_page';
+        const OPTIONS_PREFIX          = 'cg_options';
+        const APP_OPTION_CLASS_NAME   = 'Cap_Graphics_Options';
+        const SETTINGS_PAGE_TITLE     = 'CAP Graphics Options';
+        const SETTINGS_PAGE1          = 'cg_settings';
+        const SETTINGS_PAGE_SUBTITLE1 = '';
 
         var $settings, $options_page;
 
         function __construct()
         {
+
             if (is_admin()) {
 
                 $settings_class = APP_CLASS_NAME . '_Settings';
-                $options_class = APP_CLASS_NAME . '_Options';
-
+                $options_class  = APP_CLASS_NAME . '_Options';
+                //error_log(__FILE__.' - here');
                 if (!class_exists($settings_class))
                     require(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR . '/app-settings.php');
                 $this->settings = new $settings_class();
 
                 if (!class_exists($options_class))
-                    require(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR . '/app-options.php');
+                    require(WP_CONTENT_DIR . self::PLUGIN_DIR  . self::APP_DIR . '/app-options.php');
                 $this->options_page = new $options_class();
 
                 //action for seettings
                 add_filter('plugin_row_meta', array(&$this, '_app_settings_link'), 10, 2);
+                //error_log(__FILE__.' - here');
             } else {
                 require(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR . '/app-frontend.php');
             }
@@ -60,7 +52,6 @@ if (!class_exists(APP_CLASS_NAME)) {
             add_action('init', array($this, 'init'));
             add_action('admin_init', array($this, 'admin_init'));
             add_action('admin_menu', array($this, 'admin_menu'));
-
         }
 
         /**
@@ -88,8 +79,7 @@ if (!class_exists(APP_CLASS_NAME)) {
                 // for each blog id
                 if ($networkwide) {
                     $old_blog = $wpdb->blogid;
-                    // Get all blog ids
-                    $blogids = $wpdb->get_col("SELECT blog_id FROM {$wpdb->blogs}");
+                    $blogids  = $wpdb->get_col("SELECT blog_id FROM {$wpdb->blogs}");
                     foreach ($blogids as $blog_id) {
                         switch_to_blog($blog_id);
                         call_user_func($pfunction, $networkwide);
@@ -145,7 +135,7 @@ if (!class_exists(APP_CLASS_NAME)) {
 }
 
 
-global $pdf_generator;
-if (class_exists(APP_CLASS_NAME) && !$pdf_generator) {
-    $pdf_generator = new Pdf_Generator();
+global $cap_graphics;
+if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
+    $cap_graphics = new Cap_Graphics();
 }

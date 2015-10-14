@@ -6,9 +6,9 @@ if (!function_exists('is_admin')) {
     exit();
 }
 
-if (!class_exists("Pdf_Generator_Settings")) {
+if (!class_exists("Cap_Graphics_Settings")) {
 
-    class Pdf_Generator_Settings extends Pdf_Generator
+    class Cap_Graphics_Settings extends Cap_Graphics
     {
 
         /**
@@ -24,16 +24,6 @@ if (!class_exists("Pdf_Generator_Settings")) {
             $this->app_options = get_option(parent::OPTIONS_PREFIX);
             $this->app_defaults = array(
                     'pdf' => array(
-                    'logo' => 'http://'.$_SERVER['HTTP_HOST'].'/wp-content/themes/nasba/img/pdf-logo.png',
-                    'logo_alignment' => 'left',
-                    'strip_images' => '1',
-                    'template' => 'report-pdf.php',
-                    'browserwidth' => 1280,
-                    'bodyfont' => 'Arial',
-                    'fontsize' => 8,
-                    'bottom_margin' => '.25in',
-                    'top_margin' => '.25in',
-                    'right_margin' => '.25in',
                     'left_margin' => '.25in'
                 )
             );
@@ -53,10 +43,11 @@ if (!class_exists("Pdf_Generator_Settings")) {
             //loop through template files for PDF Generation
             $theme_dir = wp_get_theme();
 
-            //logo alignment
+
             $a1 = array(
-                'left'=>'Left',
-                'center'=>'Center'
+                'aws'=>'Amazon AWS',
+                'media'=>'Media Library',
+                'plugin'=>'Plugin Directory'
             );
 
 
@@ -65,7 +56,7 @@ if (!class_exists("Pdf_Generator_Settings")) {
                 'section' => 'all',
                 'selected' => $options['all']['storage'],
                 'data' => $a1,
-                'desc' => '<span class="description">Host graphics packages on Amazon AWS or Locally.</span>'
+                'desc' => '<span class="description">Where should graphics packages be stored?</span>'
             ));
 
 
@@ -94,10 +85,10 @@ if (!class_exists("Pdf_Generator_Settings")) {
         function render_text($args)
         {
 
-            $section = isset($args['section']) ? $args['section'] : null;
-            $type = isset($args['type']) ? $args['type'] : null;
-            $class = isset($args['class']) ? 'class="' . $args['class'] . '"' : null;
-            $extra = isset($args['extra']) ?  $args['extra'] : null;
+            $section  = isset($args['section']) ? $args['section'] : null;
+            $type     = isset($args['type']) ? $args['type'] : null;
+            $class    = isset($args['class']) ? 'class="' . $args['class'] . '"' : null;
+            $extra    = isset($args['extra']) ?  $args['extra'] : null;
             
             //check if option contained in section
             if ($section) {
@@ -136,7 +127,7 @@ if (!class_exists("Pdf_Generator_Settings")) {
         function render_drop_down($args)
         {
             $section = isset($args['section']) ? $args['section'] : null;
-            $type = isset($args['type']) ? $args['type'] : null;
+            $type    = isset($args['type']) ? $args['type'] : null;
 
             if ($section) {
                 $name = parent::OPTIONS_PREFIX . '[' . $args['section'] . '][' . $args['id'] . ']';
@@ -179,7 +170,7 @@ if (!class_exists("Pdf_Generator_Settings")) {
         function render_checkbox($args)
         {
             $options = $this->app_options;
-            $id = parent::OPTIONS_PREFIX . '[' . $args['id'] . ']';
+            $id      = parent::OPTIONS_PREFIX . '[' . $args['id'] . ']';
             ?>
             <input name="<?php echo $id; ?>" type="checkbox"
                    value="<?php echo $args['value']; ?>" <?php echo isset($options[$args['id']]) ? 'checked' : ''; ?> /> <?php echo "{$args['text']}"; ?>
@@ -256,6 +247,5 @@ if (!class_exists("Pdf_Generator_Settings")) {
             }
         }
     }
-
 }
 ?>

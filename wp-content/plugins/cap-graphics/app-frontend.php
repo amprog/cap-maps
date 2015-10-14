@@ -1,9 +1,9 @@
 <?php
 if ( !defined( 'ABSPATH' ) ) die(); //keep from direct access
 
-if (!class_exists("Pdf_Generator_Frontend")) {
+if (!class_exists("Cap_Graphics_Frontend")) {
 
-    class Pdf_Generator_Frontend extends Pdf_Generator
+    class Cap_Graphics_Frontend extends Cap_Graphics
     {
 
         /*
