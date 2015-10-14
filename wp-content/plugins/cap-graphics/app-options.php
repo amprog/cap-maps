@@ -85,13 +85,10 @@ if (!class_exists("Cap_Graphics_Options")) {
          */
         function instruction_submenu()
         {
-            ?>
-            <div class="wrap">
-                <h2>CAP GRAPHICS INSTRUCTIONS</h2>
-                <p></p>
-
-            </div>
-            <?php
+            echo ABSPATH.parent::APP_DIR.'/assets/templates/home.php';
+            $var = 'balsgdf saldgf sd';
+            include(WP_CONTENT_DIR . parent::PLUGIN_DIR . parent::APP_DIR.'/assets/templates/admin/home.php');
+            // echo Cap_Graphics_Frontend::get_template($data,'admin/home.php'); //this one not working
         }
 
         /**

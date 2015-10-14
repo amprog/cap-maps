@@ -1156,5 +1156,8 @@ NCURSES_KEY_EOS;
             return ((float)$usec + (float)$sec);
         }
 
+        function get_template($data,$template) {
+            include(WP_CONTENT_DIR . parent::PLUGIN_DIR . parent::APP_DIR.'/assets/templates/'.$template);
+        }
     }
 }
