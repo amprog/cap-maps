@@ -13,7 +13,7 @@ if (!class_exists("Cap_Graphics_Settings")) {
 
         /**
          * Init class
-         */
+
         function __construct()
         {
             if (is_admin()) {
@@ -28,7 +28,7 @@ if (!class_exists("Cap_Graphics_Settings")) {
                 )
             );
         }
-
+         */
         /**
          * Init admin functions
          */

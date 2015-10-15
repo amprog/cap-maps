@@ -13,11 +13,12 @@ if (!class_exists("Cap_Graphics_Options")) {
 
         var $page    = '';
         var $message = 0;
-
+/*
         function __construct()
         {
             add_action('admin_menu', array($this, 'init'));
         }
+*/
 
         function init()
         {
