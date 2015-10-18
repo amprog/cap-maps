@@ -110,6 +110,14 @@ if (!class_exists("Cap_Graphics_Options")) {
         }
 
 
+        function charts_new() {
+
+
+            $data['var'] ='hello';
+            $var = 'var hello';
+            return parent::gc_get_template($data,'admin/charts_new.php');
+        }
+
     }
 }
 ?>

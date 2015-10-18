@@ -62,6 +62,18 @@ if (!class_exists(APP_CLASS_NAME)) {
                 //action for seettings
                 add_filter('plugin_row_meta', array(&$this, '_app_settings_link'), 10, 2);
                 //
+
+                wp_enqueue_style( 'wp-color-picker' );
+                wp_enqueue_script( 'wp-color-picker');
+                error_log(__FILE__.':'.__LINE__.'  did we make it');
+                //error_log(__FILE__.':'.__LINE__.' - cap graphics '.$cap_graphics->APP_NAMESPACE.'-admin');
+
+                $plugin_path = plugin_dir_url(__FILE__);
+
+                wp_enqueue_style( self::APP_NAMESPACE.'admin',  $plugin_path . 'assets/css/admin.css');
+                wp_enqueue_script( self::APP_NAMESPACE.'admin', $plugin_path . 'assets/js/admin.js');
+
+
             } else {
                 //require(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR . '/app-frontend.php');
             }
@@ -144,6 +156,7 @@ if (!class_exists(APP_CLASS_NAME)) {
  
             //convention over configuration, assume menu.png is name of menu icon
             add_menu_page(self::APP_NAME, self::APP_NAME, 'manage_options', self::APP_SLUG, self::APP_OPTION_CLASS_NAME.'::instruction_submenu',  WP_CONTENT_URL.self::PLUGIN_DIR.self::APP_DIR .'/assets/images/icon.png');
+            add_submenu_page( self::APP_SLUG, 'New Chart', 'New Chart', 'manage_options', self::APP_SLUG.'-new-chart', self::APP_OPTION_CLASS_NAME.'::charts_new' );
             add_submenu_page( self::APP_SLUG, 'Charts', 'Charts', 'manage_options', self::APP_SLUG.'-charts', self::APP_OPTION_CLASS_NAME.'::charts_submenu' );
             add_submenu_page( self::APP_SLUG, 'SVG', 'SVG', 'manage_options', self::APP_SLUG.'-svg', self::APP_OPTION_CLASS_NAME.'::svg_submenu' );
             add_submenu_page( self::APP_SLUG, 'Options', 'Options', 'manage_options', self::APP_SLUG.'-help', self::APP_OPTION_CLASS_NAME.'::option_function' );
@@ -242,15 +255,7 @@ EOD;
             /* TODO: no more meta boxes
             global $cap_graphics;
 
-            if (is_admin() ) {
-                wp_enqueue_style( 'wp-color-picker' );
-                wp_enqueue_script( 'wp-color-picker');
-                error_log(__FILE__.':'.__LINE__.'  did we make it');
-                //error_log(__FILE__.':'.__LINE__.' - cap graphics '.$cap_graphics->APP_NAMESPACE.'-admin');
 
-                //wp_enqueue_style( $cap_graphics->APP_NAMESPACE.'-admin', $this->gc_frontend->plugin_uri.'assets/css/admin.css');
-                //wp_enqueue_script( $cap_graphics->APP_NAMESPACE.'-admin', $this->gc_frontend->plugin_uri.'assets/js/admin.js');
-            }
             $title1        = 'SVG Maps';
             $callback1     = 'Cap_Map::cap_map_svg_callback';
             $title2        = 'Charts';
