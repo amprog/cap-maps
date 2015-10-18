@@ -16,25 +16,8 @@ if (!class_exists("Cap_Graphics_Options")) {
 
         function __construct()
         {
-            add_action('admin_menu', array($this, 'init'));
-        }
 
 
-        function init()
-        {
-            if (!current_user_can('update_plugins'))
-                return;
-
-            // Add a new submenu
-
-            $this->page = $page = add_options_page(
-                __(parent::SETTINGS_PAGE_TITLE, parent::APP_SLUG), __(parent::SETTINGS_PAGE_TITLE, parent::APP_SLUG), 'administrator', parent::APP_SLUG, array($this, 'option_function'));
-
-            $this->page = $page = add_options_page(
-            __(parent::SETTINGS_PAGE_TITLE, parent::APP_SLUG), __(parent::SETTINGS_PAGE_TITLE, parent::APP_SLUG), 'administrator', parent::APP_SLUG,'Pdf_Generator_Options::option_function');
-
-            $this->page = $page = add_options_page(
-               __(parent::SETTINGS_PAGE_TITLE, parent::APP_SLUG), __(parent::SETTINGS_PAGE_TITLE, parent::APP_SLUG), 'administrator', parent::APP_SLUG, array($this, 'option_function'));
 
 
         }
@@ -99,15 +82,18 @@ if (!class_exists("Cap_Graphics_Options")) {
          */
         function svg_submenu()
         {
-            //TODO:  use templating system here in admin folder
-            ?>
-            <div class="wrap">
-                <h2>SVG Maps and Graphics</h2>
+            $data['var'] ='data var';
+            $var = 'var var';
 
-                <p></p>
 
-            </div>
-            <?php
+
+            parent::gc_get_template($data,'admin/svg_submenu.php');
+
+
+            return parent::gc_chart_action_callback();
+
+            //return parent::gc_get_template2($data,'admin/svg_submenu.php');
+
         }
 
         /**
@@ -115,15 +101,12 @@ if (!class_exists("Cap_Graphics_Options")) {
          */
         function charts_submenu()
         {
-            //TODO:  use templating system here in admin folder
-            ?>
-            <div class="wrap">
-                <h2>Charts</h2>
 
-                <p></p>
 
-            </div>
-            <?php
+
+            $data['var'] ='hello';
+            $var = 'var hello';
+            return parent::gc_get_template($data,'admin/charts_submenu.php');
         }
 
 

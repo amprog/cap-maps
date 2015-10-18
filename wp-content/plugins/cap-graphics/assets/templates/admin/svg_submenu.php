@@ -1,5 +1,6 @@
 <div class="wrap">
-    $var
+    <?php echo "<p>var: $var</p>"; echo $data['var']; ?>
+    svg_Submenu
     <ul class="list">
         <li class="svg_li">
             <div id="svg_select_wrap">

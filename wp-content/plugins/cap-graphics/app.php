@@ -56,7 +56,7 @@ if (!class_exists(APP_CLASS_NAME)) {
                                                              require(WP_CONTENT_DIR . self::PLUGIN_DIR  . self::APP_DIR . '/app-frontend.php');
                                                          $this->gc_frontend = new $frontend_class();
 */
-                error_log(__FILE__.' - after frontend');
+                //error_log(__FILE__.' - after frontend');
 
 
                 //action for seettings
@@ -239,6 +239,7 @@ EOD;
          */
         function gc_meta()
         {
+            /* TODO: no more meta boxes
             global $cap_graphics;
 
             if (is_admin() ) {
@@ -263,6 +264,8 @@ EOD;
 
             add_meta_box( 'chart-meta-post', $title2, $callback2, 'page', $context, $priority);  //chart meta box for pages
             add_meta_box( 'chart-meta-page', $title2, $callback2, 'post', $context, $priority); //chart meta box for posts
+
+            */
         }
 
 
@@ -317,10 +320,10 @@ EOD;
         function gc_chart_callback($post) {
 
             $gc          = new Cap_Map();  //this should not be necessary!!!!
-            $folder           = ABSPATH.$this->gc_frontend->chart_folder;
-            $package_json     = file_get_contents($folder.'charts.json');
-            $packages         = json_decode($package_json);
-            $chart_select     = esc_attr(get_post_meta( $post->ID, 'chart_select', true ));
+            $data['folder']           = ABSPATH.$this->gc_frontend->chart_folder;
+            $data['package_json']       = file_get_contents($folder.'charts.json');
+            $data['packages']          = json_decode($package_json);
+            $data['chart_select']       = esc_attr(get_post_meta( $post->ID, 'chart_select', true ));
 
             //if there is already a chart selected, show this chart
             if($chart_select!='' || $chart_select!='Select One') {
@@ -331,37 +334,7 @@ EOD;
 
             wp_nonce_field( 'cap_map_meta_save', 'admin_meta_box_nonce' );
 
-            ?>
-
-            <ul class="list">
-                <li class="chart_li">
-                    <div id="chart_select_wrap">
-                        <div class="left">
-                            <span class="loading h"></span>
-                            <span>Select Existing Chart</span>
-                            <select class="chart_select" name="chart_select">
-                                <option>Select One</option>
-                                <?php foreach($packages->charts as $package): ?>
-                                    <?php if($chart_select==$package->slug): ?>
-                                        <option value="<?php echo $package->slug; ?>" selected><?php echo $package->label; ?></option>
-                                    <?php else: ?>
-                                        <option value="<?php echo $package->slug; ?>"><?php echo $package->label; ?></option>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="left r">
-                            <button type="button" class="create" data-type="chart">NEW CHART</button>
-                        </div>
-                    </div>
-                    <div id="chart_new"><?php echo $chart_new; ?></div>
-                </li>
-            </ul>
-            <div  class="note">
-                <p>Place the following short code where you want a CHART to appear: [cap_chart]</p>
-            </div>
-
-            <?php
+            return self::gc_get_template($data,'admin/gc_chart_callback.php');
 
         }
 
@@ -761,6 +734,9 @@ EOS;
          * AJAX: show template box, either with data or blank
          */
         function gc_chart_action_callback() {
+            //TODO: leave this out of templating system for now
+
+
 
             $list = $disable = '';
             $chart_slug = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;  //proper way of getting variables without notice errors
@@ -768,7 +744,7 @@ EOS;
 
             //if there is a chart type, then drop down selected so we grab data
             if($chart_slug) {
-                $gc            = new Cap_Map();
+                $gc                 = new Cap_Map();
                 $package            = $this->gc_frontend->plugin_uri.'charts/'.$chart_slug;
                 $jsonfile           = $package.'/'.$chart_slug.'.json';
                 $json               = file_get_contents(ABSPATH.$jsonfile);
@@ -807,15 +783,7 @@ EOS;
                 'Bar',
                 'Radar'
             );
-
-
-            foreach ($chart_types as $c) {
-                if($chart_type==$c) {
-                    $list .= "<option selected>$c</option>";
-                } else {
-                    $list .= "<option>$c</option>";
-                }
-            }
+            $list .= self::gc_get_dropdown($chart_types,$chart_type);
 
 
             //get default values for switches
@@ -969,6 +937,7 @@ EOS;
 
 </script>
 EOS;
+
 
             $return = array(
                 'html'=>$html,
@@ -1181,7 +1150,7 @@ E_ALL;
          * @return string
          */
         function gc_svg_tpl($svg_action,$svg,$js,$css,$json) {
-            /*
+
             return <<<NCURSES_KEY_EOS
 
 
@@ -1218,7 +1187,7 @@ E_ALL;
 <li><input type="hidden" id="svg_action" name="svg_action" value="$svg_action" /></li>
 </ul>
 NCURSES_KEY_EOS;
-*/
+
 
         }
 
@@ -1290,6 +1259,30 @@ NCURSES_KEY_EOS;
          */
         function gc_get_template($data,$template) {
             include(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR.'/assets/templates/'.$template);
+        }
+
+        function gc_get_template2($data,$template) {
+            echo file_get_contents(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR.'/assets/templates/'.$template);
+        }
+
+
+        /**
+         * UTILITY: build dropdown
+         * @param $options
+         * @param null $selected
+         * @return string
+         */
+        function gc_get_dropdown($options,$selected = NULL) {
+
+            $list = '';
+            foreach ($options as $c) {
+                if($selected==$c) {
+                    $list .= "<option selected>$c</option>";
+                } else {
+                    $list .= "<option>$c</option>";
+                }
+            }
+            return $list;
         }
     }
 
