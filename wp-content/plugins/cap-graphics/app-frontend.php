@@ -1,17 +1,22 @@
 <?php
-if ( !defined( 'ABSPATH' ) ) die(); //keep from direct access
+//if ( !defined( 'ABSPATH' ) ) die(); //keep from direct access
 
 if (!class_exists("Cap_Graphics_Frontend")) {
 
     class Cap_Graphics_Frontend extends Cap_Graphics
     {
 
+
         //TODO:  Also put visualizations in media library, just allow picking and link to edit screen
         //TODO: turn svg=slug to id=10
         //TODO: no more saving slugs in the database, everything is in media library
 
+        //function __construct() {}
+
         function settings_init() {
-            register_setting( 'wp_cap_map', 'cap_map_options', array(&$this, 'sanitize_settings') );
+            error_log(__FILE__.':'.__LINE__.' - frontend  ');
+
+            register_setting( 'wp_cap_map', 'gp_options', array(&$this, 'sanitize_settings') );
         }
 
         /**
@@ -33,7 +38,7 @@ if (!class_exists("Cap_Graphics_Frontend")) {
             static $this_plugin;
             if( ! $this_plugin ) $this_plugin = plugin_basename(__FILE__);
             if ( $file == $this_plugin ) {
-                $settings_link = '<a href="' . admin_url( 'options-general.php?page=cap_map_options' ) . '">' . __('Settings', 'cap_map_options') . '</a>';
+                $settings_link = '<a href="' . admin_url( 'options-general.php?page=gp_options' ) . '">' . __('Settings', 'gp_options') . '</a>';
                 array_unshift( $links, $settings_link ); // before other links
             }
             return $links;
@@ -43,7 +48,7 @@ if (!class_exists("Cap_Graphics_Frontend")) {
          *
 
         function gc_options_admin() {
-            add_options_page('Cap Map', 'Cap Map', 'administrator', 'cap_map_options','Cap_Map::cap_map_admin');
+            add_options_page('Cap Map', 'Cap Map', 'administrator', 'gp_options','Cap_Map::cap_map_admin');
         }
          */
         /**
@@ -51,22 +56,10 @@ if (!class_exists("Cap_Graphics_Frontend")) {
          */
         function gc_admin() {
             //$gc = new Cap_Map();  //this should not be necessary!!!!
-            ?>
-            <div class="wrap">
-                <h2>CAP MAP - Settings and Options</h2>
-                <div class="postbox-container" style="width:65%;">
-                    <div class="metabox-holder">
-                        <div class="meta-box-sortables">
-                            <form action="options.php" method="post">
-                                <p>namespace:<?php //echo $this->this_plugin; ?></p>
-                                <p>plugin url: <?php //echo $this->gc_frontend->plugin_uri; ?></p>
 
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <?php
+
+            $html = self::gc_get_template(NULL,'assets/admin.php');
+            return $html;
         }
 
         /**
@@ -92,8 +85,11 @@ EOD;
             if (is_admin() ) {
                 wp_enqueue_style( 'wp-color-picker' );
                 wp_enqueue_script( 'wp-color-picker');
-                wp_enqueue_style( $cap_graphics->APP_NAMESPACE.'-admin', $this->gc_frontend->plugin_uri.'assets/css/admin.css');
-                wp_enqueue_script( $cap_graphics->APP_NAMESPACE.'-admin', $this->gc_frontend->plugin_uri.'assets/js/admin.js');
+                error_log(__FILE__.':'.__LINE__.'  did we make it');
+                //error_log(__FILE__.':'.__LINE__.' - cap graphics '.$cap_graphics->APP_NAMESPACE.'-admin');
+
+                //wp_enqueue_style( $cap_graphics->APP_NAMESPACE.'-admin', $this->gc_frontend->plugin_uri.'assets/css/admin.css');
+                //wp_enqueue_script( $cap_graphics->APP_NAMESPACE.'-admin', $this->gc_frontend->plugin_uri.'assets/js/admin.js');
             }
             $title1        = 'SVG Maps';
             $callback1     = 'Cap_Map::cap_map_svg_callback';
@@ -115,9 +111,10 @@ EOD;
          * Custom callback function for svg box
          */
         function gc_svg_callback($post) {
+
             global $frontend_class;
 
-            $folder           = ABSPATH.$this->gc_frontend->svg_folder;
+            //$folder           = ABSPATH.$this->gc_frontend->svg_folder;
             $svg_select       = esc_attr(get_post_meta( $post->ID, 'svg_select', true ));
             $package_json     = file_get_contents($folder.'svg.json');
             $packages         = json_decode($package_json);
@@ -126,12 +123,16 @@ EOD;
             if($svg_select!='' || $svg_select!='Select One') {
 
                 //instead of using javascript to pull existing data, get that data here
-                $svg          = file_get_contents($folder.$svg_select.'/'.$svg_select.'.svg', "w");
-                $js           = file_get_contents($folder.$svg_select.'/'.$svg_select.'.js', "w");
-                $css          = file_get_contents($folder.$svg_select.'/'.$svg_select.'.css', "w");
-                $json         = file_get_contents($folder.$svg_select.'/'.$svg_select.'.json', "w");
-                $svg_new      = $this->gc_frontend->cap_map_svg_tpl('update',$svg,$js,$css,$json);
+                $data['svg']  = file_get_contents($folder.$svg_select.'/'.$svg_select.'.svg', "w");
+                $data['js']   = file_get_contents($folder.$svg_select.'/'.$svg_select.'.js', "w");
+                $data['css']  = file_get_contents($folder.$svg_select.'/'.$svg_select.'.css', "w");
+                $data['json'] = file_get_contents($folder.$svg_select.'/'.$svg_select.'.json', "w");
+                //$svg_new      = $this->gc_frontend->cap_map_svg_tpl('update',$svg,$js,$css,$json);
             }
+
+
+
+            return self::gc_get_template($data,'admin/svg_edit.php');
 
             /*
              *    <?php while (false !== ($entry = readdir($handle))): ?>
@@ -147,40 +148,7 @@ EOD;
 
             //wp_nonce_field( 'cap_map_meta_save', 'admin_meta_box_nonce' );
 
-            ?>
-            <ul class="list">
-                <li class="svg_li">
-                    <div id="svg_select_wrap">
-                        <div class="left">
-                            <span class="loading h"></span>
-                        <span id="svg_select_inner">
-                            <span><strong>Select SVG Graphic</strong></span>
-                            <select class="svg_select" name="svg_select">
-                                <option>Select One</option>
-                                <?php foreach($packages->svg as $package): ?>
-                                    <?php if($svg_select==$package->slug): ?>
-                                        <option value="<?php echo $package->slug; ?>" selected><?php echo $package->label; ?></option>
-                                    <?php else: ?>
-                                        <option value="<?php echo $package->slug; ?>"><?php echo $package->label; ?></option>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-                            </select>
-                        </span>
-                        </div>
-                        <div class="left r">
-                            <button type="button" class="create" data-type="svg">NEW SVG GRAPHIC</button>
-                        </div>
-                    </div>
-                    <div id="svg_slug_wrap"></div>
-                    <div id="svg_new"><?php echo $svg_new; ?></div>
-                    <input type="hidden" id="ID" value="<?php echo $post->ID; ?>" />
-                </li>
-            </ul>
-            <div class="note">
-                <p>Place the following short code where you want an SVG file to appear: [cap_svg]</p>
-                <p>Place multiple charts on the page by using the svg slug: [cap_svg svg="PACKAGE_SLUG"]</p>
-            </div>
-            <?php
+
         }
 
 
@@ -458,7 +426,7 @@ EOD;
          */
         function gc_svg_shortcode( $atts ){
             //TODO: think about putting every fiule, json, js, css into one "package" or in ONE folder
-   
+
             $id       = get_the_ID();
 
             //TODO: if short code is [cap_svg svg="slug"]
@@ -502,6 +470,7 @@ EOD;
         /**
          * Return chart depending on options selected for this ID
          * @param $atts
+         * @return string
          */
         function gc_chart_shortcode( $atts ){
             $content = $legend_html = $legend_inner = $canvas_html = '';
@@ -1160,7 +1129,7 @@ NCURSES_KEY_EOS;
          * @param $data
          * @param $template
          */
-        function get_template($data,$template) {
+        function gc_get_template($data,$template) {
             include(WP_CONTENT_DIR . parent::PLUGIN_DIR . parent::APP_DIR.'/assets/templates/'.$template);
         }
     }
