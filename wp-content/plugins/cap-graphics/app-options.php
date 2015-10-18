@@ -110,14 +110,35 @@ if (!class_exists("Cap_Graphics_Options")) {
         }
 
 
+        /**
+         * Create a new CHART
+         */
         function charts_new() {
 
+            $images      =    plugin_dir_url(__FILE__).'/assets/images/';
+            $data['h1']          = 'Create a New Chart';
 
-            $data['var'] ='hello';
-            $var = 'var hello';
+
+            //add chart typs here to one array
+            $data['charts']['pie']['label'] = 'Pie Chart';
+            $data['charts']['pie']['slug']  = 'pie';
+            $data['charts']['pie']['img']   = $images.'pie.png';
+
+
+            $data['charts']['doughnut']['label'] = 'Doughnut Chart';
+            $data['charts']['doughnut']['img']   = $images.'doughnut.png';
+
+
             return parent::gc_get_template($data,'admin/charts_new.php');
         }
 
     }
 }
+/*
+ *     <?php foreach($data['charts'] as $chart): ?>
+        <div class="chart">
+            <?php echo $chart['name']; ?>
+        </div>
+    <?php endforeach; ?>
+ */
 ?>
