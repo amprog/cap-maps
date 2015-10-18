@@ -41,12 +41,12 @@ if (!class_exists(APP_CLASS_NAME)) {
 
                 error_log(__FILE__.':'.__LINE__.' - here');
 
-/*
+
 
                                if (!class_exists($settings_class))
                                    require(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR . '/app-settings.php');
                                $this->settings = new $settings_class();
-*/
+
                                            if (!class_exists($options_class))
                                                require(WP_CONTENT_DIR . self::PLUGIN_DIR  . self::APP_DIR . '/app-options.php');
                                            $this->options_page = new $options_class();
