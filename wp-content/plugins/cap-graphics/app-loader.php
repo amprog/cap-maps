@@ -24,7 +24,7 @@ register_activation_hook(__FILE__, 'cap_graphics_activate');
 
 // display error message to users
 if (array_key_exists('action', $_GET) && $_GET['action'] == 'error_scrape') {
-    die("This PLUGIN requires PHP 5.0 or higher. Please deactivate.");
+    //die("This PLUGIN requires PHP 5.0 or higher. Please deactivate.");
 }
 
 function cap_graphics_activate()

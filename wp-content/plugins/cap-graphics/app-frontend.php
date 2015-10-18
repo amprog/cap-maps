@@ -59,7 +59,7 @@ if (!class_exists("Cap_Graphics_Frontend")) {
                         <div class="meta-box-sortables">
                             <form action="options.php" method="post">
                                 <p>namespace:<?php //echo $this->this_plugin; ?></p>
-                                <p>plugin url: <?php echo $this->gc_frontend->plugin_uri; ?></p>
+                                <p>plugin url: <?php //echo $this->gc_frontend->plugin_uri; ?></p>
 
                             </form>
                         </div>
@@ -87,12 +87,13 @@ EOD;
          */
         function gc_meta()
         {
+            global $cap_graphics;
 
             if (is_admin() ) {
                 wp_enqueue_style( 'wp-color-picker' );
                 wp_enqueue_script( 'wp-color-picker');
-                wp_enqueue_style( $this->gc_frontend->namespace.'-admin', $this->gc_frontend->plugin_uri.'assets/css/admin.css');
-                wp_enqueue_script( $this->gc_frontend->namespace.'-admin', $this->gc_frontend->plugin_uri.'assets/js/admin.js');
+                wp_enqueue_style( $cap_graphics->APP_NAMESPACE.'-admin', $this->gc_frontend->plugin_uri.'assets/css/admin.css');
+                wp_enqueue_script( $cap_graphics->APP_NAMESPACE.'-admin', $this->gc_frontend->plugin_uri.'assets/js/admin.js');
             }
             $title1        = 'SVG Maps';
             $callback1     = 'Cap_Map::cap_map_svg_callback';
@@ -114,6 +115,7 @@ EOD;
          * Custom callback function for svg box
          */
         function gc_svg_callback($post) {
+            global $frontend_class;
 
             $folder           = ABSPATH.$this->gc_frontend->svg_folder;
             $svg_select       = esc_attr(get_post_meta( $post->ID, 'svg_select', true ));

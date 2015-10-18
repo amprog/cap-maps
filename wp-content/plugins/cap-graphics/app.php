@@ -3,13 +3,14 @@
 if ( !defined( 'ABSPATH' ) ) die(); //keep from direct access
 
 define('APP_CLASS_NAME', 'Cap_Graphics');
-
+error_log(__FILE__.':'.__LINE__);
 if (!class_exists(APP_CLASS_NAME)) {
 
     class Cap_Graphics
     {
         const APP_VERSION             = '1.0';
         const APP_DEBUG               = 1;
+        const APP_NAMESPACE           = 'gc_';
         const APP_LOADER              = 'cap-graphics/app-loader.php';
         const APP_NAME                = 'CAP Graphics';
         const APP_SLUG                = 'cap-graphics';
@@ -23,6 +24,9 @@ if (!class_exists(APP_CLASS_NAME)) {
         const SETTINGS_PAGE_TITLE     = 'CAP Graphics Options';
         const SETTINGS_PAGE1          = 'cg_settings';
         const SETTINGS_PAGE_SUBTITLE1 = '';
+        //const APP_SVG_FOLDER          = '/cap-graphics/';  //TODO:  get this from options
+        //const APP_CHART_FOLDER        = '';
+
 
         var $settings, $options_page;
 
@@ -35,25 +39,28 @@ if (!class_exists(APP_CLASS_NAME)) {
                 $options_class   = APP_CLASS_NAME . '_Options';
                 $frontend_class  = APP_CLASS_NAME . '_Frontend';
 
-                //error_log(__FILE__.' - here');
-                if (!class_exists($settings_class))
-                    require(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR . '/app-settings.php');
-                $this->settings = new $settings_class();
+                error_log(__FILE__.':'.__LINE__.' - here');
 
-                if (!class_exists($options_class))
-                    require(WP_CONTENT_DIR . self::PLUGIN_DIR  . self::APP_DIR . '/app-options.php');
-                $this->options_page = new $options_class();
+/*
 
-                /*
-                if (!class_exists($options_class))
-                    require(WP_CONTENT_DIR . self::PLUGIN_DIR  . self::APP_DIR . '/app-frontend.php');
-                $this->gc_frontend = new $frontend_class();
+                               if (!class_exists($settings_class))
+                                   require(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR . '/app-settings.php');
+                               $this->settings = new $settings_class();
 */
+                                           if (!class_exists($options_class))
+                                               require(WP_CONTENT_DIR . self::PLUGIN_DIR  . self::APP_DIR . '/app-options.php');
+                                           $this->options_page = new $options_class();
+                /*
+
+                              if (!class_exists($frontend_class))
+                                                             require(WP_CONTENT_DIR . self::PLUGIN_DIR  . self::APP_DIR . '/app-frontend.php');
+                                                         $this->gc_frontend = new $frontend_class();
+              */
                 //action for seettings
                 add_filter('plugin_row_meta', array(&$this, '_app_settings_link'), 10, 2);
                 //error_log(__FILE__.' - here');
             } else {
-                require(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR . '/app-frontend.php');
+                //require(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR . '/app-frontend.php');
             }
 
             add_action('init', array($this, 'init'));
@@ -163,7 +170,7 @@ global $cap_graphics;
 if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
     $cap_graphics = new Cap_Graphics();
 
-    error_log(__FILE__.':'.__LINE__);
+
 
     if ( is_admin() ) {
         add_action( 'admin_menu', 'Cap_Graphics_Frontend::gc_options_admin' );  //options page, TODO: perhaps put chart options here

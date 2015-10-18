@@ -11,14 +11,14 @@ if (!class_exists("Cap_Graphics_Options")) {
     class Cap_Graphics_Options extends Cap_Graphics
     {
 
-        var $page    = '';
+        var $page = '';
         var $message = 0;
-/*
+
         function __construct()
         {
             add_action('admin_menu', array($this, 'init'));
         }
-*/
+
 
         function init()
         {
@@ -26,15 +26,15 @@ if (!class_exists("Cap_Graphics_Options")) {
                 return;
 
             // Add a new submenu
-            /*
+
             $this->page = $page = add_options_page(
                 __(parent::SETTINGS_PAGE_TITLE, parent::APP_SLUG), __(parent::SETTINGS_PAGE_TITLE, parent::APP_SLUG), 'administrator', parent::APP_SLUG, array($this, 'option_function'));
-*/
-            //$this->page = $page = add_options_page(
-                //__(parent::SETTINGS_PAGE_TITLE, parent::APP_SLUG), __(parent::SETTINGS_PAGE_TITLE, parent::APP_SLUG), 'administrator', parent::APP_SLUG,'Pdf_Generator_Options::option_function');
 
-            //$this->page = $page = add_options_page(
-             //   __(parent::SETTINGS_PAGE_TITLE, parent::APP_SLUG), __(parent::SETTINGS_PAGE_TITLE, parent::APP_SLUG), 'administrator', parent::APP_SLUG, array($this, 'option_function'));
+            $this->page = $page = add_options_page(
+            __(parent::SETTINGS_PAGE_TITLE, parent::APP_SLUG), __(parent::SETTINGS_PAGE_TITLE, parent::APP_SLUG), 'administrator', parent::APP_SLUG,'Pdf_Generator_Options::option_function');
+
+            $this->page = $page = add_options_page(
+               __(parent::SETTINGS_PAGE_TITLE, parent::APP_SLUG), __(parent::SETTINGS_PAGE_TITLE, parent::APP_SLUG), 'administrator', parent::APP_SLUG, array($this, 'option_function'));
 
 
         }
@@ -54,52 +54,56 @@ if (!class_exists("Cap_Graphics_Options")) {
 
             $title = __(parent::SETTINGS_PAGE_TITLE, parent::APP_SLUG);
             ?>
-        <div class="wrap">
-            <h2><?php echo esc_html($title); ?></h2>
+            <div class="wrap">
+                <h2><?php echo esc_html($title); ?></h2>
 
+                <?php
+                if (!empty($message)) :
+                    ?>
+                    <div id="message" class="updated fade"><p><?php echo $message; ?></p></div>
+                    <?php
+                endif;
+                ?>
+
+                <form method="post" action="options.php">
+                    <?php
+                    settings_fields(parent::OPTIONS_PAGE);
+                    do_settings_sections(parent::SETTINGS_PAGE1);
+                    ?>
+                    <p>
+                        <input type="submit" class="button button-primary" name="save_options"
+                               value="<?php esc_attr_e('Save Options'); ?>"/>
+                    </p>
+                </form>
+                <p class="note"><?php print parent::APP_NAME; ?> by Amir Meshkin
+                    version <?php print parent::APP_VERSION; ?></p>
+                <span> debug: <?php print parent::APP_DEBUG; ?></span>
+            </div>
             <?php
-            if (!empty($message)) :
-                ?>
-                <div id="message" class="updated fade"><p><?php echo $message; ?></p></div>
-                <?php
-            endif;
-            ?>
-
-            <form method="post" action="options.php">
-                <?php
-                settings_fields(parent::OPTIONS_PAGE);
-                do_settings_sections(parent::SETTINGS_PAGE1);
-                ?>
-                <p>
-                    <input type="submit" class="button button-primary" name="save_options" value="<?php esc_attr_e('Save Options'); ?>"/>
-                </p>
-            </form>
-            <p class="note"><?php print parent::APP_NAME; ?> by Amir Meshkin version <?php print parent::APP_VERSION; ?></p>
-            <span> debug: <?php print parent::APP_DEBUG; ?></span>
-        </div>
-        <?php
         }
 
 
         /**
-        * Instructions page
+         * Instructions page
          */
         function instruction_submenu()
         {
-            echo ABSPATH.parent::APP_DIR.'/assets/templates/home.php';
+            echo ABSPATH . parent::APP_DIR . '/assets/templates/home.php';
             $var = 'balsgdf saldgf sd';
-            include(WP_CONTENT_DIR . parent::PLUGIN_DIR . parent::APP_DIR.'/assets/templates/admin/home.php');
+            include(WP_CONTENT_DIR . parent::PLUGIN_DIR . parent::APP_DIR . '/assets/templates/admin/home.php');
             // echo Cap_Graphics_Frontend::get_template($data,'admin/home.php'); //this one not working
         }
 
         /**
          *
          */
-        function svg_submenu() {
+        function svg_submenu()
+        {
             //TODO:  use templating system here in admin folder
             ?>
             <div class="wrap">
                 <h2>SVG Maps and Graphics</h2>
+
                 <p></p>
 
             </div>
@@ -109,11 +113,13 @@ if (!class_exists("Cap_Graphics_Options")) {
         /**
          *
          */
-        function charts_submenu() {
+        function charts_submenu()
+        {
             //TODO:  use templating system here in admin folder
             ?>
             <div class="wrap">
                 <h2>Charts</h2>
+
                 <p></p>
 
             </div>
