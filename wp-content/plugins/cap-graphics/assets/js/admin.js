@@ -1,4 +1,5 @@
 jQuery(document).ready(function($) {
+    //TODO:  js for placing charts needs to be a foreach that iterates through all charts it finds on the page
     svg_wrap = $('#svg_select_wrap');
     //creating new charts
     $( ".create" ).live( "click", function(e) {
@@ -37,7 +38,7 @@ jQuery(document).ready(function($) {
             'chart_slug': $( this ).data('type')
         };
         jQuery.post(ajaxurl, data, function(response) {
-            $('#list_assets').html(response.html); console.dir(response); 
+            $('#list_assets').html(response.html); console.dir(response);
         });
 
 

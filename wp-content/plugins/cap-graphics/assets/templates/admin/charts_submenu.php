@@ -5,5 +5,8 @@
     <p>boxes representing current charrs in system.   Open them in lightbox, instead of everything on one page for speed.</p>
     <p>var:  <?php echo $var; ?></p>
 
-    <p>new jack city: <?php echo $data['var']; ?></p>
+    <p>data var: <?php echo $data['var']; ?></p>
+
+
+
 </div>
