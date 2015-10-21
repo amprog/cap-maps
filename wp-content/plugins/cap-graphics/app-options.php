@@ -121,7 +121,6 @@ if (!class_exists("Cap_Graphics_Options")) {
 
             //add chart typs here to one array
             $data['charts']['pie']['label'] = 'Pie Chart';
-            $data['charts']['pie']['slug']  = 'pie';
             $data['charts']['pie']['img']   = $images.'pie.png';
 
 

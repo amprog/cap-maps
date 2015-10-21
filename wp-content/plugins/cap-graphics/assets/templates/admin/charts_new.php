@@ -4,7 +4,7 @@
 <div id="list_assets">
     <ul>
         <?php foreach($data['charts'] as $key=>$chart): ?>
-            <li data-type="<?php echo $key; ?>">
+            <li data-type="<?php echo $key; ?>" class="new_chart">
                 <h3><?php echo $chart['label']; ?></h3>
                 <img src="<?php echo $chart['img']; ?>" alt="<?php echo $chart['label']; ?>" />
             </li>
@@ -12,3 +12,4 @@
     </ul>
 
 </div>
+

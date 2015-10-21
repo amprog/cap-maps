@@ -30,6 +30,23 @@ jQuery(document).ready(function($) {
         e.preventDefault();
     });
 
+    $( ".new_chart" ).live( "click", function(e) {
+
+        var data = {
+            'action': 'cap_map_chart_action',
+            'chart_slug': $( this ).data('type')
+        };
+        jQuery.post(ajaxurl, data, function(response) {
+            $('#list_assets').html(response.html); console.dir(response); 
+        });
+
+
+        console.log('new_chart');
+        console.log($( this ).data('type'));
+
+
+    });
+
     //new chart, needs blank form fields by chart type
     $( ".chart_type" ).live( "change", function() {
         if($('#chart_action').val()=='new') {
