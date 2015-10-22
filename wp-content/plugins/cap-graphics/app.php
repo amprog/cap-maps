@@ -37,31 +37,22 @@ if (!class_exists(APP_CLASS_NAME)) {
 
                 $settings_class  = APP_CLASS_NAME . '_Settings';
                 $options_class   = APP_CLASS_NAME . '_Options';
-                $frontend_class  = APP_CLASS_NAME . '_Frontend';
+
 
                 error_log(__FILE__.':'.__LINE__.' - here');
 
+               if (!class_exists($settings_class))
+                   require(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR . '/app-settings.php');
+               $this->settings = new $settings_class();
 
+               if (!class_exists($options_class))
+                   require(WP_CONTENT_DIR . self::PLUGIN_DIR  . self::APP_DIR . '/app-options.php');
+               $this->options_page = new $options_class();
 
-                               if (!class_exists($settings_class))
-                                   require(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR . '/app-settings.php');
-                               $this->settings = new $settings_class();
-
-                                           if (!class_exists($options_class))
-                                               require(WP_CONTENT_DIR . self::PLUGIN_DIR  . self::APP_DIR . '/app-options.php');
-                                           $this->options_page = new $options_class();
-
-/*
-                              if (!class_exists($frontend_class))
-                                                             require(WP_CONTENT_DIR . self::PLUGIN_DIR  . self::APP_DIR . '/app-frontend.php');
-                                                         $this->gc_frontend = new $frontend_class();
-*/
-                //error_log(__FILE__.' - after frontend');
 
 
                 //action for seettings
                 add_filter('plugin_row_meta', array(&$this, '_app_settings_link'), 10, 2);
-                //
 
                 wp_enqueue_style( 'wp-color-picker' );
                 wp_enqueue_script( 'wp-color-picker');
@@ -77,6 +68,12 @@ if (!class_exists(APP_CLASS_NAME)) {
             } else {
                 //require(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR . '/app-frontend.php');
             }
+
+            $this->app_defaults = array(
+                'all' => array(
+                    'storage' => 'media'
+                )
+            );
 
             add_action('init', array($this, 'init'));
             add_action('admin_init', array($this, 'admin_init'));
@@ -156,14 +153,19 @@ if (!class_exists(APP_CLASS_NAME)) {
  
             //convention over configuration, assume menu.png is name of menu icon
             add_menu_page(self::APP_NAME, self::APP_NAME, 'manage_options', self::APP_SLUG, self::APP_OPTION_CLASS_NAME.'::instruction_submenu',  WP_CONTENT_URL.self::PLUGIN_DIR.self::APP_DIR .'/assets/images/icon.png');
-            add_submenu_page( self::APP_SLUG, 'New Chart', 'New Chart', 'manage_options', self::APP_SLUG.'-new-chart', self::APP_OPTION_CLASS_NAME.'::charts_new' );
             add_submenu_page( self::APP_SLUG, 'Charts', 'Charts', 'manage_options', self::APP_SLUG.'-charts', self::APP_OPTION_CLASS_NAME.'::charts_submenu' );
+            add_submenu_page( self::APP_SLUG, 'New Chart', 'New Chart', 'manage_options', self::APP_SLUG.'-new-chart', self::APP_OPTION_CLASS_NAME.'::charts_new' );
             add_submenu_page( self::APP_SLUG, 'SVG', 'SVG', 'manage_options', self::APP_SLUG.'-svg', self::APP_OPTION_CLASS_NAME.'::svg_submenu' );
+            add_submenu_page( self::APP_SLUG, 'New SVG', 'New SVG', 'manage_options', self::APP_SLUG.'-new-svg', self::APP_OPTION_CLASS_NAME.'::svg_new' );
             add_submenu_page( self::APP_SLUG, 'Options', 'Options', 'manage_options', self::APP_SLUG.'-help', self::APP_OPTION_CLASS_NAME.'::option_function' );
 
             //add_plugins_page( self::APP_NAME, "Instructions", 'manage_options', 'pdf-instructions', self::APP_OPTION_CLASS_NAME.'::instruction_submenu');
         }
 
+        /**
+         * UTILITY: Error output
+         * @param $input
+         */
         function _e($input) {
 
             if(self::APP_DEBUG) {
@@ -175,9 +177,6 @@ if (!class_exists(APP_CLASS_NAME)) {
                     error_log($input);
                 }
             }
-
-
-
         }
 
 
@@ -186,8 +185,7 @@ if (!class_exists(APP_CLASS_NAME)) {
         //TODO: no more saving slugs in the database, everything is in media library
 
         function settings_init() {
-            error_log(__FILE__.':'.__LINE__.' - frontend  ');
-
+            //error_log(__FILE__.':'.__LINE__.' - frontend  ');
             register_setting( 'wp_cap_map', 'gp_options', array(&$this, 'sanitize_settings') );
         }
 
@@ -741,44 +739,65 @@ EOS;
         function gc_chart_action_callback() {
             //TODO: leave this out of templating system for now
 
+            //$this->app_options;
+            $app_options  = get_option(self::OPTIONS_PREFIX);
+
+
+            $cap_graphics = new Cap_Graphics();
+            $app_defaults = $cap_graphics->app_defaults;  //what is wrong with this
+
+
+            $options    = Cap_Graphics_Settings::merge_options($app_defaults, $app_options);
+
+            $return = array(
+                'html'=>$_POST,
+                'options'=>$options,
+            );
+
+            wp_send_json($return);
+            wp_die();
+
 
 
             $list = $disable = '';
-            $chart_slug = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;  //proper way of getting variables without notice errors
+            $chart_type = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;  //proper way of getting variables without notice errors
             $d_place    = 'Enter a Slug with Underscores Not Spaces';
+            $chart_data = self::get_chart_data(NULL,$chart_type,'');
+
+
 
             //if there is a chart type, then drop down selected so we grab data
-            if($chart_slug) {
-                $gc                 = new Cap_Map();
-                $package            = $this->gc_frontend->plugin_uri.'charts/'.$chart_slug;
-                $jsonfile           = $package.'/'.$chart_slug.'.json';
-                $json               = file_get_contents(ABSPATH.$jsonfile);
-                $data               = json_decode($json,true);
 
-                //form values
-                $chart_name         = isset($data['options']['chart_name']) ? $data['options']['chart_name'] : null;
-                $chart_type         = isset($data['options']['chart_type']) ? $data['options']['chart_type']  : null;
-                $chart_source       = isset($data['options']['chart_source']) ? $data['options']['chart_source']  : null;
-                $segmentStrokeColor = isset($data['options']['segmentStrokeColor']) ? $data['options']['segmentStrokeColor']  : null;
-                $width              = isset($data['options']['width']) ? $data['options']['width']  : null;
-                $height             = isset($data['options']['height']) ? $data['options']['height']  : null;
-                $source             = isset($data['options']['source']) ? $data['options']['source']  : null;
-                $legend             = isset($data['options']['legend']) ? $data['options']['legend']  : null;
-                $name               = isset($data['options']['name']) ? $data['options']['name']  : null;
+            //TODO: where to get packages
+            $package            = $this->gc_frontend->plugin_uri.'charts/'.$chart_slug;
 
-                if($data['options']['animateRotate']=='1') {
-                    $animateRotate = 1;
-                } else {
-                    $animateRotate = 0;
-                }
 
-                $chart_action       = 'update';
-                $chart_data         = self::get_chart_data($data,$chart_type,'');
+
+
+            $jsonfile           = $package.'/'.$chart_slug.'.json';
+            $json               = file_get_contents(ABSPATH.$jsonfile);
+            $data               = json_decode($json,true);
+
+            //form values
+            $chart_name         = isset($data['options']['chart_name']) ? $data['options']['chart_name'] : null;
+            $chart_type         = isset($data['options']['chart_type']) ? $data['options']['chart_type']  : null;
+            $chart_source       = isset($data['options']['chart_source']) ? $data['options']['chart_source']  : null;
+            $segmentStrokeColor = isset($data['options']['segmentStrokeColor']) ? $data['options']['segmentStrokeColor']  : null;
+            $width              = isset($data['options']['width']) ? $data['options']['width']  : null;
+            $height             = isset($data['options']['height']) ? $data['options']['height']  : null;
+            $source             = isset($data['options']['source']) ? $data['options']['source']  : null;
+            $legend             = isset($data['options']['legend']) ? $data['options']['legend']  : null;
+            $name               = isset($data['options']['name']) ? $data['options']['name']  : null;
+
+            if($data['options']['animateRotate']=='1') {
+                $animateRotate = 1;
             } else {
-                //chart data should be a blank form
-                $segmentStrokeColor = '#ffffff';
-                $chart_action       = 'new';
+                $animateRotate = 0;
             }
+
+            $chart_action       = 'update';
+            $chart_data         = self::get_chart_data($data,$chart_type,'');
+
 
             $chart_types = array(
                 'Doughnut',
@@ -957,6 +976,242 @@ EOS;
         }
 
 
+
+        /**
+         * AJAX: show template box, either with data or blank
+         */
+        function gc_chart_action_callbackOLD() {
+            //TODO: leave this out of templating system for now
+
+
+
+
+
+            $list = $disable = '';
+            $chart_slug = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;  //proper way of getting variables without notice errors
+            $d_place    = 'Enter a Slug with Underscores Not Spaces';
+
+
+            $return = array(
+                'html'=>$_POST,
+                'options'=>$this->options_page,
+            );
+
+            wp_send_json($return);
+            wp_die();
+
+
+            //if there is a chart type, then drop down selected so we grab data
+
+            //TODO: where to get packages
+            $package            = $this->gc_frontend->plugin_uri.'charts/'.$chart_slug;
+
+
+
+
+            $jsonfile           = $package.'/'.$chart_slug.'.json';
+            $json               = file_get_contents(ABSPATH.$jsonfile);
+            $data               = json_decode($json,true);
+
+            //form values
+            $chart_name         = isset($data['options']['chart_name']) ? $data['options']['chart_name'] : null;
+            $chart_type         = isset($data['options']['chart_type']) ? $data['options']['chart_type']  : null;
+            $chart_source       = isset($data['options']['chart_source']) ? $data['options']['chart_source']  : null;
+            $segmentStrokeColor = isset($data['options']['segmentStrokeColor']) ? $data['options']['segmentStrokeColor']  : null;
+            $width              = isset($data['options']['width']) ? $data['options']['width']  : null;
+            $height             = isset($data['options']['height']) ? $data['options']['height']  : null;
+            $source             = isset($data['options']['source']) ? $data['options']['source']  : null;
+            $legend             = isset($data['options']['legend']) ? $data['options']['legend']  : null;
+            $name               = isset($data['options']['name']) ? $data['options']['name']  : null;
+
+            if($data['options']['animateRotate']=='1') {
+                $animateRotate = 1;
+            } else {
+                $animateRotate = 0;
+            }
+
+            $chart_action       = 'update';
+            $chart_data         = self::get_chart_data($data,$chart_type,'');
+
+
+            $chart_types = array(
+                'Doughnut',
+                'Pie',
+                'Line',
+                'LinePie',
+                'Bar',
+                'Radar'
+            );
+            $list .= self::gc_get_dropdown($chart_types,$chart_type);
+
+
+            //get default values for switches
+            switch ($name) {
+                case 0:
+                    $name_disable = 'selected';
+                    $name_enable  = '';
+                    $name_1        = '';
+                    $name_2        = 'checked';
+                    break;
+                case 1:
+                    $name_enable = 'selected';
+                    $name_disable  = '';
+                    $name_1        = 'checked';
+                    $name_2        = '';
+                    break;
+                default:
+                    $name_disable = 'selected';
+                    $name_enable  = '';
+                    $name_1        = '';
+                    $name_2        = 'checked';
+            }
+
+            switch ($source) {
+                case 0:
+                    $source_disable  = 'selected';
+                    $source_enable   = '';
+                    $source_1        = '';
+                    $source_2        = 'checked';
+                    break;
+                case 1:
+                    $source_enable   = 'selected';
+                    $source_disable  = '';
+                    $source_1        = 'checked';
+                    $source_2        = '';
+                    break;
+                default:
+                    $source_disable  = 'selected';
+                    $source_enable   = '';
+                    $source_1        = '';
+                    $source_2        = 'checked';
+            }
+
+            switch ($legend) {
+                case 0:
+                    $legend_disable = 'selected';
+                    $legend_enable  = '';
+                    $legend_1       = '';
+                    $legend_2       = 'checked';
+                    break;
+                case 1:
+                    $legend_enable  = 'selected';
+                    $legend_disable = '';
+                    $legend_1       = 'checked';
+                    $legend_2       = '';
+                    break;
+                default:
+                    $legend_disable = 'selected';
+                    $legend_enable  = '';
+                    $legend_1       = '';
+                    $legend_2       = 'checked';
+            }
+
+            switch ($animateRotate) {
+                case false:
+                    $animateRotate_disable = 'selected';
+                    $animateRotate_enable  = '';
+                    $animateRotate_1        = '';
+                    $animateRotate_2        = 'checked';
+                    break;
+                case true:
+                    $animateRotate_enable  = 'selected';
+                    $animateRotate_disable = '';
+                    $animateRotate_1        = 'checked';
+                    $animateRotate_2        = '';
+                    break;
+                default:
+                    $animateRotate_disable = 'selected';
+                    $animateRotate_enable  = '';
+                    $animateRotate_1        = '';
+                    $animateRotate_2        = 'checked';
+            }
+
+
+            $html = <<< EOS
+                        <ul class="sub">
+                            <li>
+                                <span>Chart Slug</span>
+                                <input type="text" name="chart_slug" id="chart_slug" value="$chart_slug" placeholder="$d_place" required />
+                            </li>
+                            <li>
+                                <span>Chart Type</span>
+                                <select class="chart_type" name="chart_type" id="chart_type_anchor">
+                                    <option>Select One</option>
+                                    $list
+                                </select>
+                            </li>
+                            <li>
+                                <span>Chart Name</span>
+                                <input type="text" name="chart_name" id="chart_name" placeholder="Enter a Chart Name with No Special Characters" value="$chart_name" />
+
+                            </li>
+                            <li>
+                                <span>Data Source</span>
+                                <input type="text" name="chart_source" id="chart_source" placeholder="Enter a url for the source of this data" value="$chart_source" />
+                            </li>
+                            <li>
+                                <span>Line Color</span>
+                                <input type="text" class="colorpicker" id="segmentStrokeColor" name="segmentStrokeColor" value="$segmentStrokeColor" required />
+                            </li>
+                            <li>
+                                <span>Chart Height</span>
+                                <input type="number" name="height" id="height" placeholder="Enter a height for this chart (defaut: 300)" value="$height" />
+                            </li>
+                            <li>
+                                <span>Chart Width</span>
+                                <input type="number" name="width" id="width" placeholder="Enter a width for this chart (defaut: 300)" value="$width" />
+                            </li>
+                            <li class="switch">
+                                <div>Show Name</div>
+                                <label class="cb-enable $name_enable" data-class="name"><span>Yes</span></label> <input type="checkbox" name="name" value="1" id="name_enabled" $name_1 />
+                                <label class="cb-disable $name_disable" data-class="name"><span>No</span></label> <input type="checkbox" name="name" value="0" id="name_disabled" $name_2 />
+                            </li>
+                            <li class="switch">
+                                <div>Show Source</div>
+                                <label class="cb-enable $source_enable" data-class="source"><span>Yes</span></label> <input type="checkbox" name="source" value="1" id="source_enabled" $source_1 />
+                                <label class="cb-disable $source_disable" data-class="source"><span>No</span></label> <input type="checkbox" name="source" value="0" id="source_disabled" $source_2 />
+                            </li>
+                            <li class="switch">
+                                <div>Show Legend</div>
+                                <label class="cb-enable $legend_enable" data-class="legend"><span>Yes</span></label> <input type="checkbox" name="legend" value="1" id="legend_enabled" $legend_1 />
+                                <label class="cb-disable $legend_disable" data-class="legend"><span>No</span></label> <input type="checkbox" name="legend" value="0" id="legend_disabled" $legend_2 />
+                            </li>
+                            <li class="switch">
+                                <div>Animate</div>
+                                <label class="cb-enable $animateRotate_enable" data-class="animateRotate"><span>Yes</span></label> <input type="checkbox" name="animateRotate" value="1" id="animateRotate_enabled" $animateRotate_1 />
+                                <label class="cb-disable $animateRotate_disable" data-class="animateRotate"><span>No</span></label> <input type="checkbox" name="animateRotate" value="0" id="animateRotate_disabled" $animateRotate_2 />
+                            </li>
+                            <li><div class="note">NOTE:  The legend is only for Doughnut and Pie Charts</div><h4><a href="javascript:void(0);" class="add_field" data-type="$chart_type">Add Line to Chart</a></h4></li>
+
+                            <ul class="chart_data_wrap">
+                                <li>$chart_data</li>
+                            </ul>
+                            <li><input type="hidden" id="chart_action" name="chart_action" value="$chart_action" /></li>
+                        </ul>
+EOS;
+
+
+            $html .= <<< EOS
+<script>
+
+</script>
+EOS;
+
+
+            $return = array(
+                'html'=>$html,
+                'json'=> $json,
+                'data'=> $data,
+                'chart_name' =>$chart_name,
+                'chart_data' =>$chart_data
+            );
+
+            wp_send_json($return);
+            wp_die();
+        }
+
+
+
         /**
          * AJAX: get a line and prepend depending on chart type
          */
@@ -991,6 +1246,7 @@ EOS;
             $chart_data = '';
             switch ($chart_type) {
                 case 'Doughnut':
+
 
                     //always show add line to chart
                     $chart_data .= <<< EOS
@@ -1300,25 +1556,25 @@ if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
 
 
     if ( is_admin() ) {
-        add_action( 'admin_menu', 'Cap_Graphics_Frontend::gc_options_admin' );  //options page, TODO: perhaps put chart options here
-        add_action( 'add_meta_boxes', "Cap_Graphics_Frontend::gc_meta"); //meta box
-        add_action( 'save_post', 'Cap_Graphics_Frontend::gc_meta_save' );  //this is causing problems with new post pages
+        add_action( 'admin_menu', 'Cap_Graphics::gc_options_admin' );  //options page, TODO: perhaps put chart options here
+        add_action( 'add_meta_boxes', "Cap_Graphics::gc_meta"); //meta box
+        add_action( 'save_post', 'Cap_Graphics::gc_meta_save' );  //this is causing problems with new post pages
 
         //svg
-        add_action( 'wp_ajax_cap_map_svg_action', 'Cap_Graphics_Frontend::gc_svg_action_callback' );  //ajax for new svg
-        add_action( 'wp_ajax_nopriv_cap_map_svg_action', 'Cap_Graphics_Frontend::gc_svg_action_callback' );   //ajax for new svg
-        add_action( 'wp_ajax_cap_map_file_save_action', 'Cap_Graphics_Frontend::gc_file_save_action_callback' );  //ajax for saving files
-        add_action( 'wp_ajax_nopriv_cap_map_file_save_action', 'Cap_Graphics_Frontend::gc_file_save_action_callback' );   //ajax for saving files
+        add_action( 'wp_ajax_cap_map_svg_action', 'Cap_Graphics::gc_svg_action_callback' );  //ajax for new svg
+        add_action( 'wp_ajax_nopriv_cap_map_svg_action', 'Cap_Graphics::gc_svg_action_callback' );   //ajax for new svg
+        add_action( 'wp_ajax_cap_map_file_save_action', 'Cap_Graphics::gc_file_save_action_callback' );  //ajax for saving files
+        add_action( 'wp_ajax_nopriv_cap_map_file_save_action', 'Cap_Graphics::gc_file_save_action_callback' );   //ajax for saving files
 
         //charts
-        add_action( 'wp_ajax_cap_map_chart_action', 'Cap_Graphics_Frontend::gc_chart_action_callback' );  //ajax for new chart
-        add_action( 'wp_ajax_nopriv_cap_map_chart_action', 'Cap_Graphics_Frontend::gc_chart_action_callback' );   //ajax for new chart
-        add_action( 'wp_ajax_cap_map_chart_line_action', 'Cap_Graphics_Frontend::gc_chart_action_line_callback' );  //ajax for adding a line to new chart
-        add_action( 'wp_ajax_nopriv_cap_map_chart_line_action', 'Cap_Graphics_Frontend::gc_chart_action_line_callback' );   //ajaxfor adding a line to new chart
+        add_action( 'wp_ajax_cap_map_chart_action', 'Cap_Graphics::gc_chart_action_callback' );  //ajax for new chart
+        add_action( 'wp_ajax_nopriv_cap_map_chart_action', 'Cap_Graphics::gc_chart_action_callback' );   //ajax for new chart
+        add_action( 'wp_ajax_cap_map_chart_line_action', 'Cap_Graphics::gc_chart_action_line_callback' );  //ajax for adding a line to new chart
+        add_action( 'wp_ajax_nopriv_cap_map_chart_line_action', 'Cap_Graphics::gc_chart_action_line_callback' );   //ajaxfor adding a line to new chart
 
     } else {
-        add_shortcode( 'cap_svg', 'Cap_Graphics_Frontend::gc_svg_shortcode' );  //register shortcode for svg
-        add_shortcode( 'cap_chart', 'Cap_Graphics_Frontend::gc_chart_shortcode' );  //register shortcode
+        add_shortcode( 'cap_svg', 'Cap_Graphics::gc_svg_shortcode' );  //register shortcode for svg
+        add_shortcode( 'cap_chart', 'Cap_Graphics::gc_chart_shortcode' );  //register shortcode
     }
 
 }

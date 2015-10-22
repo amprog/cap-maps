@@ -131,6 +131,21 @@ if (!class_exists("Cap_Graphics_Options")) {
             return parent::gc_get_template($data,'admin/charts_new.php');
         }
 
+        /**
+         * Create a new CHART
+         */
+        function svg_new() {
+
+            $images      =    plugin_dir_url(__FILE__).'/assets/images/';
+            $data['h1']          = 'Create a New SVG Graphic';
+
+
+
+
+            return parent::gc_get_template($data,'admin/svg_new.php');
+        }
+
+
     }
 }
 /*

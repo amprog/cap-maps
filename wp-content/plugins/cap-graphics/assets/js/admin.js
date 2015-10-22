@@ -35,7 +35,7 @@ jQuery(document).ready(function($) {
 
         var data = {
             'action': 'cap_map_chart_action',
-            'chart_slug': $( this ).data('type')
+            'chart_type': $( this ).data('type')
         };
         jQuery.post(ajaxurl, data, function(response) {
             $('#list_assets').html(response.html); console.dir(response);
@@ -173,5 +173,9 @@ jQuery(document).ready(function($) {
             alert("If adding a new chart please make sure to select one from the dropdown!");
         }
         //event.preventDefault();
+    });
+
+    $( ".new" ).click(function() {
+        window.location.href = '/wp-admin/admin.php?page=cap-graphics-new-'+$(this).data('type');
     });
 });

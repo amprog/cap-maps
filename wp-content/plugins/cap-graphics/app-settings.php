@@ -45,7 +45,6 @@ if (!class_exists("Cap_Graphics_Settings")) {
 
 
             $a1 = array(
-                'aws'=>'Amazon AWS',
                 'media'=>'Media Library',
                 'plugin'=>'Plugin Directory'
             );
@@ -219,7 +218,7 @@ if (!class_exists("Cap_Graphics_Settings")) {
          * @param array $opt
          * @return array
          */
-        public function merge_options($default, $opt)
+        public static function merge_options($default, $opt)
         {
             foreach ($default as $option => $values) {
                 if (!empty($opt[$option])) {
