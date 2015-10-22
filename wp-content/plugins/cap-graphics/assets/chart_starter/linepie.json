@@ -1,0 +1,37 @@
+{
+  "options": {
+    "segmentStrokeColor": "#D2DFF2",
+    "animateRotate": true,
+    "lineThickness": 25
+  },
+  "data_array": [
+    {
+      "data": [
+        {
+          "label": "Canada",
+          "value": 25,
+          "color": "#5F7099",
+          "highlight": "#2E4272"
+        },
+        {
+          "label": "Mexico",
+          "value": 10,
+          "color": "#B93A43",
+          "highlight": "#8A1019"
+        },
+        {
+          "label": "China",
+          "value": 35,
+          "color": "#2E4272",
+          "highlight": "#0E204B"
+        },
+        {
+          "label": "Russia",
+          "value": 30,
+          "color": "#2E4272",
+          "highlight": "#0E204B"
+        }
+      ]
+    }
+  ]
+}

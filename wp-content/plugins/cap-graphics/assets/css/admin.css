@@ -237,13 +237,16 @@ ul.chart_data_wrap input {
 
 #list_assets ul li {
     float: left;
-    padding: 5px;
     margin: 0 24px 24px 0;
     border: 1px solid #ddd;
     -webkit-box-shadow: 0px 0px 8px #ddd;
-    box-shadow: 0px 0px 8px #ddd;
+    box-shadow: 0 0 8px #ddd;
     background-color: #fff;
     padding: 24px 47px;
+}
+
+#list_assets ul li a {
+   text-decoration: none;
 }
 
 #list_assets ul li h3 {
