@@ -238,7 +238,7 @@ if (!class_exists(APP_CLASS_NAME)) {
         function configuration() {
 
             $html = <<<EOD
-	<h4>CAP MAP and SVG Help Page</h4>
+	<h4>CAP Graphics Help Page</h4>
 
 EOD;
             return $html;

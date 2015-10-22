@@ -245,6 +245,10 @@ ul.chart_data_wrap input {
     padding: 24px 47px;
 }
 
+#list_assets ul li img {
+    display: block;
+}
+
 #list_assets ul li a {
    text-decoration: none;
 }
