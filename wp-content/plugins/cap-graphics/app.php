@@ -739,37 +739,37 @@ EOS;
         function gc_chart_action_callback() {
             //TODO: leave this out of templating system for now
 
-            //$this->app_options;
+
+            $list = $disable = '';
             $app_options  = get_option(self::OPTIONS_PREFIX);
-
-
             $cap_graphics = new Cap_Graphics();
             $app_defaults = $cap_graphics->app_defaults;  //what is wrong with this
+            $options      = Cap_Graphics_Settings::merge_options($app_defaults, $app_options);
 
 
-            $options    = Cap_Graphics_Settings::merge_options($app_defaults, $app_options);
+
+
+            $chart_type = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;  //proper way of getting variables without notice errors
+            $d_place    = 'Enter a Slug with Underscores Not Spaces';
+            $chart_data = self::get_chart_data(NULL,$chart_type,'');
 
             $return = array(
                 'html'=>$_POST,
                 'options'=>$options,
+                'storage'=>$options['all']['storage']
             );
 
             wp_send_json($return);
             wp_die();
 
 
-
-            $list = $disable = '';
-            $chart_type = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;  //proper way of getting variables without notice errors
-            $d_place    = 'Enter a Slug with Underscores Not Spaces';
-            $chart_data = self::get_chart_data(NULL,$chart_type,'');
-
-
-
             //if there is a chart type, then drop down selected so we grab data
+            if($options['all']['storage'] == 'media') {
+                $package = $this->gc_frontend->plugin_uri.'charts/'.$chart_slug;
+            } else {
+                $package = $this->gc_frontend->plugin_uri.'charts/'.$chart_slug;
+            }
 
-            //TODO: where to get packages
-            $package            = $this->gc_frontend->plugin_uri.'charts/'.$chart_slug;
 
 
 
