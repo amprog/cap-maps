@@ -2,6 +2,21 @@
 
 
 //TODO:  build lyvefire version
+//TODO: build option for using oEmbed
+//TODO: add line pie
+
+/*
+
+,
+    {
+      "slug": "linepie",
+      "label": "Line Pie Chart",
+      "description": "Test description",
+      "type": "linepie",
+      "status": 1
+    },
+*/
+
 
 if ( !defined( 'ABSPATH' ) ) die(); //keep from direct access
 
@@ -741,7 +756,6 @@ EOS;
          *
          */
         function gc_chart_action_callback() {
-            //TODO: leave this out of templating system for now
 
 
             $list = $disable = '';
@@ -755,17 +769,9 @@ EOS;
 
             $chart_type = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;  //proper way of getting variables without notice errors
             $d_place    = 'Enter a Slug with Underscores Not Spaces';
-            $chart_data = self::get_chart_data(NULL,$chart_type,'');
 
-            $return = array(
-                'html'=>$_POST,
-                'options'=>$options,
-                'storage'=>$options['all']['storage']
-            );
 
-            wp_send_json($return);
-            wp_die();
-
+            /*
 
             //if there is a chart type, then drop down selected so we grab data
             if($options['all']['storage'] == 'media') {
@@ -774,7 +780,7 @@ EOS;
                 $package = $this->gc_frontend->plugin_uri.'charts/'.$chart_slug;
             }
 
-
+*/
 
 
 
@@ -965,6 +971,13 @@ EOS;
 
 </script>
 EOS;
+
+
+
+            //get starter data, and feed to chart
+            $start_data = file_get_contents(dirname(__FILE__).'/chart_starter/'.$chart_type.'.json');
+            $chart_data = self::get_chart_data(json_decode($start_data,true),$chart_type,'');
+
 
 
             $return = array(
@@ -1249,7 +1262,7 @@ EOS;
 
             $chart_data = '';
             switch ($chart_type) {
-                case 'Doughnut':
+                case 'doughnut':
 
 
                     //always show add line to chart
@@ -1320,9 +1333,78 @@ EOS;
                     }
 
                     break;
-                case 1:
-                    echo "i equals 1";
-                    break;
+                case 'pie':
+
+
+                    //always show add line to chart
+                    $chart_data .= <<< EOS
+
+EOS;
+
+                    //if there is data, then plug it in
+                    if($data) {
+                        foreach($data['data_array'][0]['chart_data'] as $k=>$v) {
+                            $chart_data .= <<< EOS
+                        <li>
+                            <ul class="chart_data_inner" id="data-$k">
+                                <li class="btns_data">
+                                    <a href="javascript:void(0);" class="btn delete" data-id="$k">delete</a>
+                                </li>
+                                <li>
+                                    <span>Label</span>
+                                    <input type="text" name="chart_data[$k][label]" value="{$v['label']}" />
+                                </li>
+                                <li>
+                                    <span>Value</span>
+                                    <input type="text" name="chart_data[$k][value]" value="{$v['value']}" />
+                                </li>
+                                <li>
+                                    <span>Color</span>
+                                    <input type="text" class="colorpicker" name="chart_data[$k][color]" value="{$v['color']}" data-default-color="{$v['color']}" />
+                                </li>
+                                <li>
+                                    <span>Highlight</span>
+                                    <input type="text" class="colorpicker" name="chart_data[$k][highlight]" value="{$v['highlight']}"  data-default-color="{$v['color']}" />
+                                </li>
+                            </ul>
+                        </li>
+EOS;
+                        }
+                        $chart_data .= '</ul>';
+
+                    } else {
+                        $chart_data .= <<< EOS
+
+            <li>
+                <ul class="chart_data_inner" id="data-$id">
+                    <li class="btns_data">
+                        <a href="javascript:void(0);" class="btn delete" data-id="$id">delete</a>
+                    </li>
+                    <li>
+                        <span>Label</span>
+                        <input type="text" name="chart_data[$id][label]" value="Enter Label" />
+                    </li>
+                    <li>
+                        <span>Value</span>
+                        <input type="text" name="chart_data[$id][value]" value="10" />
+                    </li>
+                    <li>
+                        <span>Color</span>
+                        <input type="text" class="colorpicker" name="chart_data[$id][color]" value="#ba575a" data-default-color="#ba575a" />
+                    </li>
+                    <li>
+                        <span>Highlight</span>
+                        <input type="text" class="colorpicker" name="chart_data[$id][highlight]" value="#a92d31"  data-default-color="#a92d31" />
+                    </li>
+                </ul>
+            </li>
+
+EOS;
+
+                    }
+                        break;
+
+
                 case 2:
                     echo "i equals 2";
                     break;
@@ -1582,16 +1664,3 @@ if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
     }
 
 }
-
-
-/*
-TODO: add line pie
-,
-    {
-      "slug": "linepie",
-      "label": "Line Pie Chart",
-      "description": "Test description",
-      "type": "linepie",
-      "status": 1
-    },
-*/
