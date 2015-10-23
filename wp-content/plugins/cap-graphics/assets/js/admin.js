@@ -61,23 +61,36 @@ jQuery(document).ready(function($) {
         });
 */
 
+        var c = $(this).attr('class');
         chart = $(this).data('i');
 
 
-        console.log($( this ).attr('class'));
+        if(c=='delete') {
+            var question = "Are you sure you want to delete this chart?";
+            confirmation(question).then(function (answer) {
+                if(answer=='true'){
+                    //TODO: run ajax that will delete chart from json
+                    $('#l-'+chart).remove();
+                } else {
+                    console.dir('else');
+                }
 
-        var question = "Do you want to start a war?";
-        confirmation(question).then(function (answer) {
+            });
+        } else if (c=='copy') {
+            //TODO: run ajax that will OPEN A LIGHTBOX, AND ALLOW COPY
+            console.log('copy');
+
+        } else if (c=='view') {
+            //TODO: run ajax that will OPEN A LIGHTBOX AND WRITE CHART
+            console.log('view');
+        } else if (c=='edit') {
+            //TODO: run ajax that will get chart data, and replace main div with it
+            console.log('edit');
+        } else {
+
+        }
 
 
-
-            if(answer=='true'){
-                $('#l-'+chart).remove();
-            } else {
-                console.dir('else');
-            }
-
-        });
 
 
     });
