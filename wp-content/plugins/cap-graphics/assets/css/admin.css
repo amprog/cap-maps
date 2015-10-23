@@ -317,18 +317,18 @@ ul.chart_data_wrap input {
 }
 
 .starter.doughnut {
-    background: url('../images/pie.png');
+    background: url('../images/doughnut.png');
 }
 
 .starter.bar {
-    background: url('../images/pie.png');
+    background: url('../images/bar.png');
 }
 .starter.line {
-    background: url('../images/pie.png');
+    background: url('../images/line.png');
 }
 
 .starter.linepie {
-    background: url('../images/pie.png');
+    background: url('../images/linepie.png');
 }
 
 .shortcode {
@@ -361,7 +361,6 @@ ul.chart_data_wrap input {
 
 
 /* icons */
-
 @font-face {
     font-family: 'icomoon';
     src:url('../icomoon/fonts/icomoon.eot?ysznlx');

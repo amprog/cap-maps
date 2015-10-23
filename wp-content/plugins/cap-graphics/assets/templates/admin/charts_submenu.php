@@ -8,11 +8,8 @@
                 <li data-type="<?php echo $chart['slug']; ?>" class="current_chart">
                     <h3><?php echo $chart['label']; ?></h3>
                     <div class="starter <?php echo $chart['type']; ?>"></div>
-
                     <p><?php echo $chart['description']; ?></p>
-
                     <input type="text" value='[cap_chart chart="<?php echo $chart['slug']; ?>"]' class="shortcode" />
-
 
                     <div class="meta">
                         <ul>
