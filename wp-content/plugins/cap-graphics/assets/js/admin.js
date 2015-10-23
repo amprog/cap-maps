@@ -31,8 +31,8 @@ jQuery(document).ready(function($) {
         e.preventDefault();
     });
 
+    //create new charts
     $( ".new_chart" ).live( "click", function(e) {
-
         var data = {
             'action': 'cap_map_chart_action',
             'chart_type': $( this ).data('type')
@@ -40,13 +40,23 @@ jQuery(document).ready(function($) {
         jQuery.post(ajaxurl, data, function(response) {
             $('#list_assets').html(response.html); console.dir(response);
         });
-
-
-        console.log('new_chart');
-        console.log($( this ).data('type'));
-
-
     });
+
+
+    //save new chart
+    /* DO NOT DO THIS WITH AJAX
+    $( "#frm_new_chart .button-primary" ).live( "click", function() {
+        console.dir($('#frm_new_chart').serialize());
+        var data = {
+            'action': 'gc_chart_save_callback',
+            'data': $('#frm_new_chart').serialize()
+        };
+        jQuery.post(ajaxurl, data, function(response) {
+            $('#list_assets').html(response.html); console.dir(response);
+        });
+    });
+*/
+
 
     //handle all button clicks
     $( ".meta ul li" ).live( "click", function(e) {
@@ -89,9 +99,6 @@ jQuery(document).ready(function($) {
         } else {
 
         }
-
-
-
 
     });
 
@@ -244,6 +251,11 @@ jQuery(document).ready(function($) {
     });
 
 
+    /**
+     * Popup with confirmation
+     * @param question
+     * @returns {*}
+     */
     function confirmation(question) {
         var defer = $.Deferred();
         $('<div></div>')

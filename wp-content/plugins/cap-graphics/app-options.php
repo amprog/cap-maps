@@ -111,20 +111,31 @@ if (!class_exists("Cap_Graphics_Options")) {
          */
         function charts_new() {
 
-            $images      =    plugin_dir_url(__FILE__).'/assets/images/';
-            $data['h1']          = 'Create a New Chart';
+            //check for post data, if it exists, save
+
+            if($_POST) {
+                echo '<pre>';
+                 print_r($_POST);
+                echo '</pre>';
+            } else {
 
 
-            //add chart typs here to one array
-            $data['charts']['pie']['label'] = 'Pie Chart';
-            $data['charts']['pie']['img']   = $images.'pie.png';
+                $images      =    plugin_dir_url(__FILE__).'/assets/images/';
+                $data['h1']          = 'Create a New Chart';
 
 
-            $data['charts']['doughnut']['label'] = 'Doughnut Chart';
-            $data['charts']['doughnut']['img']   = $images.'doughnut.png';
+                //add chart typs here to one array
+                $data['charts']['pie']['label'] = 'Pie Chart';
+                $data['charts']['pie']['img']   = $images.'pie.png';
 
 
-            return parent::gc_get_template($data,'admin/charts_new.php');
+                $data['charts']['doughnut']['label'] = 'Doughnut Chart';
+                $data['charts']['doughnut']['img']   = $images.'doughnut.png';
+
+
+                return parent::gc_get_template($data,'admin/charts_new.php');
+            }
+
         }
 
         /**

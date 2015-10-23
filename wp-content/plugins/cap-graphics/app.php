@@ -5,6 +5,9 @@
 //TODO: build option for using oEmbed
 //TODO: add line pie
 
+//TODO:  Also put visualizations in media library, just allow picking and link to edit screen
+//TODO: turn svg=slug to id=10
+//TODO: no more saving slugs in the database, everything is in media library
 /*
 
 ,
@@ -198,13 +201,14 @@ if (!class_exists(APP_CLASS_NAME)) {
         }
 
 
-        //TODO:  Also put visualizations in media library, just allow picking and link to edit screen
-        //TODO: turn svg=slug to id=10
-        //TODO: no more saving slugs in the database, everything is in media library
 
         function settings_init() {
-            //error_log(__FILE__.':'.__LINE__.' - frontend  ');
-            register_setting( 'wp_cap_map', 'gp_options', array(&$this, 'sanitize_settings') );
+            error_log(__FILE__.':'.__LINE__.' - frontend  ');
+            //register_setting( 'wp_cap_map', 'gp_options', array(&$this, 'sanitize_settings') );
+            //register_setting( 'wp_cap_map', 'gp_options', array(&$this, 'sanitize_settings') );
+
+
+            register_setting('gc_chart_save_callback', self::OPTIONS_PREFIX);
         }
 
         /**
@@ -359,9 +363,79 @@ EOD;
 
         }
 
+        /**
+         * Save charts but do not use AJAX, use built in options saving
+         * Called from template
+         */
+        function gc_chart_save_callback() {
+
+
+            $chart_action = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
+
+
+            $save['options']['chart_type']         = array_key_exists('chart_type', $_POST) ? sanitize_text_field($_POST['chart_type']) : null;
+            $save['options']['chart_name']         = array_key_exists('chart_name', $_POST) ? sanitize_text_field($_POST['chart_name']) : null;
+            $save['options']['segmentStrokeColor'] = array_key_exists('segmentStrokeColor', $_POST) ? $_POST['segmentStrokeColor'] : null;
+            $save['options']['chart_source']       = array_key_exists('chart_source', $_POST) ? $_POST['chart_source'] : null;
+            $save['options']['legend']             = array_key_exists('legend', $_POST) ? $_POST['legend'] : null;
+            $save['options']['source']             = array_key_exists('source', $_POST) ? $_POST['source'] : null;
+            $save['options']['name']               = array_key_exists('name', $_POST) ? $_POST['name'] : null;
+            $save['options']['width']              = array_key_exists('width', $_POST) ? $_POST['width'] : null;
+            $save['options']['height']             = array_key_exists('height', $_POST) ? $_POST['height'] : null;
+            $save['data_array'][0]['chart_data']   = $_POST['chart_data'];
+
+
+
+
+            if($chart_action=='new') {
+                $chart_slug   = array_key_exists('chart_slug', $_POST) ? sanitize_text_field($_POST['chart_slug']) : null;
+                $file         = ABSPATH.$this->gc_frontend->chart_folder.$chart_slug.'/'.$chart_slug.'.json';
+                //TODO: rewrite json file of packages
+                $package_file = ABSPATH.$this->gc_frontend->chart_folder.'/charts.json';
+                $charts_json  = json_decode(file_get_contents($package_file),true);
+
+                mkdir(ABSPATH.$this->gc_frontend->chart_folder.$chart_slug.'/');  //make directory
+                update_post_meta( $_POST['ID'], 'chart_select',  $chart_slug);  //update meta so we know what chart is associated with this post
+
+                //TODO: add new chart to array and rewrite
+                $charts_json['charts'][]['slug']        = $chart_slug;
+                $charts_json['charts'][]['label']       = $save['options']['chart_name'];
+                $charts_json['charts'][]['description'] =  'New Chart: '.$save['options']['chart_type'];
+
+                //rewrite json file
+                $this->gc_frontend->cap_map_save_json_file($package_file,$charts_json);
+            } else {
+                $chart_slug   = $save['options']['chart_slug']  = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
+                $chart_select = $save['options']['chart_select']  = array_key_exists('chart_select', $_POST) ? $_POST['chart_select'] : null;
+
+                //if chart slug, differs from chart_select then rename file!
+                if($chart_slug!=$chart_select) {
+                    $file                          = ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
+                    //$del                           = self::deleteDir(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_select.'/');
+                    system("rm -rf ".escapeshellarg(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_select.'/'));  //system works better than php
+
+                    mkdir(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/');  //make directory
+                } else {
+                    $file                          = ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
+                }
+                update_post_meta( $_POST['ID'], 'chart_select',  sanitize_text_field($_POST['chart_select']));  //update meta so we know what chart is associated with this post
+
+            }
+
+            if($_POST['animateRotate']=='1') {
+                $save['options']['animateRotate'] = true;
+            } else {
+                $save['options']['animateRotate'] = false;
+            }
+
+            $save_result = self::cap_map_save_json_file($file,$save);
+
+
+        }
 
         /**
-         * Save custom meta box
+         * TODO: this used to save meta box, but now we need to save charts outside of post system
+         * THIS FUNCTION DECOM NO LONGER USED
          * @internal param $post_id
          */
         function gc_meta_save() {
@@ -401,7 +475,9 @@ EOD;
                 }
             }
 
-            $gc      = new Cap_Map();
+            //$gc      = new Cap_Map();
+
+
             $chart_action = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
 
             //if chart_action is set, then we are editing an existing chart
@@ -417,6 +493,9 @@ EOD;
                 $save['options']['width']              = array_key_exists('width', $_POST) ? $_POST['width'] : null;
                 $save['options']['height']             = array_key_exists('height', $_POST) ? $_POST['height'] : null;
                 $save['data_array'][0]['chart_data']   = $_POST['chart_data'];
+
+
+
 
                 if($chart_action=='new') {
                     $chart_slug   = array_key_exists('chart_slug', $_POST) ? sanitize_text_field($_POST['chart_slug']) : null;
@@ -787,9 +866,11 @@ EOS;
                 } else {
                     $package = $this->gc_frontend->plugin_uri.'charts/'.$chart_slug;
                 }
+                $chart_action       = 'update';
             } else {
                 //new chart, get json data from starter
                 $jsonfile           = dirname(__FILE__).'/assets/chart_starter/'.$chart_type.'.json';
+                $chart_action       = 'new';
             }
 
 
@@ -804,7 +885,7 @@ EOS;
             $source             = isset($data['options']['source']) ? $data['options']['source']  : null;
             $legend             = isset($data['options']['legend']) ? $data['options']['legend']  : null;
             $name               = isset($data['options']['name']) ? $data['options']['name']  : null;
-            $chart_action       = 'update';
+
             $chart_data         = self::get_chart_data($data,$chart_type,'');
 
 
@@ -896,9 +977,10 @@ EOS;
                     $animateRotate_2        = 'checked';
             }
 
+            //$self = $_SERVER['PHP_SELF'];
 
             $html = <<< EOS
-                    <form method="post" action="options.php">
+                    <form method="post" id="frm_new_chart" action="/wp-admin/admin.php?page=cap-graphics-new-chart">
                         <ul class="sub">
                             <li class="r"><input type="submit" class="button button-primary" name="save_options" value="save"/></li>
                             <li>
@@ -1382,8 +1464,10 @@ if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
 
     if ( is_admin() ) {
         add_action( 'admin_menu', 'Cap_Graphics::gc_options_admin' );  //options page, TODO: perhaps put chart options here
-        add_action( 'add_meta_boxes', "Cap_Graphics::gc_meta"); //meta box
-        add_action( 'save_post', 'Cap_Graphics::gc_meta_save' );  //this is causing problems with new post pages
+        add_action( 'add_meta_boxes', "Cap_Graphics::gc_meta"); //TODO: no longer need this
+
+
+        //add_action( 'save_post', 'Cap_Graphics::gc_meta_save' ); //TODO: instead of saving meta, need to save outside of meta
 
         //svg
         add_action( 'wp_ajax_cap_map_svg_action', 'Cap_Graphics::gc_svg_action_callback' );  //ajax for new svg
@@ -1396,6 +1480,12 @@ if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
         add_action( 'wp_ajax_nopriv_cap_map_chart_action', 'Cap_Graphics::gc_chart_action_callback' );   //ajax for new chart
         add_action( 'wp_ajax_cap_map_chart_line_action', 'Cap_Graphics::gc_chart_action_line_callback' );  //ajax for adding a line to new chart
         add_action( 'wp_ajax_nopriv_cap_map_chart_line_action', 'Cap_Graphics::gc_chart_action_line_callback' );   //ajaxfor adding a line to new chart
+        add_action( 'wp_ajax_gc_chart_save', 'Cap_Graphics::gc_chart_save_callback' );  //save chart
+        add_action( 'wp_ajax_nopriv_gc_chart_save', 'Cap_Graphics::gc_chart_save_callback' );   //save chart
+
+
+        add_action( 'save_post', 'Cap_Graphics::gc_meta_save' ); //TODO: instead of saving meta, need to save outside of meta
+
 
     } else {
         add_shortcode( 'cap_svg', 'Cap_Graphics::gc_svg_shortcode' );  //register shortcode for svg
