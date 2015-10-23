@@ -4,30 +4,35 @@
       "slug": "10_7_2015_pie",
       "label": "Pie Chart",
       "description": "Test description",
+      "type": "pie",
       "status": 1
     },
     {
       "slug": "doughnut",
       "label": "Doughnut Chart",
       "description": "Test description",
+      "type": "doughnut",
       "status": 1
     },
     {
       "slug": "bar",
       "label": "Bar Chart",
       "description": "Test description",
+      "type": "bar",
       "status": 1
     },
     {
       "slug": "linepie",
       "label": "Line Pie Chart",
       "description": "Test description",
+      "type": "linepie",
       "status": 1
     },
     {
       "slug": "line",
       "label": "Line Chart",
       "description": "Test description",
+      "type": "line",
       "status": 1
     }
   ]

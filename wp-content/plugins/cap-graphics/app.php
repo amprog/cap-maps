@@ -1,5 +1,8 @@
 <?php
 
+
+//TODO:  build lyvefire version
+
 if ( !defined( 'ABSPATH' ) ) die(); //keep from direct access
 
 define('APP_CLASS_NAME', 'Cap_Graphics');
@@ -734,7 +737,8 @@ EOS;
 
 
         /**
-         * AJAX: show template box, either with data or blank
+         * AJAX: show a CHART template box, either with data or blank
+         *
          */
         function gc_chart_action_callback() {
             //TODO: leave this out of templating system for now

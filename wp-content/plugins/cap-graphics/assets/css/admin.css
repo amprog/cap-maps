@@ -243,6 +243,7 @@ ul.chart_data_wrap input {
     box-shadow: 0 0 8px #ddd;
     background-color: #fff;
     padding: 24px 47px;
+    text-align: center;
 }
 
 #list_assets ul li a {
@@ -252,4 +253,69 @@ ul.chart_data_wrap input {
 #list_assets ul li h3 {
     margin: 5px 0 17px 0;
     text-align: center;
+}
+
+
+.meta  {
+    margin: 17px auto 0 auto;
+}
+
+.meta button {
+    padding:7px;
+    margin:3px 7px 0 7px;
+}
+
+.starter {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+}
+
+.starter.pie {
+    background: url('../images/pie.png');
+}
+
+.starter.doughnut {
+    background: url('../images/pie.png');
+}
+
+.starter.bar {
+    background: url('../images/pie.png');
+}
+.starter.line {
+    background: url('../images/pie.png');
+}
+
+.starter.linepie {
+    background: url('../images/pie.png');
+}
+
+.shortcode {
+    background: #F5F5F5!important;
+}
+
+.highlight {
+    border: 1px solid #00ba04!important;
+    background: #36ec3c!important;
+    -webkit-animation-name: goout; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
+    -webkit-animation-delay: 2s; /* Chrome, Safari, Opera */
+    animation-name: goout;
+    animation-duration: 2s;
+    animation-delay: 2s;
+}
+
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes goout {
+    0%   {background:#36ec3c;}
+    25%  {background:#00ba04;}
+    100%  {background:#F5F5F5;}
+}
+
+/* Standard syntax */
+@keyframes goout {
+    0%   {background:#36ec3c;}
+    25%  {background:#00ba04;}
+    100%  {background:#F5F5F5;}
 }

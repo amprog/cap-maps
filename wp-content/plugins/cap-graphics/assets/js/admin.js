@@ -48,6 +48,50 @@ jQuery(document).ready(function($) {
 
     });
 
+    //handle all button clicks
+    $( ".meta button" ).live( "click", function(e) {
+
+        /*
+        var data = {
+            'action': 'cap_map_chart_action',
+            'chart_type': $( this ).data('type')
+        };
+        jQuery.post(ajaxurl, data, function(response) {
+            $('#list_assets').html(response.html); console.dir(response);
+        });
+*/
+
+        console.log($( this ).attr('class'));
+
+
+    });
+
+    $( ".shortcode" ).live( "click", function() {
+
+        var copy  = $(this).addClass('highlight');
+        var short = copy.val();
+        copy.val('copied!');
+
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($(this).val()).select();
+        document.execCommand("copy");
+        $temp.remove();
+
+
+        setTimeout(function() {
+
+            copy.removeClass('highlight');
+            copy.val(short);
+        }, 3000);
+
+    });
+
+
+
+
+
+
     //new chart, needs blank form fields by chart type
     $( ".chart_type" ).live( "change", function() {
         if($('#chart_action').val()=='new') {

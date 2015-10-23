@@ -97,15 +97,12 @@ if (!class_exists("Cap_Graphics_Options")) {
         }
 
         /**
-         *
+         * Read JSON of charts already in system and return to admin
          */
         function charts_submenu()
         {
-
-
-
-            $data['var'] ='hello';
-            $var = 'var hello';
+            $charts           = file_get_contents(dirname(__FILE__).'/charts.json');
+            $data['packages'] = json_decode($charts,true);
             return parent::gc_get_template($data,'admin/charts_submenu.php');
         }
 
