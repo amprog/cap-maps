@@ -6,8 +6,8 @@
 
     <div id="list_assets">
         <ul class="l">
-            <?php foreach($data['packages']['charts'] as $chart): ?>
-                <li data-type="<?php echo $chart['slug']; ?>" class="current_chart">
+            <?php $i=1; foreach($data['packages']['charts'] as $chart): ?>
+                <li data-type="<?php echo $chart['slug']; ?>" class="current_chart" id="l-<?php echo $i; ?>">
                     <h3><?php echo $chart['label']; ?></h3>
                     <div class="starter <?php echo $chart['type']; ?>"></div>
                     <p><?php echo $chart['description']; ?></p>
@@ -15,15 +15,15 @@
 
                     <div class="meta">
                         <ul>
-                            <li class="view"><i class="icon icon-eye"></i>  view</li>
-                            <li class="edit"><i class="icon icon-pencil2"></i>  edit</li>
-                            <li class="copy"><i class="icon icon-copy"></i>  copy</li>
-                            <li class="delete"><i class="icon icon-bin"></i>  delete</li>
+                            <li class="view" data-i="<?php echo $i; ?>"><i class="icon icon-eye"></i>  view</li>
+                            <li class="edit" data-i="<?php echo $i; ?>"><i class="icon icon-pencil2"></i>  edit</li>
+                            <li class="copy" data-i="<?php echo $i; ?>"><i class="icon icon-copy"></i>  copy</li>
+                            <li class="delete" data-i="<?php echo $i; ?>"><i class="icon icon-bin"></i>  delete</li>
                         </ul>
                     </div>
 
                 </li>
-            <?php endforeach; ?>
+            <?php $i++; endforeach; ?>
         </ul>
     </div>
 

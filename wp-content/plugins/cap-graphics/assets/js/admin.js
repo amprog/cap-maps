@@ -49,7 +49,7 @@ jQuery(document).ready(function($) {
     });
 
     //handle all button clicks
-    $( ".meta li" ).live( "click", function(e) {
+    $( ".meta ul li" ).live( "click", function(e) {
 
         /*
         var data = {
@@ -61,16 +61,22 @@ jQuery(document).ready(function($) {
         });
 */
 
+        chart = $(this).data('i');
+
+
         console.log($( this ).attr('class'));
 
         var question = "Do you want to start a war?";
         confirmation(question).then(function (answer) {
-            var ansbool = Boolean.parse(answer.toString());
-            if(ansbool){
-                alert("this is obviously " + ansbool);//TRUE
+
+
+
+            if(answer=='true'){
+                $('#l-'+chart).remove();
             } else {
-                alert("and then there is " + ansbool);//FALSE
+                console.dir('else');
             }
+
         });
 
 
