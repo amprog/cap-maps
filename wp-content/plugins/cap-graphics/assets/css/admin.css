@@ -29,6 +29,17 @@ ul.sub li {
     margin:7px 0;
 }
 
+ul.sub li dd {
+    width: 105px;
+    float: left;
+    margin: 0;
+    padding:0;
+}
+
+ul.sub li input {
+    width: 350px;
+}
+
 ul.chart_data_wrap {
     margin:17px 0 17px 27px;
     padding:17px;
@@ -214,9 +225,6 @@ ul.chart_data_wrap input {
     background: url(../images/save.png) no-repeat;
 }
 
-#svg_slug,#chart_slug {
-    width: 240px;
-}
 
 .h {
     display: none;

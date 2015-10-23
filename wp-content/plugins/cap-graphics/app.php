@@ -752,7 +752,7 @@ EOS;
 
 
         /**
-         * AJAX: show a CHART template box, either with data or blank
+         * AJAX: Create a NEW CHART
          *
          */
         function gc_chart_action_callback() {
@@ -766,29 +766,35 @@ EOS;
 
 
 
-
+            $chart_slug = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;  //proper way of getting variables without notice errors
             $chart_type = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;  //proper way of getting variables without notice errors
             $d_place    = 'Enter a Slug with Underscores Not Spaces';
 
 
             /*
 
-            //if there is a chart type, then drop down selected so we grab data
-            if($options['all']['storage'] == 'media') {
-                $package = $this->gc_frontend->plugin_uri.'charts/'.$chart_slug;
-            } else {
-                $package = $this->gc_frontend->plugin_uri.'charts/'.$chart_slug;
-            }
+
 
 */
 
+            //if we have a chart slug, we get data from the json file
+
+            if($chart_slug) {
+                //TODO: figure out media storage
+                //if there is a chart type, then drop down selected so we grab data
+                if($options['all']['storage'] == 'media') {
+                    $package = $this->gc_frontend->plugin_uri.'charts/'.$chart_slug;
+                } else {
+                    $package = $this->gc_frontend->plugin_uri.'charts/'.$chart_slug;
+                }
+            } else {
+                //new chart, get json data from starter
+                $jsonfile           = dirname(__FILE__).'/assets/chart_starter/'.$chart_type.'.json';
+            }
 
 
-            $jsonfile           = $package.'/'.$chart_slug.'.json';
-            $json               = file_get_contents(ABSPATH.$jsonfile);
+            $json               = file_get_contents($jsonfile);
             $data               = json_decode($json,true);
-
-            //form values
             $chart_name         = isset($data['options']['chart_name']) ? $data['options']['chart_name'] : null;
             $chart_type         = isset($data['options']['chart_type']) ? $data['options']['chart_type']  : null;
             $chart_source       = isset($data['options']['chart_source']) ? $data['options']['chart_source']  : null;
@@ -798,26 +804,15 @@ EOS;
             $source             = isset($data['options']['source']) ? $data['options']['source']  : null;
             $legend             = isset($data['options']['legend']) ? $data['options']['legend']  : null;
             $name               = isset($data['options']['name']) ? $data['options']['name']  : null;
+            $chart_action       = 'update';
+            $chart_data         = self::get_chart_data($data,$chart_type,'');
+
 
             if($data['options']['animateRotate']=='1') {
                 $animateRotate = 1;
             } else {
                 $animateRotate = 0;
             }
-
-            $chart_action       = 'update';
-            $chart_data         = self::get_chart_data($data,$chart_type,'');
-
-
-            $chart_types = array(
-                'Doughnut',
-                'Pie',
-                'Line',
-                'LinePie',
-                'Bar',
-                'Radar'
-            );
-            $list .= self::gc_get_dropdown($chart_types,$chart_type);
 
 
             //get default values for switches
@@ -905,277 +900,28 @@ EOS;
             $html = <<< EOS
                         <ul class="sub">
                             <li>
-                                <span>Chart Slug</span>
+                                <dd>Chart Slug</dd>
                                 <input type="text" name="chart_slug" id="chart_slug" value="$chart_slug" placeholder="$d_place" required />
                             </li>
                             <li>
-                                <span>Chart Type</span>
-                                <select class="chart_type" name="chart_type" id="chart_type_anchor">
-                                    <option>Select One</option>
-                                    $list
-                                </select>
-                            </li>
-                            <li>
-                                <span>Chart Name</span>
+                                <dd>Chart Name</dd>
                                 <input type="text" name="chart_name" id="chart_name" placeholder="Enter a Chart Name with No Special Characters" value="$chart_name" />
 
                             </li>
                             <li>
-                                <span>Data Source</span>
+                                <dd>Data Source</dd>
                                 <input type="text" name="chart_source" id="chart_source" placeholder="Enter a url for the source of this data" value="$chart_source" />
                             </li>
                             <li>
-                                <span>Line Color</span>
+                                <dd>Line Color</dd>
                                 <input type="text" class="colorpicker" id="segmentStrokeColor" name="segmentStrokeColor" value="$segmentStrokeColor" required />
                             </li>
                             <li>
-                                <span>Chart Height</span>
+                                <dd>Chart Height</dd>
                                 <input type="number" name="height" id="height" placeholder="Enter a height for this chart (defaut: 300)" value="$height" />
                             </li>
                             <li>
-                                <span>Chart Width</span>
-                                <input type="number" name="width" id="width" placeholder="Enter a width for this chart (defaut: 300)" value="$width" />
-                            </li>
-                            <li class="switch">
-                                <div>Show Name</div>
-                                <label class="cb-enable $name_enable" data-class="name"><span>Yes</span></label> <input type="checkbox" name="name" value="1" id="name_enabled" $name_1 />
-                                <label class="cb-disable $name_disable" data-class="name"><span>No</span></label> <input type="checkbox" name="name" value="0" id="name_disabled" $name_2 />
-                            </li>
-                            <li class="switch">
-                                <div>Show Source</div>
-                                <label class="cb-enable $source_enable" data-class="source"><span>Yes</span></label> <input type="checkbox" name="source" value="1" id="source_enabled" $source_1 />
-                                <label class="cb-disable $source_disable" data-class="source"><span>No</span></label> <input type="checkbox" name="source" value="0" id="source_disabled" $source_2 />
-                            </li>
-                            <li class="switch">
-                                <div>Show Legend</div>
-                                <label class="cb-enable $legend_enable" data-class="legend"><span>Yes</span></label> <input type="checkbox" name="legend" value="1" id="legend_enabled" $legend_1 />
-                                <label class="cb-disable $legend_disable" data-class="legend"><span>No</span></label> <input type="checkbox" name="legend" value="0" id="legend_disabled" $legend_2 />
-                            </li>
-                            <li class="switch">
-                                <div>Animate</div>
-                                <label class="cb-enable $animateRotate_enable" data-class="animateRotate"><span>Yes</span></label> <input type="checkbox" name="animateRotate" value="1" id="animateRotate_enabled" $animateRotate_1 />
-                                <label class="cb-disable $animateRotate_disable" data-class="animateRotate"><span>No</span></label> <input type="checkbox" name="animateRotate" value="0" id="animateRotate_disabled" $animateRotate_2 />
-                            </li>
-                            <li><div class="note">NOTE:  The legend is only for Doughnut and Pie Charts</div><h4><a href="javascript:void(0);" class="add_field" data-type="$chart_type">Add Line to Chart</a></h4></li>
-
-                            <ul class="chart_data_wrap">
-                                <li>$chart_data</li>
-                            </ul>
-                            <li><input type="hidden" id="chart_action" name="chart_action" value="$chart_action" /></li>
-                        </ul>
-EOS;
-
-
-            $html .= <<< EOS
-<script>
-
-</script>
-EOS;
-
-
-
-            //get starter data, and feed to chart
-            $start_data = file_get_contents(dirname(__FILE__).'/chart_starter/'.$chart_type.'.json');
-            $chart_data = self::get_chart_data(json_decode($start_data,true),$chart_type,'');
-
-
-
-            $return = array(
-                'html'=>$html,
-                'json'=> $json,
-                'data'=> $data,
-                'chart_name' =>$chart_name,
-                'chart_data' =>$chart_data
-            );
-
-            wp_send_json($return);
-            wp_die();
-        }
-
-
-
-        /**
-         * AJAX: show template box, either with data or blank
-         */
-        function gc_chart_action_callbackOLD() {
-            //TODO: leave this out of templating system for now
-
-
-
-
-
-            $list = $disable = '';
-            $chart_slug = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;  //proper way of getting variables without notice errors
-            $d_place    = 'Enter a Slug with Underscores Not Spaces';
-
-
-            $return = array(
-                'html'=>$_POST,
-                'options'=>$this->options_page,
-            );
-
-            wp_send_json($return);
-            wp_die();
-
-
-            //if there is a chart type, then drop down selected so we grab data
-
-            //TODO: where to get packages
-            $package            = $this->gc_frontend->plugin_uri.'charts/'.$chart_slug;
-
-
-
-
-            $jsonfile           = $package.'/'.$chart_slug.'.json';
-            $json               = file_get_contents(ABSPATH.$jsonfile);
-            $data               = json_decode($json,true);
-
-            //form values
-            $chart_name         = isset($data['options']['chart_name']) ? $data['options']['chart_name'] : null;
-            $chart_type         = isset($data['options']['chart_type']) ? $data['options']['chart_type']  : null;
-            $chart_source       = isset($data['options']['chart_source']) ? $data['options']['chart_source']  : null;
-            $segmentStrokeColor = isset($data['options']['segmentStrokeColor']) ? $data['options']['segmentStrokeColor']  : null;
-            $width              = isset($data['options']['width']) ? $data['options']['width']  : null;
-            $height             = isset($data['options']['height']) ? $data['options']['height']  : null;
-            $source             = isset($data['options']['source']) ? $data['options']['source']  : null;
-            $legend             = isset($data['options']['legend']) ? $data['options']['legend']  : null;
-            $name               = isset($data['options']['name']) ? $data['options']['name']  : null;
-
-            if($data['options']['animateRotate']=='1') {
-                $animateRotate = 1;
-            } else {
-                $animateRotate = 0;
-            }
-
-            $chart_action       = 'update';
-            $chart_data         = self::get_chart_data($data,$chart_type,'');
-
-
-            $chart_types = array(
-                'Doughnut',
-                'Pie',
-                'Line',
-                'LinePie',
-                'Bar',
-                'Radar'
-            );
-            $list .= self::gc_get_dropdown($chart_types,$chart_type);
-
-
-            //get default values for switches
-            switch ($name) {
-                case 0:
-                    $name_disable = 'selected';
-                    $name_enable  = '';
-                    $name_1        = '';
-                    $name_2        = 'checked';
-                    break;
-                case 1:
-                    $name_enable = 'selected';
-                    $name_disable  = '';
-                    $name_1        = 'checked';
-                    $name_2        = '';
-                    break;
-                default:
-                    $name_disable = 'selected';
-                    $name_enable  = '';
-                    $name_1        = '';
-                    $name_2        = 'checked';
-            }
-
-            switch ($source) {
-                case 0:
-                    $source_disable  = 'selected';
-                    $source_enable   = '';
-                    $source_1        = '';
-                    $source_2        = 'checked';
-                    break;
-                case 1:
-                    $source_enable   = 'selected';
-                    $source_disable  = '';
-                    $source_1        = 'checked';
-                    $source_2        = '';
-                    break;
-                default:
-                    $source_disable  = 'selected';
-                    $source_enable   = '';
-                    $source_1        = '';
-                    $source_2        = 'checked';
-            }
-
-            switch ($legend) {
-                case 0:
-                    $legend_disable = 'selected';
-                    $legend_enable  = '';
-                    $legend_1       = '';
-                    $legend_2       = 'checked';
-                    break;
-                case 1:
-                    $legend_enable  = 'selected';
-                    $legend_disable = '';
-                    $legend_1       = 'checked';
-                    $legend_2       = '';
-                    break;
-                default:
-                    $legend_disable = 'selected';
-                    $legend_enable  = '';
-                    $legend_1       = '';
-                    $legend_2       = 'checked';
-            }
-
-            switch ($animateRotate) {
-                case false:
-                    $animateRotate_disable = 'selected';
-                    $animateRotate_enable  = '';
-                    $animateRotate_1        = '';
-                    $animateRotate_2        = 'checked';
-                    break;
-                case true:
-                    $animateRotate_enable  = 'selected';
-                    $animateRotate_disable = '';
-                    $animateRotate_1        = 'checked';
-                    $animateRotate_2        = '';
-                    break;
-                default:
-                    $animateRotate_disable = 'selected';
-                    $animateRotate_enable  = '';
-                    $animateRotate_1        = '';
-                    $animateRotate_2        = 'checked';
-            }
-
-
-            $html = <<< EOS
-                        <ul class="sub">
-                            <li>
-                                <span>Chart Slug</span>
-                                <input type="text" name="chart_slug" id="chart_slug" value="$chart_slug" placeholder="$d_place" required />
-                            </li>
-                            <li>
-                                <span>Chart Type</span>
-                                <select class="chart_type" name="chart_type" id="chart_type_anchor">
-                                    <option>Select One</option>
-                                    $list
-                                </select>
-                            </li>
-                            <li>
-                                <span>Chart Name</span>
-                                <input type="text" name="chart_name" id="chart_name" placeholder="Enter a Chart Name with No Special Characters" value="$chart_name" />
-
-                            </li>
-                            <li>
-                                <span>Data Source</span>
-                                <input type="text" name="chart_source" id="chart_source" placeholder="Enter a url for the source of this data" value="$chart_source" />
-                            </li>
-                            <li>
-                                <span>Line Color</span>
-                                <input type="text" class="colorpicker" id="segmentStrokeColor" name="segmentStrokeColor" value="$segmentStrokeColor" required />
-                            </li>
-                            <li>
-                                <span>Chart Height</span>
-                                <input type="number" name="height" id="height" placeholder="Enter a height for this chart (defaut: 300)" value="$height" />
-                            </li>
-                            <li>
-                                <span>Chart Width</span>
+                                <dd>Chart Width</dd>
                                 <input type="number" name="width" id="width" placeholder="Enter a width for this chart (defaut: 300)" value="$width" />
                             </li>
                             <li class="switch">
@@ -1220,13 +966,13 @@ EOS;
                 'json'=> $json,
                 'data'=> $data,
                 'chart_name' =>$chart_name,
-                'chart_data' =>$chart_data
+                'chart_data' =>$chart_data,
+                'json_file'  => $jsonfile
             );
 
             wp_send_json($return);
             wp_die();
         }
-
 
 
         /**
@@ -1338,7 +1084,7 @@ EOS;
 
                     //always show add line to chart
                     $chart_data .= <<< EOS
-
+pie chart
 EOS;
 
                     //if there is data, then plug it in
