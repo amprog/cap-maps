@@ -66,30 +66,21 @@ jQuery(document).ready(function($) {
 
     });
 
+    //copy shortcode
     $( ".shortcode" ).live( "click", function() {
-
         var copy  = $(this).addClass('highlight');
         var short = copy.val();
         copy.val('copied!');
-
         var $temp = $("<input>");
         $("body").append($temp);
         $temp.val($(this).val()).select();
         document.execCommand("copy");
         $temp.remove();
-
-
         setTimeout(function() {
-
             copy.removeClass('highlight');
             copy.val(short);
         }, 3000);
-
     });
-
-
-
-
 
 
     //new chart, needs blank form fields by chart type
