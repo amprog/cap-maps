@@ -266,34 +266,6 @@ EOD;
             return $html;
         }
 
-
-        /**
-         * Meta boxes for picking svg and charts
-         */
-        function gc_meta()
-        {
-            /* TODO: no more meta boxes
-            global $cap_graphics;
-
-
-            $title1        = 'SVG Maps';
-            $callback1     = 'Cap_Map::cap_map_svg_callback';
-            $title2        = 'Charts';
-            $callback2     = 'Cap_Map::cap_map_chart_callback';
-            $context       = 'normal';
-            $priority      = 'high';
-
-
-            add_meta_box( 'svg-meta-post', $title1, $callback1, 'page', $context, $priority);  //svg meta box for pages
-            add_meta_box( 'svg-meta-page', $title1, $callback1, 'post', $context, $priority); //svg meta box for posts
-
-            add_meta_box( 'chart-meta-post', $title2, $callback2, 'page', $context, $priority);  //chart meta box for pages
-            add_meta_box( 'chart-meta-page', $title2, $callback2, 'post', $context, $priority); //chart meta box for posts
-
-            */
-        }
-
-
         /**
          * Custom callback function for svg box
          */
@@ -321,26 +293,12 @@ EOD;
 
             return self::gc_get_template($data,'admin/svg_edit.php');
 
-            /*
-             *    <?php while (false !== ($entry = readdir($handle))): ?>
-                                        <?php  if ($entry != "." && $entry != ".." && $entry != 'starter' && is_dir($folder.$entry)): ?>
-                                            <?php if($svg_select==$entry): ?>
-                                                <option value="<?php echo $entry; ?>" selected><?php echo $entry; ?></option>
-                                            <?php else: ?>
-                                                <option value="<?php echo $entry; ?>"><?php echo $entry; ?></option>
-                                            <?php endif; ?>
-                                        <?php endif; ?>
-                                    <?php endwhile; closedir($handle); ?>
-             */
-
-            //wp_nonce_field( 'cap_map_meta_save', 'admin_meta_box_nonce' );
-
-
         }
 
 
         /**
-         * Custom callback function for CHARTS box
+         * Custom callback function for CHARTS box'
+         * DONT TODO:  THINK THIS IS USED any more
          */
         function gc_chart_callback($post) {
 
@@ -363,39 +321,43 @@ EOD;
 
         }
 
+
         /**
          * Save charts but do not use AJAX, use built in options saving
          * Called from template
+         * @param $data
          */
-        function gc_chart_save_callback() {
+        function gc_chart_save_callback($data) {
 
 
-            $chart_action = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
+            $chart_action = array_key_exists('chart_action', $data) ? $data['chart_action'] : null;
 
 
-            $save['options']['chart_type']         = array_key_exists('chart_type', $_POST) ? sanitize_text_field($_POST['chart_type']) : null;
-            $save['options']['chart_name']         = array_key_exists('chart_name', $_POST) ? sanitize_text_field($_POST['chart_name']) : null;
-            $save['options']['segmentStrokeColor'] = array_key_exists('segmentStrokeColor', $_POST) ? $_POST['segmentStrokeColor'] : null;
-            $save['options']['chart_source']       = array_key_exists('chart_source', $_POST) ? $_POST['chart_source'] : null;
-            $save['options']['legend']             = array_key_exists('legend', $_POST) ? $_POST['legend'] : null;
-            $save['options']['source']             = array_key_exists('source', $_POST) ? $_POST['source'] : null;
-            $save['options']['name']               = array_key_exists('name', $_POST) ? $_POST['name'] : null;
-            $save['options']['width']              = array_key_exists('width', $_POST) ? $_POST['width'] : null;
-            $save['options']['height']             = array_key_exists('height', $_POST) ? $_POST['height'] : null;
-            $save['data_array'][0]['chart_data']   = $_POST['chart_data'];
+            $save['options']['chart_type']         = array_key_exists('chart_type', $data) ? sanitize_text_field($data['chart_type']) : null;
+            $save['options']['chart_name']         = array_key_exists('chart_name', $data) ? sanitize_text_field($data['chart_name']) : null;
+            $save['options']['segmentStrokeColor'] = array_key_exists('segmentStrokeColor', $data) ? $data['segmentStrokeColor'] : null;
+            $save['options']['chart_source']       = array_key_exists('chart_source', $data) ? $data['chart_source'] : null;
+            $save['options']['legend']             = array_key_exists('legend', $data) ? $data['legend'] : null;
+            $save['options']['source']             = array_key_exists('source', $data) ? $data['source'] : null;
+            $save['options']['name']               = array_key_exists('name', $data) ? $data['name'] : null;
+            $save['options']['width']              = array_key_exists('width', $data) ? $data['width'] : null;
+            $save['options']['height']             = array_key_exists('height', $data) ? $data['height'] : null;
+            $save['data_array'][0]['chart_data']   = $data['chart_data'];
 
 
 
 
             if($chart_action=='new') {
-                $chart_slug   = array_key_exists('chart_slug', $_POST) ? sanitize_text_field($_POST['chart_slug']) : null;
+                $chart_slug   = array_key_exists('chart_slug', $data) ? sanitize_text_field($data['chart_slug']) : null;
+                //TODO: need to get this from media library!!!
+
                 $file         = ABSPATH.$this->gc_frontend->chart_folder.$chart_slug.'/'.$chart_slug.'.json';
                 //TODO: rewrite json file of packages
                 $package_file = ABSPATH.$this->gc_frontend->chart_folder.'/charts.json';
                 $charts_json  = json_decode(file_get_contents($package_file),true);
 
                 mkdir(ABSPATH.$this->gc_frontend->chart_folder.$chart_slug.'/');  //make directory
-                update_post_meta( $_POST['ID'], 'chart_select',  $chart_slug);  //update meta so we know what chart is associated with this post
+                update_post_meta( $data['ID'], 'chart_select',  $chart_slug);  //update meta so we know what chart is associated with this post
 
                 //TODO: add new chart to array and rewrite
                 $charts_json['charts'][]['slug']        = $chart_slug;
@@ -405,8 +367,8 @@ EOD;
                 //rewrite json file
                 $this->gc_frontend->cap_map_save_json_file($package_file,$charts_json);
             } else {
-                $chart_slug   = $save['options']['chart_slug']  = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
-                $chart_select = $save['options']['chart_select']  = array_key_exists('chart_select', $_POST) ? $_POST['chart_select'] : null;
+                $chart_slug   = $save['options']['chart_slug']  = array_key_exists('chart_slug', $data) ? $data['chart_slug'] : null;
+                $chart_select = $save['options']['chart_select']  = array_key_exists('chart_select', $data) ? $data['chart_select'] : null;
 
                 //if chart slug, differs from chart_select then rename file!
                 if($chart_slug!=$chart_select) {
@@ -418,11 +380,11 @@ EOD;
                 } else {
                     $file                          = ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
                 }
-                update_post_meta( $_POST['ID'], 'chart_select',  sanitize_text_field($_POST['chart_select']));  //update meta so we know what chart is associated with this post
+                update_post_meta( $data['ID'], 'chart_select',  sanitize_text_field($data['chart_select']));  //update meta so we know what chart is associated with this post
 
             }
 
-            if($_POST['animateRotate']=='1') {
+            if($data['animateRotate']=='1') {
                 $save['options']['animateRotate'] = true;
             } else {
                 $save['options']['animateRotate'] = false;

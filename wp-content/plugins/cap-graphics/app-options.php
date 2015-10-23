@@ -117,6 +117,16 @@ if (!class_exists("Cap_Graphics_Options")) {
                 echo '<pre>';
                  print_r($_POST);
                 echo '</pre>';
+
+
+                $result = parent::gc_chart_save_callback($_POST);
+
+
+                echo '<pre>';
+                print_r($result);
+                echo '</pre>';
+
+
             } else {
 
 
