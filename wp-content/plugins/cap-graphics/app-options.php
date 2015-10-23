@@ -54,8 +54,7 @@ if (!class_exists("Cap_Graphics_Options")) {
                     do_settings_sections(parent::SETTINGS_PAGE1);
                     ?>
                     <p>
-                        <input type="submit" class="button button-primary" name="save_options"
-                               value="<?php esc_attr_e('Save Options'); ?>"/>
+                        <input type="submit" class="button button-primary" name="save_options" value="<?php esc_attr_e('Save Options'); ?>"/>
                     </p>
                 </form>
                 <p class="note"><?php print parent::APP_NAME; ?> by Amir Meshkin

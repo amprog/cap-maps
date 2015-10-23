@@ -898,7 +898,9 @@ EOS;
 
 
             $html = <<< EOS
+                    <form method="post" action="options.php">
                         <ul class="sub">
+                            <li class="r"><input type="submit" class="button button-primary" name="save_options" value="save"/></li>
                             <li>
                                 <dd>Chart Slug</dd>
                                 <input type="text" name="chart_slug" id="chart_slug" value="$chart_slug" placeholder="$d_place" required />
@@ -945,12 +947,13 @@ EOS;
                                 <label class="cb-disable $animateRotate_disable" data-class="animateRotate"><span>No</span></label> <input type="checkbox" name="animateRotate" value="0" id="animateRotate_disabled" $animateRotate_2 />
                             </li>
                             <li><div class="note">NOTE:  The legend is only for Doughnut and Pie Charts</div><h4><a href="javascript:void(0);" class="add_field" data-type="$chart_type">Add Line to Chart</a></h4></li>
-
+                            <li><input type="hidden" id="chart_action" name="chart_action" value="$chart_action" /></li>
                             <ul class="chart_data_wrap">
                                 <li>$chart_data</li>
                             </ul>
-                            <li><input type="hidden" id="chart_action" name="chart_action" value="$chart_action" /></li>
                         </ul>
+                        <div class="r"><input type="submit" class="button button-primary" name="save_options" value="save"/></div>
+                    </form>
 EOS;
 
 
@@ -1010,11 +1013,6 @@ EOS;
             switch ($chart_type) {
                 case 'doughnut':
 
-
-                    //always show add line to chart
-                    $chart_data .= <<< EOS
-
-EOS;
 
                     //if there is data, then plug it in
                     if($data) {
@@ -1082,11 +1080,6 @@ EOS;
                 case 'pie':
 
 
-                    //always show add line to chart
-                    $chart_data .= <<< EOS
-pie chart
-EOS;
-
                     //if there is data, then plug it in
                     if($data) {
                         foreach($data['data_array'][0]['chart_data'] as $k=>$v) {
@@ -1097,19 +1090,19 @@ EOS;
                                     <a href="javascript:void(0);" class="btn delete" data-id="$k">delete</a>
                                 </li>
                                 <li>
-                                    <span>Label</span>
+                                    <dd>Label</dd>
                                     <input type="text" name="chart_data[$k][label]" value="{$v['label']}" />
                                 </li>
                                 <li>
-                                    <span>Value</span>
+                                    <dd>Value</dd>
                                     <input type="text" name="chart_data[$k][value]" value="{$v['value']}" />
                                 </li>
                                 <li>
-                                    <span>Color</span>
+                                    <dd>Color</dd>
                                     <input type="text" class="colorpicker" name="chart_data[$k][color]" value="{$v['color']}" data-default-color="{$v['color']}" />
                                 </li>
                                 <li>
-                                    <span>Highlight</span>
+                                    <dd>Highlight</dd>
                                     <input type="text" class="colorpicker" name="chart_data[$k][highlight]" value="{$v['highlight']}"  data-default-color="{$v['color']}" />
                                 </li>
                             </ul>
@@ -1127,19 +1120,19 @@ EOS;
                         <a href="javascript:void(0);" class="btn delete" data-id="$id">delete</a>
                     </li>
                     <li>
-                        <span>Label</span>
+                        <dd>Label</dd>
                         <input type="text" name="chart_data[$id][label]" value="Enter Label" />
                     </li>
                     <li>
-                        <span>Value</span>
+                        <dd>Value</dd>
                         <input type="text" name="chart_data[$id][value]" value="10" />
                     </li>
                     <li>
-                        <span>Color</span>
+                        <dd>Color</dd>
                         <input type="text" class="colorpicker" name="chart_data[$id][color]" value="#ba575a" data-default-color="#ba575a" />
                     </li>
                     <li>
-                        <span>Highlight</span>
+                        <dd>Highlight</dd>
                         <input type="text" class="colorpicker" name="chart_data[$id][highlight]" value="#a92d31"  data-default-color="#a92d31" />
                     </li>
                 </ul>

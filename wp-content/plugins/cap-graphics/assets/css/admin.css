@@ -40,6 +40,11 @@ ul.sub li input {
     width: 350px;
 }
 
+.button-primary {
+    width: 120px;
+    margin-right: 17px;
+}
+
 ul.chart_data_wrap {
     margin:17px 0 17px 27px;
     padding:17px;

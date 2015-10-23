@@ -184,8 +184,8 @@ jQuery(document).ready(function($) {
      * Add fields
      */
     $( ".add_field" ).live( "click", function() {
-        var chart_type = $('.chart_type option:selected').val();
-        if(chart_type  && chart_type != 'Select One') {
+        var chart_type = $(this).data('type');
+        if(chart_type) {
             var data = {
                 'action': 'cap_map_chart_line_action',
                 'chart_type': chart_type,
