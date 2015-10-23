@@ -1584,3 +1584,14 @@ if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
 }
 
 
+/*
+TODO: add line pie
+,
+    {
+      "slug": "linepie",
+      "label": "Line Pie Chart",
+      "description": "Test description",
+      "type": "linepie",
+      "status": 1
+    },
+*/

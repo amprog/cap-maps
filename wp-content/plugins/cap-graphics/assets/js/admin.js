@@ -49,7 +49,7 @@ jQuery(document).ready(function($) {
     });
 
     //handle all button clicks
-    $( ".meta button" ).live( "click", function(e) {
+    $( ".meta li" ).live( "click", function(e) {
 
         /*
         var data = {
@@ -62,6 +62,16 @@ jQuery(document).ready(function($) {
 */
 
         console.log($( this ).attr('class'));
+
+        var question = "Do you want to start a war?";
+        confirmation(question).then(function (answer) {
+            var ansbool = Boolean.parse(answer.toString());
+            if(ansbool){
+                alert("this is obviously " + ansbool);//TRUE
+            } else {
+                alert("and then there is " + ansbool);//FALSE
+            }
+        });
 
 
     });
@@ -213,4 +223,33 @@ jQuery(document).ready(function($) {
     $( ".new" ).click(function() {
         window.location.href = '/wp-admin/admin.php?page=cap-graphics-new-'+$(this).data('type');
     });
+
+
+    function confirmation(question) {
+        var defer = $.Deferred();
+        $('<div></div>')
+            .html(question)
+            .dialog({
+                autoOpen: true,
+                modal: true,
+                title: 'Confirmation',
+                buttons: {
+                    "Yes": function () {
+                        defer.resolve("true");//this text 'true' can be anything. But for this usage, it should be true or false.
+                        $(this).dialog("close");
+                    },
+                    "No": function () {
+                        defer.resolve("false");//this text 'false' can be anything. But for this usage, it should be true or false.
+                        $(this).dialog("close");
+                    }
+                },
+                close: function () {
+                    $(this).remove();
+                }
+            });
+        return defer.promise();
+    }
+
+
+
 });

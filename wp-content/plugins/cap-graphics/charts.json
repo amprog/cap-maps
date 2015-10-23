@@ -22,13 +22,6 @@
       "status": 1
     },
     {
-      "slug": "linepie",
-      "label": "Line Pie Chart",
-      "description": "Test description",
-      "type": "linepie",
-      "status": 1
-    },
-    {
       "slug": "line",
       "label": "Line Chart",
       "description": "Test description",
