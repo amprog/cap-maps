@@ -7,9 +7,9 @@
       "status": 1
     },
     {
-      "slug": "electoral_districts",
-      "label": "Electoral Districts with Reps",
-      "description": "Test description",
+      "slug": "district_reps",
+      "label": "Representatives by District",
+      "description": "Representatives by District ",
       "status": 1
     },
     {
@@ -19,9 +19,9 @@
       "status": 1
     },
     {
-      "slug": "test",
-      "label": "Poll Chart Test",
-      "description": "Test description",
+      "slug": "us_bases",
+      "label": "American Bases",
+      "description": "American Bases outside of the US",
       "status": 1
     }
   ]

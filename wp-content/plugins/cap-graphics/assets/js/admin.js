@@ -48,6 +48,70 @@ jQuery(document).ready(function($) {
 
     });
 
+    //handle all button clicks
+    $( ".meta ul li" ).live( "click", function(e) {
+
+        /*
+        var data = {
+            'action': 'cap_map_chart_action',
+            'chart_type': $( this ).data('type')
+        };
+        jQuery.post(ajaxurl, data, function(response) {
+            $('#list_assets').html(response.html); console.dir(response);
+        });
+*/
+
+        var c = $(this).attr('class');
+        chart = $(this).data('i');
+
+
+        if(c=='delete') {
+            var question = "Are you sure you want to delete this chart?";
+            confirmation(question).then(function (answer) {
+                if(answer=='true'){
+                    //TODO: run ajax that will delete chart from json
+                    $('#l-'+chart).remove();
+                } else {
+                    console.dir('else');
+                }
+
+            });
+        } else if (c=='copy') {
+            //TODO: run ajax that will OPEN A LIGHTBOX, AND ALLOW COPY
+            console.log('copy');
+
+        } else if (c=='view') {
+            //TODO: run ajax that will OPEN A LIGHTBOX AND WRITE CHART
+            console.log('view');
+        } else if (c=='edit') {
+            //TODO: run ajax that will get chart data, and replace main div with it
+            console.log('edit');
+        } else {
+
+        }
+
+
+
+
+    });
+
+    //copy shortcode
+    $( ".shortcode" ).live( "click", function() {
+        var copy  = $(this).addClass('highlight');
+        var short = copy.val();
+        copy.val('copied!');
+        var $temp = $("<input>");
+        $("body").append($temp);
+        $temp.val($(this).val()).select();
+        document.execCommand("copy");
+        $temp.remove();
+        setTimeout(function() {
+            copy.removeClass('highlight');
+            copy.val(short);
+        }, 3000);
+    });
+
+
     //new chart, needs blank form fields by chart type
     $( ".chart_type" ).live( "change", function() {
         if($('#chart_action').val()=='new') {
@@ -178,4 +242,33 @@ jQuery(document).ready(function($) {
     $( ".new" ).click(function() {
         window.location.href = '/wp-admin/admin.php?page=cap-graphics-new-'+$(this).data('type');
     });
+
+
+    function confirmation(question) {
+        var defer = $.Deferred();
+        $('<div></div>')
+            .html(question)
+            .dialog({
+                autoOpen: true,
+                modal: true,
+                title: 'Confirmation',
+                buttons: {
+                    "Yes": function () {
+                        defer.resolve("true");//this text 'true' can be anything. But for this usage, it should be true or false.
+                        $(this).dialog("close");
+                    },
+                    "No": function () {
+                        defer.resolve("false");//this text 'false' can be anything. But for this usage, it should be true or false.
+                        $(this).dialog("close");
+                    }
+                },
+                close: function () {
+                    $(this).remove();
+                }
+            });
+        return defer.promise();
+    }
+
+
+
 });

@@ -235,25 +235,170 @@ ul.chart_data_wrap input {
     padding: 10px;
 }
 
-#list_assets ul li {
+.l li {
     float: left;
-    margin: 0 24px 24px 0;
+    margin: 15px;
     border: 1px solid #ddd;
     -webkit-box-shadow: 0px 0px 8px #ddd;
     box-shadow: 0 0 8px #ddd;
     background-color: #fff;
-    padding: 24px 47px;
+    padding: 24px 0 0 0;
+    text-align: center;
+    width: 260px!important;
 }
 
-#list_assets ul li img {
-    display: block;
-}
-
-#list_assets ul li a {
+.l li a {
    text-decoration: none;
 }
 
-#list_assets ul li h3 {
+.l li h3 {
     margin: 5px 0 17px 0;
     text-align: center;
 }
+
+
+.meta  {
+    background-color: #f5f5f5;
+    border: 1px solid #dedede;
+    overflow: hidden;
+    clear: both;
+    margin-top:10px;
+}
+
+
+.meta li {
+    margin:0;
+    padding:7px 0;
+    background-color: #f5f5f5;
+    border: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-right: 1px solid #ccc;
+    width: 63px!important;
+    text-align: left!important;
+    transition: all .3s ease-out;
+}
+
+.meta li:hover {
+    color: #000;
+    cursor: pointer;
+}
+
+.meta li:active {
+    background: #36ec3c;
+    opacity: .7;
+}
+
+.meta li.delete {
+    color: #ff1213;
+}
+
+.meta li.delete:active {
+    background: #ec252c;
+    opacity: .7;
+}
+
+.meta li:last-child {
+    border-right: 0;
+}
+
+.meta li i {
+    padding-left:3px;
+}
+
+.starter {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+}
+
+.starter.pie {
+    background: url('../images/pie.png');
+}
+
+.starter.doughnut {
+    background: url('../images/doughnut.png');
+}
+
+.starter.bar {
+    background: url('../images/bar.png');
+}
+.starter.line {
+    background: url('../images/line.png');
+}
+
+.starter.linepie {
+    background: url('../images/linepie.png');
+}
+
+.shortcode {
+    background: #F5F5F5!important;
+}
+
+.highlight {
+    border: 1px solid #00ba04!important;
+    background: #36ec3c!important;
+    -webkit-animation-name: goout; /* Chrome, Safari, Opera */
+    -webkit-animation-duration: 4s; /* Chrome, Safari, Opera */
+    -webkit-animation-delay: 2s; /* Chrome, Safari, Opera */
+    animation-name: goout;
+    animation-duration: 2s;
+    animation-delay: 2s;
+}
+
+
+/* Chrome, Safari, Opera */
+@-webkit-keyframes goout {
+    0%   {background:#36ec3c;}
+    100%  {background:#F5F5F5;}
+}
+
+/* Standard syntax */
+@keyframes goout {
+    0%   {background:#36ec3c;}
+    100%  {background:#F5F5F5;}
+}
+
+
+/* icons */
+@font-face {
+    font-family: 'icomoon';
+    src:url('../icomoon/fonts/icomoon.eot?ysznlx');
+    src:url('../icomoon/fonts/icomoon.eot?ysznlx#iefix') format('embedded-opentype'),
+    url('../icomoon/fonts/icomoon.ttf?ysznlx') format('truetype'),
+    url('../icomoon/fonts/icomoon.woff?ysznlx') format('woff'),
+    url('../icomoon/fonts/icomoon.svg?ysznlx#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    font-family: 'icomoon';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-pencil2:before {
+    content: "\e900";
+}
+.icon-copy:before {
+    content: "\e901";
+}
+.icon-floppy-disk:before {
+    content: "\e902";
+}
+.icon-bin:before {
+    content: "\e903";
+}
+.icon-eye:before {
+    content: "\e904";
+}
+

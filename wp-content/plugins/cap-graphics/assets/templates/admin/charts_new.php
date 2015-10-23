@@ -7,7 +7,7 @@
             <li data-type="<?php echo $key; ?>" class="new_chart">
                 <a href="javascript:void(0);">
                     <h3><?php echo $chart['label']; ?></h3>
-                    <img src="<?php echo $chart['img']; ?>" alt="<?php echo $chart['label']; ?>" />
+                    <div class="starter <?php echo $chart['img']; ?>"></div>
                 </a>
             </li>
         <?php endforeach; ?>
