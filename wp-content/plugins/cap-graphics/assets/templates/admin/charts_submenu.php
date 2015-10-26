@@ -2,7 +2,7 @@
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <div class="wrap">
     <h2>Charts</h2>
-    <p>These are the charts currently in the system.  They can be res</p>
+    <p>These are the charts currently in the system.  You should be able to view, edit, and copy any of them.  Only certain roles will be able to delete charts.</p>
 
     <div id="list_assets">
         <ul class="l">
@@ -26,6 +26,4 @@
             <?php $i++; endforeach; ?>
         </ul>
     </div>
-
-
 </div>

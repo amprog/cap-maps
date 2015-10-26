@@ -351,6 +351,9 @@ EOD;
                 $chart_slug   = array_key_exists('chart_slug', $data) ? sanitize_text_field($data['chart_slug']) : null;
                 //TODO: need to get this from media library!!!
 
+                $file = self::get_file_location('chart',$chart_slug);
+
+
                 $file         = ABSPATH.$this->gc_frontend->chart_folder.$chart_slug.'/'.$chart_slug.'.json';
                 //TODO: rewrite json file of packages
                 $package_file = ABSPATH.$this->gc_frontend->chart_folder.'/charts.json';
@@ -393,6 +396,17 @@ EOD;
             $save_result = self::cap_map_save_json_file($file,$save);
 
 
+        }
+
+        /**
+         * Get file location with given info
+         * @param $type
+         * @param $slug
+         * @return mixed
+         */
+        function get_file_location($type,$slug) {
+
+            return $file;
         }
 
         /**
