@@ -36,7 +36,6 @@ if (!class_exists(APP_CLASS_NAME)) {
         const APP_NAME                = 'CAP Graphics';
         const APP_SLUG                = 'cap-graphics';
         const PLUGIN_DIR              = '/plugins';
-        //const APP_DIR                 = ABSPATH.self::PLUGIN_DIR.'/cap-graphics';
         const APP_DIR                 = '/cap-graphics';
         const SETTINGS_SECTION_ID     = 'cg_main';
         const OPTIONS_PAGE            = 'cg_options_page';
@@ -424,52 +423,64 @@ EOD;
 
 
             //TODO:  get data to save in EXACT format that is needed. requires form to be on point
-            $return = array(
-                'post'=>$_POST
-            );
 
-            wp_send_json($return);
-            wp_die();
+            //TODO:  clean post
+
+            $chart_action  = $_POST['chart_action']  = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
 
 
-            if($chart_action=='new') {
-                $chart_slug   = array_key_exists('chart_slug', $data) ? sanitize_text_field($data['chart_slug']) : null;
-                //TODO: need to get this from media library!!!
+            switch ($chart_action) {
+                case 'new':  //
 
-                $file = self::get_file_location('chart',$chart_slug);
+                    $chart_slug   = array_key_exists('chart_slug', $_POST) ? sanitize_text_field($_POST['chart_slug']) : null;
 
 
-                $file         = ABSPATH.$this->gc_frontend->chart_folder.$chart_slug.'/'.$chart_slug.'.json';
-                //TODO: rewrite json file of packages
-                $package_file = ABSPATH.$this->gc_frontend->chart_folder.'/charts.json';
-                $charts_json  = json_decode(file_get_contents($package_file),true);
+                    //TODO: do we need to grab from starter folder
+                    //$package_file = ABSPATH.$this->gc_frontend->chart_folder.'/charts.json';
 
-                mkdir(ABSPATH.$this->gc_frontend->chart_folder.$chart_slug.'/');  //make directory
-                update_post_meta( $data['ID'], 'chart_select',  $chart_slug);  //update meta so we know what chart is associated with this post
+                    $package      = self::get_file_location('charts',$chart_slug);
+                    $file         = self::get_file_location('charts',$chart_slug).'index.json';
 
-                //TODO: add new chart to array and rewrite
-                $charts_json['charts'][]['slug']        = $chart_slug;
-                $charts_json['charts'][]['label']       = $save['options']['chart_name'];
-                $charts_json['charts'][]['description'] =  'New Chart: '.$save['options']['chart_type'];
 
-                //rewrite json file
-                $this->gc_frontend->cap_map_save_json_file($package_file,$charts_json);
-            } else {
-                $chart_slug   = $save['options']['chart_slug']  = array_key_exists('chart_slug', $data) ? $data['chart_slug'] : null;
-                $chart_select = $save['options']['chart_select']  = array_key_exists('chart_select', $data) ? $data['chart_select'] : null;
 
-                //if chart slug, differs from chart_select then rename file!
-                if($chart_slug!=$chart_select) {
-                    $file                          = ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
-                    //$del                           = self::deleteDir(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_select.'/');
-                    system("rm -rf ".escapeshellarg(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_select.'/'));  //system works better than php
 
-                    mkdir(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/');  //make directory
-                } else {
-                    $file                          = ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
-                }
-                update_post_meta( $data['ID'], 'chart_select',  sanitize_text_field($data['chart_select']));  //update meta so we know what chart is associated with this post
+                    //$charts_json  = json_decode(file_get_contents($file),true);
+                    mkdir($file);  //make directory
 
+
+                    update_post_meta( $_POST['ID'], 'chart_select',  $chart_slug);  //update meta so we know what chart is associated with this post
+
+                    //TODO: add new chart to array and rewrite
+                    $charts_json['charts'][]['slug']        = $chart_slug;
+                    $charts_json['charts'][]['label']       = $save['options']['chart_name'];
+                    $charts_json['charts'][]['description'] =  'New Chart: '.$save['options']['chart_type'];
+
+                    //rewrite json file
+                    self::cap_map_save_json_file($package_file,$charts_json);
+                    break;
+                case 'update':
+                    //TODO: fix the updating of charts
+
+
+                    $chart_slug   = $save['options']['chart_slug']  = array_key_exists('chart_slug', $data) ? $data['chart_slug'] : null;
+                    $chart_select = $save['options']['chart_select']  = array_key_exists('chart_select', $data) ? $data['chart_select'] : null;
+
+                    //if chart slug, differs from chart_select then rename file!
+                    if($chart_slug!=$chart_select) {
+                        $file                          = ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
+                        //$del                           = self::deleteDir(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_select.'/');
+                        system("rm -rf ".escapeshellarg(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_select.'/'));  //system works better than php
+
+                        mkdir(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/');  //make directory
+                    } else {
+                        $file                          = ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
+                    }
+                    update_post_meta( $data['ID'], 'chart_select',  sanitize_text_field($data['chart_select']));  //update meta so we know what chart is associated with this post
+
+                    break;
+                case 0:
+
+                    break;
             }
 
             if($data['animateRotate']=='1') {
@@ -482,6 +493,7 @@ EOD;
 
 
             $return = array(
+                'post'=>$_POST,
                 'save_result'=>$save_result
             );
 
@@ -557,14 +569,20 @@ EOD;
         }
 
             /**
-         * Get file location with given info
+         * Get FOLDER LOCATION.  not the file since files may change to index.json
          * @param $type
          * @param $slug
          * @return mixed
          */
-        function get_file_location($type,$slug) {
+        public static function get_file_location($type,$slug) {
 
-            return $file;
+
+            //TODO: returns local package library for now. But needs to go into media library. check options here
+
+            error_log(ABSPATH.self::PLUGIN_DIR.self::APP_DIR.'/'.$type.'/'.$slug.'/');
+
+
+            return ABSPATH.self::PLUGIN_DIR.self::APP_DIR.'/'.$type.'/'.$slug.'/';
         }
 
         /**
@@ -1115,7 +1133,7 @@ EOS;
         <ul class="sub">
             <li>
                 <dd>Chart Slug</dd>
-                <input type="text" name="chart_slug" id="chart_slug" value="$chart_slug" placeholder="$d_place" disabled />
+                <input type="text" name="chart_slug_d" id="chart_slug_d" value="$chart_slug" placeholder="$d_place" disabled />
             </li>
             <li>
                 <dd>Chart Name</dd>
@@ -1158,7 +1176,10 @@ EOS;
                 <label class="cb-disable $animateRotate_disable" data-class="animateRotate"><span>No</span></label> <input type="checkbox" name="animateRotate" value="0" id="animateRotate_disabled" $animateRotate_2 />
             </li>
             <li><div class="note">NOTE:  The legend is only for Doughnut and Pie Charts</div><h4><a href="javascript:void(0);" class="add_field" data-type="$chart_type">Add Line to Chart</a></h4></li>
-            <li><input type="hidden" id="chart_action" name="chart_action" value="$chart_action" /></li>
+            <li>
+                <input type="hidden" id="chart_action" name="chart_action" value="$chart_action" />
+                <input type="hidden" id="chart_slug" name="chart_slug" value="$chart_slug" />
+            </li>
             <ul class="chart_data_wrap">
                 <li>$chart_data</li>
             </ul>

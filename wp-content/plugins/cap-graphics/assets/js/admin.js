@@ -314,26 +314,14 @@ jQuery(document).ready(function($) {
     //update canvas and save
     $( ".chart_update" ).live( "click", function() {
 
-        var paramObj = {};
-        $.each($('#frm_chart_update').serializeArray(), function(_, kv) {
-            if (paramObj.hasOwnProperty(kv.name)) {
-                paramObj[kv.name] = $.makeArray(paramObj[kv.name]);
-                paramObj[kv.name].push(kv.value);
-            }
-            else {
-                paramObj[kv.name] = kv.value;
-            }
-        });
 
 
-        console.dir(paramObj);
-    //$( "#frm_chart_update" ).serialize()
-
-
+        obj = create_object('#frm_chart_update');
+        console.dir(obj);
 
         var data = {
             'action': 'gc_chart_save',
-            'data': paramObj
+            'data': obj
         };
         $.post(ajaxurl, data, function(response) {
             console.dir(response);
@@ -399,5 +387,25 @@ jQuery(document).ready(function($) {
                 }
             });
         return defer.promise();
+    }
+
+    /**
+     *
+     * @param cnt
+     * @returns {{}}
+     */
+    function create_object(cnt) {
+
+        var obj = {};
+        $.each($(cnt).serializeArray(), function(_, kv) {
+            if (obj.hasOwnProperty(kv.name)) {
+                obj[kv.name] = $.makeArray(obj[kv.name]);
+                obj[kv.name].push(kv.value);
+            }
+            else {
+                obj[kv.name] = kv.value;
+            }
+        });
+        return obj;
     }
 });
