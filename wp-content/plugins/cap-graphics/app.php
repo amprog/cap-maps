@@ -828,13 +828,15 @@ EOS;
                 //TODO: figure out media storage
 
                 //TODO: "<p>GET FROM PACKAGES FOLDER IN MEDIA LIBRARY</p>";
-
+                $jsonfile = dirname(__FILE__).'/packages/charts/'.$chart_slug.'/'.$chart_slug.'.json';
                 //if there is a chart type, then drop down selected so we grab data
+                /*
                 if($options['all']['storage'] == 'media') {
                     $package = dirname(__FILE__).'/assets/chart_starter/'.$chart_type.'.json';
                 } else {
                     $package = dirname(__FILE__).'/assets/chart_starter/'.$chart_type.'.json';
-                }
+                }*/
+
                 $chart_action       = 'update';
             } else {
                 //NEW CHART: get json data from chart_starter folder for this chart type
@@ -842,9 +844,11 @@ EOS;
                 $chart_action       = 'new';
             }
 
-
+            error_log("jsonfile: $jsonfile");
             $json               = file_get_contents($jsonfile);
+            error_log(print_r($json,true));
             $data               = json_decode($json,true);
+            error_log(print_r($data,true));
             $chart_name         = isset($data['options']['chart_name']) ? $data['options']['chart_name'] : null;
             $chart_type         = isset($data['options']['chart_type']) ? $data['options']['chart_type']  : null;
             $chart_source       = isset($data['options']['chart_source']) ? $data['options']['chart_source']  : null;
@@ -859,31 +863,31 @@ EOS;
 
 
             if($data['options']['animateRotate']=='1') {
-                $animateRotate = 1;
+                $animateRotate  = 1;
             } else {
-                $animateRotate = 0;
+                $animateRotate  = 0;
             }
 
 
             //get default values for switches
             switch ($name) {
                 case 0:
-                    $name_disable = 'selected';
-                    $name_enable  = '';
-                    $name_1        = '';
-                    $name_2        = 'checked';
+                    $name_disable    = 'selected';
+                    $name_enable     = '';
+                    $name_1          = '';
+                    $name_2          = 'checked';
                     break;
                 case 1:
-                    $name_enable = 'selected';
-                    $name_disable  = '';
-                    $name_1        = 'checked';
-                    $name_2        = '';
+                    $name_enable     = 'selected';
+                    $name_disable    = '';
+                    $name_1          = 'checked';
+                    $name_2          = '';
                     break;
                 default:
-                    $name_disable = 'selected';
-                    $name_enable  = '';
-                    $name_1        = '';
-                    $name_2        = 'checked';
+                    $name_disable    = 'selected';
+                    $name_enable     = '';
+                    $name_1          = '';
+                    $name_2          = 'checked';
             }
 
             switch ($source) {
@@ -908,40 +912,40 @@ EOS;
 
             switch ($legend) {
                 case 0:
-                    $legend_disable = 'selected';
-                    $legend_enable  = '';
-                    $legend_1       = '';
-                    $legend_2       = 'checked';
+                    $legend_disable  = 'selected';
+                    $legend_enable   = '';
+                    $legend_1        = '';
+                    $legend_2        = 'checked';
                     break;
                 case 1:
-                    $legend_enable  = 'selected';
-                    $legend_disable = '';
-                    $legend_1       = 'checked';
-                    $legend_2       = '';
+                    $legend_enable   = 'selected';
+                    $legend_disable  = '';
+                    $legend_1        = 'checked';
+                    $legend_2        = '';
                     break;
                 default:
-                    $legend_disable = 'selected';
-                    $legend_enable  = '';
-                    $legend_1       = '';
-                    $legend_2       = 'checked';
+                    $legend_disable  = 'selected';
+                    $legend_enable   = '';
+                    $legend_1        = '';
+                    $legend_2        = 'checked';
             }
 
             switch ($animateRotate) {
                 case false:
-                    $animateRotate_disable = 'selected';
-                    $animateRotate_enable  = '';
+                    $animateRotate_disable  = 'selected';
+                    $animateRotate_enable   = '';
                     $animateRotate_1        = '';
                     $animateRotate_2        = 'checked';
                     break;
                 case true:
-                    $animateRotate_enable  = 'selected';
-                    $animateRotate_disable = '';
+                    $animateRotate_enable   = 'selected';
+                    $animateRotate_disable  = '';
                     $animateRotate_1        = 'checked';
                     $animateRotate_2        = '';
                     break;
                 default:
-                    $animateRotate_disable = 'selected';
-                    $animateRotate_enable  = '';
+                    $animateRotate_disable  = 'selected';
+                    $animateRotate_enable   = '';
                     $animateRotate_1        = '';
                     $animateRotate_2        = 'checked';
             }
@@ -1018,7 +1022,7 @@ EOS;
             $return = array(
                 'html'=>$html,
                 'json'=> $json,
-                'data'=> $data,
+                'data'=> print_r($data,true),
                 'chart_name' =>$chart_name,
                 'chart_data' =>$chart_data,
                 'json_file'  => $jsonfile

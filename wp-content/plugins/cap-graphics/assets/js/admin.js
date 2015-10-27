@@ -85,9 +85,10 @@ jQuery(document).ready(function($) {
             console.log('view');
         } else if (c=='edit') {
             //TODO: run ajax that will get chart data, and replace main div with it
+
             var data = {
                 'action': 'gc_chart_action',
-                'chart_slug': $( this ).data('slug')
+                'chart_slug': $( '#l-'+chart).data('slug')
             };
             jQuery.post(ajaxurl, data, function(response) {
                 $('#list_assets').html(response.html); console.dir(response);
