@@ -39,7 +39,7 @@ if (!class_exists("Cap_Graphics_Settings")) {
             $defaults   = $this->app_defaults; //pull DEFAULT options here, merge with options
             $db_options = $this->app_options; //pull options here, feed into args
             $options    = $this->merge_options($defaults, $db_options);
-            error_log(__FILE__.':'.__LINE__.' - settings');
+            //error_log(__FILE__.':'.__LINE__.' - settings');
             //loop through template files for PDF Generation
             $theme_dir = wp_get_theme();
 

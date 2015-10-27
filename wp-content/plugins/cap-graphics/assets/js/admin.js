@@ -284,6 +284,30 @@ jQuery(document).ready(function($) {
         });
     });
 
+    //autoupdate
+    /* TODO: add autoupdate feature
+    $('#frm_chart_update').change(function() {
+
+        var data = {
+            'action': 'gc_chart_save_input',
+            'id': $(this).attr('id'),
+            'value': $(this).attr('value')
+        };
+        $.post(ajaxurl, data, function(response) {
+            console.dir(response);
+            //$('#btn_'+file).removeClass('loading');
+        });
+
+
+
+        //$('#update').html('This is ' + $('#choose').val() + ' and other info');
+
+
+
+    });
+
+*/
+
 
     $( ".new" ).click(function() {
         window.location.href = '/wp-admin/admin.php?page=cap-graphics-new-'+$(this).data('type');

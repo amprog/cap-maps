@@ -490,7 +490,72 @@ EOD;
 
         }
 
+
         /**
+         * Save input on autoupdate
+         * TODO: return javascript to run an update
+         */
+        function gc_chart_save_input_callback()
+        {
+
+            error_log('id: '.$_POST['id']);
+
+            //first open svg file
+
+            //try and do all logic here and not in js
+
+
+
+            switch ($_POST['id']) {
+                case 'chart_name':
+
+                    break;
+                case 1:
+                    echo "i equals 1";
+                    break;
+                case 2:
+                    echo "i equals 2";
+                    break;
+            }
+
+            //TODO: need function for adding and subtracting from array, and saving json file
+
+
+
+            $return = array(
+                'post'=>$_POST,
+                'script'=>$script
+            );
+
+            wp_send_json($return);
+            wp_die();
+
+        }
+
+        /**
+         * Takes a json file, and an array
+         * Takes array and saves to json
+         * @param $jsonfile
+         * @param $data
+         * @return mixed
+         */
+        function gc_save_array_to_json($jsonfile,$data) {
+
+
+            $fh = fopen($jsonfile, "w");
+            if ($fh == false) {
+                $saveresult = 0;
+            } else {
+                fputs($fh, $data);
+                fclose($fh);
+                $saveresult = 1;
+            }
+
+
+            return $saveresult;
+        }
+
+            /**
          * Get file location with given info
          * @param $type
          * @param $slug
@@ -938,11 +1003,9 @@ EOS;
                 $chart_action       = 'new';
             }
 
-            error_log("jsonfile: $jsonfile");
+            //error_log("jsonfile: $jsonfile");
             $json               = file_get_contents($jsonfile);
-            error_log(print_r($json,true));
             $data               = json_decode($json,true);
-            error_log(print_r($data,true));
             $chart_name         = isset($data['options']['chart_name']) ? $data['options']['chart_name'] : null;
             $chart_type         = isset($data['options']['chart_type']) ? $data['options']['chart_type']  : null;
             $chart_source       = isset($data['options']['chart_source']) ? $data['options']['chart_source']  : null;
@@ -1055,16 +1118,15 @@ EOS;
             </li>
             <li>
                 <dd>Chart Name</dd>
-                <input type="text" name="chart_name" id="chart_name" placeholder="Enter a Chart Name with No Special Characters" value="$chart_name" />
-
+                <input type="text" class="autoupdate" name="chart_name" id="chart_name" placeholder="Enter a Chart Name with No Special Characters" value="$chart_name" />
             </li>
             <li>
                 <dd>Data Source</dd>
-                <input type="text" name="chart_source" id="chart_source" placeholder="Enter a url for the source of this data" value="$chart_source" />
+                <input type="text" class="autoupdate" name="chart_source" id="chart_source" placeholder="Enter a url for the source of this data" value="$chart_source" />
             </li>
             <li>
                 <dd>Line Color</dd>
-                <input type="text" class="colorpicker" id="segmentStrokeColor" name="segmentStrokeColor" value="$segmentStrokeColor" required />
+                <input type="text" class="colorpicker autoupdate" id="segmentStrokeColor" name="segmentStrokeColor" value="$segmentStrokeColor" required />
             </li>
             <li>
                 <dd>Chart Height</dd>
@@ -1112,10 +1174,13 @@ EOS;
     TODO:  input shortcode here
 
     <div class="float"><input type="button" class="button button-primary chart_update" name="save_options" value="save"/></div>
+    <div class="float"><input type="button" class="button button-primary goback" value="go back"/></div>
+
+
 </div>
 EOS;
 
-//TODO: save auto updates chart
+//TODO: on update, text fields update chart
             $html .= <<< EOS
 
 <script>
@@ -1128,6 +1193,10 @@ EOS;
         var err = textStatus + ", " + error;
         console.log( "Request Failed: " + err );
     });
+
+    //autoupdate
+
+
 });
 </script>
 EOS;
@@ -1569,6 +1638,8 @@ if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
         add_action( 'wp_ajax_nopriv_cap_map_chart_line_action', 'Cap_Graphics::gc_chart_action_line_callback' );   //ajaxfor adding a line to new chart
         add_action( 'wp_ajax_gc_chart_save', 'Cap_Graphics::gc_chart_save_callback' );  //save chart
         add_action( 'wp_ajax_nopriv_gc_chart_save', 'Cap_Graphics::gc_chart_save_callback' );   //save chart
+        add_action( 'wp_ajax_gc_chart_save_input', 'Cap_Graphics::gc_chart_save_input_callback' );  //save chart input box
+        add_action( 'wp_ajax_nopriv_gc_chart_save_input', 'Cap_Graphics::gc_chart_save_input_callback' );   //save chart input box
 
 
         add_action( 'save_post', 'Cap_Graphics::gc_meta_save' ); //TODO: instead of saving meta, need to save outside of meta

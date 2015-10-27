@@ -23,6 +23,12 @@
       "label": "American Bases",
       "description": "American Bases outside of the US",
       "status": 1
+    },
+    {
+      "slug": "world_politics",
+      "label": "World Governments",
+      "description": "Show right wing/left wing and fascist governments throughout the world.  Info about last elections.  ",
+      "status": 1
     }
   ]
 }
