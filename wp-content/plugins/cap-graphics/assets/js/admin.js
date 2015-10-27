@@ -253,23 +253,36 @@ jQuery(document).ready(function($) {
     */
 
 
-    //new frm_new_chart save
-    $( "#frm_new_chart" ).submit(function( event ) {
 
-        console.dir(event);
+    //update canvas and save
+    $( ".chart_update" ).live( "click", function() {
 
-        var data = {
-            'action': 'gc_chart_save',
-            'data': "wthat"  //TODO: js object here
-        };console.dir(data);
-        $.post(ajaxurl, data, function(response) { console.dir(response);
-            $('#btn_'+file).removeClass('loading');
+        var paramObj = {};
+        $.each($('#frm_chart_update').serializeArray(), function(_, kv) {
+            if (paramObj.hasOwnProperty(kv.name)) {
+                paramObj[kv.name] = $.makeArray(paramObj[kv.name]);
+                paramObj[kv.name].push(kv.value);
+            }
+            else {
+                paramObj[kv.name] = kv.value;
+            }
         });
 
 
+        console.dir(paramObj);
+    //$( "#frm_chart_update" ).serialize()
+
+
+
+        var data = {
+            'action': 'gc_chart_save',
+            'data': paramObj
+        };
+        $.post(ajaxurl, data, function(response) {
+            console.dir(response);
+            //$('#btn_'+file).removeClass('loading');
+        });
     });
-
-
 
 
     $( ".new" ).click(function() {

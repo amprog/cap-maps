@@ -323,12 +323,12 @@ EOD;
 
 
         /**
+         * TODO: no ajax version may no longer be needed
          * Update charts, on the fly and save all data with AJAX
          * Called from template
          * @param $data
          */
-        function gc_chart_save_callback($data) {
-
+        function gc_chart_save_callback_NOAJAX($data) {
 
             $chart_action                          = array_key_exists('chart_action', $data) ? $data['chart_action'] : null;
             $save['options']['chart_type']         = array_key_exists('chart_type', $data) ? sanitize_text_field($data['chart_type']) : null;
@@ -343,6 +343,92 @@ EOD;
             $save['data_array'][0]['chart_data']   = $data['chart_data'];
 
 
+            $return = array(
+                'data'=>$data
+            );
+
+            wp_send_json($return);
+            wp_die();
+
+
+
+
+
+
+            if($chart_action=='new') {
+                $chart_slug   = array_key_exists('chart_slug', $data) ? sanitize_text_field($data['chart_slug']) : null;
+                //TODO: need to get this from media library!!!
+
+                $file = self::get_file_location('chart',$chart_slug);
+
+
+                $file         = ABSPATH.$this->gc_frontend->chart_folder.$chart_slug.'/'.$chart_slug.'.json';
+                //TODO: rewrite json file of packages
+                $package_file = ABSPATH.$this->gc_frontend->chart_folder.'/charts.json';
+                $charts_json  = json_decode(file_get_contents($package_file),true);
+
+                mkdir(ABSPATH.$this->gc_frontend->chart_folder.$chart_slug.'/');  //make directory
+                update_post_meta( $data['ID'], 'chart_select',  $chart_slug);  //update meta so we know what chart is associated with this post
+
+                //TODO: add new chart to array and rewrite
+                $charts_json['charts'][]['slug']        = $chart_slug;
+                $charts_json['charts'][]['label']       = $save['options']['chart_name'];
+                $charts_json['charts'][]['description'] =  'New Chart: '.$save['options']['chart_type'];
+
+                //rewrite json file
+                $this->gc_frontend->cap_map_save_json_file($package_file,$charts_json);
+            } else {
+                $chart_slug   = $save['options']['chart_slug']  = array_key_exists('chart_slug', $data) ? $data['chart_slug'] : null;
+                $chart_select = $save['options']['chart_select']  = array_key_exists('chart_select', $data) ? $data['chart_select'] : null;
+
+                //if chart slug, differs from chart_select then rename file!
+                if($chart_slug!=$chart_select) {
+                    $file                          = ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
+                    //$del                           = self::deleteDir(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_select.'/');
+                    system("rm -rf ".escapeshellarg(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_select.'/'));  //system works better than php
+
+                    mkdir(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/');  //make directory
+                } else {
+                    $file                          = ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
+                }
+                update_post_meta( $data['ID'], 'chart_select',  sanitize_text_field($data['chart_select']));  //update meta so we know what chart is associated with this post
+
+            }
+
+            if($data['animateRotate']=='1') {
+                $save['options']['animateRotate'] = true;
+            } else {
+                $save['options']['animateRotate'] = false;
+            }
+
+            $save_result = self::cap_map_save_json_file($file,$save);
+
+
+            $return = array(
+                'save_result'=>$save_result
+            );
+
+            wp_send_json($return);
+            wp_die();
+
+
+        }
+
+        /**
+         * NEW Update charts, on the fly and save all data with AJAX
+         * Called from template
+         */
+        function gc_chart_save_callback() {
+
+
+            //TODO:  get data to save in EXACT format that is needed. requires form to be on point
+
+            $return = array(
+                'post'=>$_POST
+            );
+
+            wp_send_json($return);
+            wp_die();
 
 
             if($chart_action=='new') {
@@ -961,7 +1047,7 @@ EOS;
 
             $html = <<< EOS
 <div class="left">
-    <form method="post" id="frm_new_chart" action="/wp-admin/admin.php?page=cap-graphics-new-chart">
+    <form method="post" id="frm_chart_update" action="/wp-admin/admin.php?page=cap-graphics-new-chart">
         <ul class="sub">
             <li>
                 <dd>Chart Slug</dd>
@@ -1025,7 +1111,7 @@ EOS;
 
     TODO:  input shortcode here
 
-    <div class="float"><input type="submit" class="button button-primary" name="save_options" value="save"/></div>
+    <div class="float"><input type="button" class="button button-primary chart_update" name="save_options" value="save"/></div>
 </div>
 EOS;
 
@@ -1033,19 +1119,16 @@ EOS;
             $html .= <<< EOS
 
 <script>
-             jQuery(document).ready(function($) {
-                $.getJSON( "$jsonfile_uri").done(function( json ) {
-                    var str = json.options.chart_type.toString();
-                    new Chart(document.getElementById('c1').getContext('2d'))[str](json.data_array[0].chart_data,json.options);
-                    console.dir(json);
-                })
-                .fail(function( jqxhr, textStatus, error ) {
-                    var err = textStatus + ", " + error;
-                    console.log( "Request Failed: " + err );
-                });
-            });
-
-
+ jQuery(document).ready(function($) {
+    $.getJSON( "$jsonfile_uri").done(function( json ) {
+        var str = json.options.chart_type.toString();
+        new Chart(document.getElementById('c1').getContext('2d'))[str](json.data_array[0].chart_data,json.options);
+    })
+    .fail(function( jqxhr, textStatus, error ) {
+        var err = textStatus + ", " + error;
+        console.log( "Request Failed: " + err );
+    });
+});
 </script>
 EOS;
 

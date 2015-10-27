@@ -102,7 +102,7 @@ if (!class_exists("Cap_Graphics_Options")) {
         {
             $charts                 = file_get_contents(dirname(__FILE__).'/charts.json');
             $data['packages']       = json_decode($charts,true);
-            $data['charts_js_file'] = '/wp-content/plugins/cap-graphics/assets/js/common/';
+            $data['charts_js_file'] = '/wp-content/plugins/cap-graphics/assets/js/common/'; //TODO: replace all of these with proper constant
             return parent::gc_get_template($data,'admin/charts_submenu.php');
         }
 
