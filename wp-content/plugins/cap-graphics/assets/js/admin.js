@@ -239,6 +239,7 @@ jQuery(document).ready(function($) {
     });
 
     // form validation
+    /* TODO: may not need this any more
     $( "#post" ).submit(function( event ) {
         if($('#chart_action').val()=='new'  && $('.chart_type option:selected').val() == 'Select One') {
             event.preventDefault();
@@ -248,6 +249,28 @@ jQuery(document).ready(function($) {
         }
         //event.preventDefault();
     });
+
+    */
+
+
+    //new frm_new_chart save
+    $( "#frm_new_chart" ).submit(function( event ) {
+
+        console.dir(event);
+
+        var data = {
+            'action': 'gc_chart_save',
+            'data': "wthat"  //TODO: js object here
+        };console.dir(data);
+        $.post(ajaxurl, data, function(response) { console.dir(response);
+            $('#btn_'+file).removeClass('loading');
+        });
+
+
+    });
+
+
+
 
     $( ".new" ).click(function() {
         window.location.href = '/wp-admin/admin.php?page=cap-graphics-new-'+$(this).data('type');
@@ -283,7 +306,4 @@ jQuery(document).ready(function($) {
             });
         return defer.promise();
     }
-
-
-
 });

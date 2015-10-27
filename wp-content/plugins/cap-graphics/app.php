@@ -323,16 +323,14 @@ EOD;
 
 
         /**
-         * Save charts but do not use AJAX, use built in options saving
+         * Update charts, on the fly and save all data with AJAX
          * Called from template
          * @param $data
          */
         function gc_chart_save_callback($data) {
 
 
-            $chart_action = array_key_exists('chart_action', $data) ? $data['chart_action'] : null;
-
-
+            $chart_action                          = array_key_exists('chart_action', $data) ? $data['chart_action'] : null;
             $save['options']['chart_type']         = array_key_exists('chart_type', $data) ? sanitize_text_field($data['chart_type']) : null;
             $save['options']['chart_name']         = array_key_exists('chart_name', $data) ? sanitize_text_field($data['chart_name']) : null;
             $save['options']['segmentStrokeColor'] = array_key_exists('segmentStrokeColor', $data) ? $data['segmentStrokeColor'] : null;
@@ -394,6 +392,14 @@ EOD;
             }
 
             $save_result = self::cap_map_save_json_file($file,$save);
+
+
+            $return = array(
+                'save_result'=>$save_result
+            );
+
+            wp_send_json($return);
+            wp_die();
 
 
         }
@@ -828,7 +834,9 @@ EOS;
                 //TODO: figure out media storage
 
                 //TODO: "<p>GET FROM PACKAGES FOLDER IN MEDIA LIBRARY</p>";
-                $jsonfile = dirname(__FILE__).'/packages/charts/'.$chart_slug.'/'.$chart_slug.'.json';
+                $jsonfile     = dirname(__FILE__).'/packages/charts/'.$chart_slug.'/'.$chart_slug.'.json';
+
+                $jsonfile_uri = '/wp-content/plugins/cap-graphics/packages/charts/'.$chart_slug.'/'.$chart_slug.'.json';
                 //if there is a chart type, then drop down selected so we grab data
                 /*
                 if($options['all']['storage'] == 'media') {
@@ -858,9 +866,8 @@ EOS;
             $source             = isset($data['options']['source']) ? $data['options']['source']  : null;
             $legend             = isset($data['options']['legend']) ? $data['options']['legend']  : null;
             $name               = isset($data['options']['name']) ? $data['options']['name']  : null;
-
             $chart_data         = self::get_chart_data($data,$chart_type,'');
-
+            $chart_type_camel   = ucwords($chart_type);
 
             if($data['options']['animateRotate']=='1') {
                 $animateRotate  = 1;
@@ -953,67 +960,91 @@ EOS;
             //$self = $_SERVER['PHP_SELF'];
 
             $html = <<< EOS
-                    <form method="post" id="frm_new_chart" action="/wp-admin/admin.php?page=cap-graphics-new-chart">
-                        <ul class="sub">
-                            <li class="r"><input type="submit" class="button button-primary" name="save_options" value="save"/></li>
-                            <li>
-                                <dd>Chart Slug</dd>
-                                <input type="text" name="chart_slug" id="chart_slug" value="$chart_slug" placeholder="$d_place" required />
-                            </li>
-                            <li>
-                                <dd>Chart Name</dd>
-                                <input type="text" name="chart_name" id="chart_name" placeholder="Enter a Chart Name with No Special Characters" value="$chart_name" />
+<div class="left">
+    <form method="post" id="frm_new_chart" action="/wp-admin/admin.php?page=cap-graphics-new-chart">
+        <ul class="sub">
+            <li>
+                <dd>Chart Slug</dd>
+                <input type="text" name="chart_slug" id="chart_slug" value="$chart_slug" placeholder="$d_place" disabled />
+            </li>
+            <li>
+                <dd>Chart Name</dd>
+                <input type="text" name="chart_name" id="chart_name" placeholder="Enter a Chart Name with No Special Characters" value="$chart_name" />
 
-                            </li>
-                            <li>
-                                <dd>Data Source</dd>
-                                <input type="text" name="chart_source" id="chart_source" placeholder="Enter a url for the source of this data" value="$chart_source" />
-                            </li>
-                            <li>
-                                <dd>Line Color</dd>
-                                <input type="text" class="colorpicker" id="segmentStrokeColor" name="segmentStrokeColor" value="$segmentStrokeColor" required />
-                            </li>
-                            <li>
-                                <dd>Chart Height</dd>
-                                <input type="number" name="height" id="height" placeholder="Enter a height for this chart (defaut: 300)" value="$height" />
-                            </li>
-                            <li>
-                                <dd>Chart Width</dd>
-                                <input type="number" name="width" id="width" placeholder="Enter a width for this chart (defaut: 300)" value="$width" />
-                            </li>
-                            <li class="switch">
-                                <div>Show Name</div>
-                                <label class="cb-enable $name_enable" data-class="name"><span>Yes</span></label> <input type="checkbox" name="name" value="1" id="name_enabled" $name_1 />
-                                <label class="cb-disable $name_disable" data-class="name"><span>No</span></label> <input type="checkbox" name="name" value="0" id="name_disabled" $name_2 />
-                            </li>
-                            <li class="switch">
-                                <div>Show Source</div>
-                                <label class="cb-enable $source_enable" data-class="source"><span>Yes</span></label> <input type="checkbox" name="source" value="1" id="source_enabled" $source_1 />
-                                <label class="cb-disable $source_disable" data-class="source"><span>No</span></label> <input type="checkbox" name="source" value="0" id="source_disabled" $source_2 />
-                            </li>
-                            <li class="switch">
-                                <div>Show Legend</div>
-                                <label class="cb-enable $legend_enable" data-class="legend"><span>Yes</span></label> <input type="checkbox" name="legend" value="1" id="legend_enabled" $legend_1 />
-                                <label class="cb-disable $legend_disable" data-class="legend"><span>No</span></label> <input type="checkbox" name="legend" value="0" id="legend_disabled" $legend_2 />
-                            </li>
-                            <li class="switch">
-                                <div>Animate</div>
-                                <label class="cb-enable $animateRotate_enable" data-class="animateRotate"><span>Yes</span></label> <input type="checkbox" name="animateRotate" value="1" id="animateRotate_enabled" $animateRotate_1 />
-                                <label class="cb-disable $animateRotate_disable" data-class="animateRotate"><span>No</span></label> <input type="checkbox" name="animateRotate" value="0" id="animateRotate_disabled" $animateRotate_2 />
-                            </li>
-                            <li><div class="note">NOTE:  The legend is only for Doughnut and Pie Charts</div><h4><a href="javascript:void(0);" class="add_field" data-type="$chart_type">Add Line to Chart</a></h4></li>
-                            <li><input type="hidden" id="chart_action" name="chart_action" value="$chart_action" /></li>
-                            <ul class="chart_data_wrap">
-                                <li>$chart_data</li>
-                            </ul>
-                        </ul>
-                        <div class="r"><input type="submit" class="button button-primary" name="save_options" value="save"/></div>
-                    </form>
+            </li>
+            <li>
+                <dd>Data Source</dd>
+                <input type="text" name="chart_source" id="chart_source" placeholder="Enter a url for the source of this data" value="$chart_source" />
+            </li>
+            <li>
+                <dd>Line Color</dd>
+                <input type="text" class="colorpicker" id="segmentStrokeColor" name="segmentStrokeColor" value="$segmentStrokeColor" required />
+            </li>
+            <li>
+                <dd>Chart Height</dd>
+                <input type="number" name="height" id="height" placeholder="Enter a height for this chart (defaut: 300)" value="$height" />
+            </li>
+            <li>
+                <dd>Chart Width</dd>
+                <input type="number" name="width" id="width" placeholder="Enter a width for this chart (defaut: 300)" value="$width" />
+            </li>
+            <li class="switch">
+                <div>Show Name</div>
+                <label class="cb-enable $name_enable" data-class="name"><span>Yes</span></label> <input type="checkbox" name="name" value="1" id="name_enabled" $name_1 />
+                <label class="cb-disable $name_disable" data-class="name"><span>No</span></label> <input type="checkbox" name="name" value="0" id="name_disabled" $name_2 />
+            </li>
+            <li class="switch">
+                <div>Show Source</div>
+                <label class="cb-enable $source_enable" data-class="source"><span>Yes</span></label> <input type="checkbox" name="source" value="1" id="source_enabled" $source_1 />
+                <label class="cb-disable $source_disable" data-class="source"><span>No</span></label> <input type="checkbox" name="source" value="0" id="source_disabled" $source_2 />
+            </li>
+            <li class="switch">
+                <div>Show Legend</div>
+                <label class="cb-enable $legend_enable" data-class="legend"><span>Yes</span></label> <input type="checkbox" name="legend" value="1" id="legend_enabled" $legend_1 />
+                <label class="cb-disable $legend_disable" data-class="legend"><span>No</span></label> <input type="checkbox" name="legend" value="0" id="legend_disabled" $legend_2 />
+            </li>
+            <li class="switch">
+                <div>Animate</div>
+                <label class="cb-enable $animateRotate_enable" data-class="animateRotate"><span>Yes</span></label> <input type="checkbox" name="animateRotate" value="1" id="animateRotate_enabled" $animateRotate_1 />
+                <label class="cb-disable $animateRotate_disable" data-class="animateRotate"><span>No</span></label> <input type="checkbox" name="animateRotate" value="0" id="animateRotate_disabled" $animateRotate_2 />
+            </li>
+            <li><div class="note">NOTE:  The legend is only for Doughnut and Pie Charts</div><h4><a href="javascript:void(0);" class="add_field" data-type="$chart_type">Add Line to Chart</a></h4></li>
+            <li><input type="hidden" id="chart_action" name="chart_action" value="$chart_action" /></li>
+            <ul class="chart_data_wrap">
+                <li>$chart_data</li>
+            </ul>
+        </ul>
+
+    </form>
+</div>
+
+<div class="side">
+    <h3>Example and Save button go here</h3>
+    <p>TODO: rename chart slug???</p>
+    <canvas id="c1"></canvas>
+
+    TODO:  input shortcode here
+
+    <div class="float"><input type="submit" class="button button-primary" name="save_options" value="save"/></div>
+</div>
 EOS;
 
-
+//TODO: save auto updates chart
             $html .= <<< EOS
+
 <script>
+             jQuery(document).ready(function($) {
+                $.getJSON( "$jsonfile_uri").done(function( json ) {
+                    var str = json.options.chart_type.toString();
+                    new Chart(document.getElementById('c1').getContext('2d'))[str](json.data_array[0].chart_data,json.options);
+                    console.dir(json);
+                })
+                .fail(function( jqxhr, textStatus, error ) {
+                    var err = textStatus + ", " + error;
+                    console.log( "Request Failed: " + err );
+                });
+            });
+
 
 </script>
 EOS;

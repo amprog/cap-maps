@@ -243,6 +243,16 @@ ul.chart_data_wrap input {
     width: 50%;
 }
 
+.side {
+    width: 390px;
+    position: fixed;
+    margin-left: 50%;
+}
+
+.float {
+
+}
+
 .create {
     padding: 10px;
 }

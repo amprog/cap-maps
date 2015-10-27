@@ -100,8 +100,9 @@ if (!class_exists("Cap_Graphics_Options")) {
          */
         function charts_submenu()
         {
-            $charts           = file_get_contents(dirname(__FILE__).'/charts.json');
-            $data['packages'] = json_decode($charts,true);
+            $charts                 = file_get_contents(dirname(__FILE__).'/charts.json');
+            $data['packages']       = json_decode($charts,true);
+            $data['charts_js_file'] = '/wp-content/plugins/cap-graphics/assets/js/common/';
             return parent::gc_get_template($data,'admin/charts_submenu.php');
         }
 
