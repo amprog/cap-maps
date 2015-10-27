@@ -683,7 +683,6 @@ EOD;
         function gc_chart_shortcode( $atts ){
             $content = $legend_html = $legend_inner = $canvas_html = '';
 
-            $gc     = new Cap_Map();
             $id          = get_the_ID();
             $chart_slug  = get_post_meta($id,'chart_slug',true);
 
@@ -818,33 +817,27 @@ EOS;
             $cap_graphics = new Cap_Graphics();
             $app_defaults = $cap_graphics->app_defaults;  //what is wrong with this
             $options      = Cap_Graphics_Settings::merge_options($app_defaults, $app_options);
+            $chart_slug   = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;  //proper way of getting variables without notice errors
+            $chart_type   = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;  //proper way of getting variables without notice errors
+            $d_place      = 'Enter a Slug with Underscores Not Spaces';
 
 
 
-            $chart_slug = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;  //proper way of getting variables without notice errors
-            $chart_type = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;  //proper way of getting variables without notice errors
-            $d_place    = 'Enter a Slug with Underscores Not Spaces';
-
-
-            /*
-
-
-
-*/
-
-            //if we have a chart slug, we get data from the json file
-
+            //EDIT: if we have a chart slug, we get data from the json file
             if($chart_slug) {
                 //TODO: figure out media storage
+
+                //TODO: "<p>GET FROM PACKAGES FOLDER IN MEDIA LIBRARY</p>";
+
                 //if there is a chart type, then drop down selected so we grab data
                 if($options['all']['storage'] == 'media') {
-                    $package = $this->gc_frontend->plugin_uri.'charts/'.$chart_slug;
+                    $package = dirname(__FILE__).'/assets/chart_starter/'.$chart_type.'.json';
                 } else {
-                    $package = $this->gc_frontend->plugin_uri.'charts/'.$chart_slug;
+                    $package = dirname(__FILE__).'/assets/chart_starter/'.$chart_type.'.json';
                 }
                 $chart_action       = 'update';
             } else {
-                //new chart, get json data from starter
+                //NEW CHART: get json data from chart_starter folder for this chart type
                 $jsonfile           = dirname(__FILE__).'/assets/chart_starter/'.$chart_type.'.json';
                 $chart_action       = 'new';
             }
@@ -1452,8 +1445,8 @@ if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
         add_action( 'wp_ajax_nopriv_cap_map_file_save_action', 'Cap_Graphics::gc_file_save_action_callback' );   //ajax for saving files
 
         //charts
-        add_action( 'wp_ajax_cap_map_chart_action', 'Cap_Graphics::gc_chart_action_callback' );  //ajax for new chart
-        add_action( 'wp_ajax_nopriv_cap_map_chart_action', 'Cap_Graphics::gc_chart_action_callback' );   //ajax for new chart
+        add_action( 'wp_ajax_gc_chart_action', 'Cap_Graphics::gc_chart_action_callback' );  //ajax for new chart
+        add_action( 'wp_ajax_nopriv_gc_chart_action', 'Cap_Graphics::gc_chart_action_callback' );   //ajax for new chart
         add_action( 'wp_ajax_cap_map_chart_line_action', 'Cap_Graphics::gc_chart_action_line_callback' );  //ajax for adding a line to new chart
         add_action( 'wp_ajax_nopriv_cap_map_chart_line_action', 'Cap_Graphics::gc_chart_action_line_callback' );   //ajaxfor adding a line to new chart
         add_action( 'wp_ajax_gc_chart_save', 'Cap_Graphics::gc_chart_save_callback' );  //save chart

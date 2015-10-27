@@ -61,16 +61,6 @@ jQuery(document).ready(function($) {
     //handle all button clicks
     $( ".meta ul li" ).live( "click", function(e) {
 
-        /*
-        var data = {
-            'action': 'cap_map_chart_action',
-            'chart_type': $( this ).data('type')
-        };
-        jQuery.post(ajaxurl, data, function(response) {
-            $('#list_assets').html(response.html); console.dir(response);
-        });
-*/
-
         var c = $(this).attr('class');
         chart = $(this).data('i');
 
@@ -95,6 +85,13 @@ jQuery(document).ready(function($) {
             console.log('view');
         } else if (c=='edit') {
             //TODO: run ajax that will get chart data, and replace main div with it
+            var data = {
+                'action': 'gc_chart_action',
+                'chart_slug': $( this ).data('slug')
+            };
+            jQuery.post(ajaxurl, data, function(response) {
+                $('#list_assets').html(response.html); console.dir(response);
+            });
             console.log('edit');
         } else {
 
@@ -136,6 +133,7 @@ jQuery(document).ready(function($) {
     });
 
     //charting
+    /* TODO: MAY NOT NEED OR WILL USE THIS ANY MORE
     $( "#chart_select_wrap .chart_select" ).change(function() {
         var chart_select =    $( this ).val()
         if(chart_select!='Select One') {
@@ -150,6 +148,7 @@ jQuery(document).ready(function($) {
             });
         }
     });
+
 
     //svg
     $( "#svg_select_wrap .svg_select" ).live( "change", function() {
@@ -168,6 +167,9 @@ jQuery(document).ready(function($) {
             });
         }
     });
+     */
+
+
 
     //switches
     $( ".cb-enable" ).live( "click", function() {

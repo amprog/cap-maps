@@ -7,7 +7,7 @@
     <div id="list_assets">
         <ul class="l">
             <?php $i=1; foreach($data['packages']['charts'] as $chart): ?>
-                <li data-type="<?php echo $chart['slug']; ?>" class="current_chart" id="l-<?php echo $i; ?>">
+                <li data-slug="<?php echo $chart['slug']; ?>" class="current_chart" id="l-<?php echo $i; ?>">
                     <h3><?php echo $chart['label']; ?></h3>
                     <div class="starter <?php echo $chart['type']; ?>"></div>
                     <p><?php echo $chart['description']; ?></p>
