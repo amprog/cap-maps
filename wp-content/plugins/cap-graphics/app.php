@@ -201,7 +201,9 @@ if (!class_exists(APP_CLASS_NAME)) {
         }
 
 
-
+        /**
+         *
+         */
         function settings_init() {
             error_log(__FILE__.':'.__LINE__.' - frontend  ');
             //register_setting( 'wp_cap_map', 'gp_options', array(&$this, 'sanitize_settings') );
@@ -422,7 +424,6 @@ EOD;
 
 
             //TODO:  get data to save in EXACT format that is needed. requires form to be on point
-
             $return = array(
                 'post'=>$_POST
             );
@@ -1168,19 +1169,21 @@ EOS;
 
 <div class="side">
     <h3>Example and Save button go here</h3>
-    <p>TODO: rename chart slug???</p>
-    <canvas id="c1"></canvas>
-
-    TODO:  input shortcode here
-
-    <div class="float"><input type="button" class="button button-primary chart_update" name="save_options" value="save"/></div>
-    <div class="float"><input type="button" class="button button-primary goback" value="go back"/></div>
-
+    <div class="c">
+        <canvas id="c1" width="300" height="300"></canvas>
+    </div>
+    <div class="short-cnt">
+        <input type="text" value="[cap_chart chart=&quot;10_7_2015_pie&quot;]" class="shortcode">
+    </div>
+    <div class="c">
+        <div class="float"><input type="button" class="button button-primary chart_update" name="save_options" value="save"/></div>
+        <div class="float"><input type="button" class="button button-primary goback" value="go back"/></div>
+    </div>
 
 </div>
 EOS;
 
-//TODO: on update, text fields update chart
+//TODO: phase II on update, text fields update chart
             $html .= <<< EOS
 
 <script>
@@ -1193,10 +1196,6 @@ EOS;
         var err = textStatus + ", " + error;
         console.log( "Request Failed: " + err );
     });
-
-    //autoupdate
-
-
 });
 </script>
 EOS;

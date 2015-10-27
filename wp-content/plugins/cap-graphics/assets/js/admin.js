@@ -63,7 +63,7 @@ jQuery(document).ready(function($) {
 
         var c = $(this).attr('class');
         chart = $(this).data('i');
-
+        slug  = $(this).parent().parent().parent().data('slug'); console.log('slug: '+slug);
 
         if(c=='delete') {
             var question = "Are you sure you want to delete this chart?";
@@ -83,6 +83,63 @@ jQuery(document).ready(function($) {
         } else if (c=='view') {
             //TODO: run ajax that will OPEN A LIGHTBOX AND WRITE CHART
             console.log('view');
+
+            /* templating may seem cleaner, but causes problems with portability and seperation of logic and templating
+            $.fancybox({
+                type: "ajax",
+                'width':'70%',
+                'height':'70%',
+                'autoDimensions':false,
+                'autoSize':false,
+                'scrolling':'no',
+                'href': '/wp-content/plugins/cap-graphics/assets/templates/chart-view.php?slug='+slug,
+                'helpers': {
+                    'overlay': {
+                        'locked': false
+                    }
+                }
+            });
+*/
+
+
+            //get json dat now, and use data later
+            var json_file = $('');
+            $.getJSON( "$jsonfile_uri").done(function( json ) {
+
+            })
+                .fail(function( jqxhr, textStatus, error ) {
+                    var err = textStatus + ", " + error;
+                    console.log( "Request Failed: " + err );
+                });
+
+
+            var width = '300';
+            var height = '300';
+            //inline version is messy but increases scalability and portability
+            $.fancybox({
+                'type': "inline",
+                'width':'70%',
+                'height':'70%',
+                'autoDimensions':false,
+                'autoSize':false,
+                'scrolling':'no',
+                'content': '<h3>Example of Chart</h3><canvas id="f1" width="'+width+'" height="'+height+'"></canvas>',  //TODO:  there should be a template with this data, that can also be used for shortcode!
+                'helpers': {
+                    'overlay': {
+                        'locked': false
+                    }
+                },
+                afterLoad: function(current, previous) {
+
+                    var str = json.options.chart_type.toString();
+                    new Chart(document.getElementById('c1').getContext('2d'))[str](json.data_array[0].chart_data,json.options);
+
+
+                }
+            });
+
+
+
         } else if (c=='edit') {
             //TODO: run ajax that will get chart data, and replace main div with it
 
