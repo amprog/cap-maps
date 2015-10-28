@@ -1020,7 +1020,7 @@ EOS;
             $source             = isset($data['options']['source']) ? $data['options']['source']  : null;
             $legend             = isset($data['options']['legend']) ? $data['options']['legend']  : null;
             $name               = isset($data['options']['name']) ? $data['options']['name']  : null;
-            $chart_data         = self::get_chart_data($data,$chart_type,'');  //error_log("chart_data:"); error_log($chart_data);
+            $chart_data         = self::get_chart_data($chart_type,'',$data);  //error_log("chart_data:"); error_log($chart_data);
             $chart_type_camel   = ucwords($chart_type);
 
             if($data['options']['animateRotate']=='1') {
@@ -1232,7 +1232,7 @@ EOS;
             $chart_type = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;
             $number     = array_key_exists('number', $_POST) ? $_POST['number'] : null;
             $id         = $number+1;
-            $chart_data = self::get_chart_data($_POST,$chart_type,$id);
+            $chart_data = self::get_chart_data($chart_type,$id);
 
 
             $return = array(
@@ -1252,7 +1252,7 @@ EOS;
          * @param $chart_type
          * @return mixed
          */
-        function get_chart_data($data,$chart_type,$id) {
+        function get_chart_data($chart_type,$id,$data = NULL) {
 
 
             $chart_type = strtolower($chart_type);
