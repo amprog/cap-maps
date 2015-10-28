@@ -5,7 +5,7 @@ jQuery(document).ready(function($) {
     $( ".create" ).live( "click", function(e) {
 
         if($(this).data('type')=='svg') {
-            console.log($( this ).val());
+
             $('#svg_select_wrap').remove();
             //$('#svg_select_wrap #svg_select_inner').addClass('h');
             $('#svg_slug_wrap').html('<span>SVG Package Name</span>  <input type="text" name="svg_slug" id="svg_slug" placeholder="Enter a slug for this SVG Graphic" />');
@@ -65,8 +65,6 @@ jQuery(document).ready(function($) {
         chart = $(this).data('i');
         slug  = $(this).parent().parent().parent().data('slug');
         dir   = $(this).data('dir');
-
-        console.log("dir: "+dir);
 
         if(c=='delete') {
             var question = "Are you sure you want to delete this chart?";
@@ -165,7 +163,7 @@ jQuery(document).ready(function($) {
             jQuery.post(ajaxurl, data, function(response) {
                 $('#list_assets').html(response.html); console.dir(response);
             });
-            console.log('edit');
+
         } else {
 
         }
@@ -331,12 +329,17 @@ jQuery(document).ready(function($) {
 
 
 
-        obj = create_object('#frm_chart_update');
-        console.dir(obj);
+        //obj = create_object('#frm_chart_update');  //manhandles the array
+
+        //obj = $('#frm_chart_update').serializeArray;  //does not get 3d array
+
+        json =  JSON.stringify(obj);
+
+        console.dir(json);
 
         var data = {
             'action': 'gc_chart_save',
-            'data': obj
+            'data': json
         };
         $.post(ajaxurl, data, function(response) {
             console.dir(response);
@@ -388,8 +391,7 @@ jQuery(document).ready(function($) {
                 modal: true,
                 title: 'Confirmation',
                 buttons: {
-                    "Yes": function () {
-                        defer.resolve("true");//this text 'true' can be anything. But for this usage, it should be true or false.
+                    "Yes": function () {//TODO: build delete functionality
                         $(this).dialog("close");
                     },
                     "No": function () {

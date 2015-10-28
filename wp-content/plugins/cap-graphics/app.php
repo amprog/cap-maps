@@ -321,99 +321,7 @@ EOD;
 
 
         /**
-         * TODO: no ajax version may no longer be needed
-         * Update charts, on the fly and save all data with AJAX
-         * Called from template
-         * @param $data
-         */
-        function gc_chart_save_callback_NOAJAX($data) {
-
-            $chart_action                          = array_key_exists('chart_action', $data) ? $data['chart_action'] : null;
-            $save['options']['chart_type']         = array_key_exists('chart_type', $data) ? sanitize_text_field($data['chart_type']) : null;
-            $save['options']['chart_name']         = array_key_exists('chart_name', $data) ? sanitize_text_field($data['chart_name']) : null;
-            $save['options']['segmentStrokeColor'] = array_key_exists('segmentStrokeColor', $data) ? $data['segmentStrokeColor'] : null;
-            $save['options']['chart_source']       = array_key_exists('chart_source', $data) ? $data['chart_source'] : null;
-            $save['options']['legend']             = array_key_exists('legend', $data) ? $data['legend'] : null;
-            $save['options']['source']             = array_key_exists('source', $data) ? $data['source'] : null;
-            $save['options']['name']               = array_key_exists('name', $data) ? $data['name'] : null;
-            $save['options']['width']              = array_key_exists('width', $data) ? $data['width'] : null;
-            $save['options']['height']             = array_key_exists('height', $data) ? $data['height'] : null;
-            $save['data_array'][0]['chart_data']   = $data['chart_data'];
-
-
-            $return = array(
-                'data'=>$data
-            );
-
-            wp_send_json($return);
-            wp_die();
-
-
-
-
-
-
-            if($chart_action=='new') {
-                $chart_slug   = array_key_exists('chart_slug', $data) ? sanitize_text_field($data['chart_slug']) : null;
-                //TODO: need to get this from media library!!!
-
-                $file = self::get_file_location('charts',$chart_slug);
-
-
-                $file         = ABSPATH.$this->gc_frontend->chart_folder.$chart_slug.'/'.$chart_slug.'.json';
-                //TODO: rewrite json file of packages
-                $package_file = ABSPATH.$this->gc_frontend->chart_folder.'/charts.json';
-                $charts_json  = json_decode(file_get_contents($package_file),true);
-
-                mkdir(ABSPATH.$this->gc_frontend->chart_folder.$chart_slug.'/');  //make directory
-                update_post_meta( $data['ID'], 'chart_select',  $chart_slug);  //update meta so we know what chart is associated with this post
-
-                //TODO: add new chart to array and rewrite
-                $charts_json['charts'][]['slug']        = $chart_slug;
-                $charts_json['charts'][]['label']       = $save['options']['chart_name'];
-                $charts_json['charts'][]['description'] =  'New Chart: '.$save['options']['chart_type'];
-
-                //rewrite json file
-                $this->gc_frontend->cap_map_save_json_file($package_file,$charts_json);
-            } else {
-                $chart_slug   = $save['options']['chart_slug']  = array_key_exists('chart_slug', $data) ? $data['chart_slug'] : null;
-                $chart_select = $save['options']['chart_select']  = array_key_exists('chart_select', $data) ? $data['chart_select'] : null;
-
-                //if chart slug, differs from chart_select then rename file!
-                if($chart_slug!=$chart_select) {
-                    $file                          = ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
-                    //$del                           = self::deleteDir(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_select.'/');
-                    system("rm -rf ".escapeshellarg(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_select.'/'));  //system works better than php
-
-                    mkdir(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/');  //make directory
-                } else {
-                    $file                          = ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
-                }
-                update_post_meta( $data['ID'], 'chart_select',  sanitize_text_field($data['chart_select']));  //update meta so we know what chart is associated with this post
-
-            }
-
-            if($data['animateRotate']=='1') {
-                $save['options']['animateRotate'] = true;
-            } else {
-                $save['options']['animateRotate'] = false;
-            }
-
-            $save_result = self::cap_map_save_json_file($file,$save);
-
-
-            $return = array(
-                'save_result'=>$save_result
-            );
-
-            wp_send_json($return);
-            wp_die();
-
-
-        }
-
-        /**
-         * NEW Update charts, on the fly and save all data with AJAX
+         * AJAX:  NEW Update charts, on the fly and save all data with AJAX
          * Called from template
          */
         function gc_chart_save_callback() {
@@ -423,20 +331,24 @@ EOD;
 
             //TODO:  clean post
 
-            $chart_action  = $_POST['chart_action']  = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
+            $data = $_POST['data'];
+
+            $chart_action  = $data['chart_action']  = array_key_exists('chart_action', $data) ? $data['chart_action'] : null;
 
 
+
+            error_log(__FILE__.':'.__LINE__."- chart_action: $chart_action");
             switch ($chart_action) {
                 case 'new':  //
 
-                    $chart_slug   = array_key_exists('chart_slug', $_POST) ? sanitize_text_field($_POST['chart_slug']) : null;
+                    $chart_slug   = array_key_exists('chart_slug', $data) ? sanitize_text_field($data['chart_slug']) : null;
 
 
                     //TODO: do we need to grab from starter folder
                     //$package_file = ABSPATH.$this->gc_frontend->chart_folder.'/charts.json';
 
                     $package      = self::get_file_location('charts',$chart_slug);
-                    $file         = self::get_file_location('charts',$chart_slug).'index.json';
+                    $file         = self::get_file_location('charts',$chart_slug).'/index.json';
 
 
 
@@ -449,25 +361,30 @@ EOD;
 
                     //TODO: add new chart to array and rewrite
                     $charts_json['charts'][]['slug']        = $chart_slug;
-                    $charts_json['charts'][]['label']       = $save['options']['chart_name'];
-                    $charts_json['charts'][]['description'] =  'New Chart: '.$save['options']['chart_type'];
+                    $charts_json['charts'][]['label']       = $data['options']['chart_name'];
+                    $charts_json['charts'][]['description'] =  'New Chart: '.$data['options']['chart_type'];
 
                     //rewrite json file
-                    self::cap_map_save_json_file($file,$charts_json);
+                    //self::gc_save_json_file($file,$charts_json);
                     break;
                 case 'update':
                     //TODO: fix the updating of charts
-                    error_log(__FILE__.':'.__LINE__.'- made it to update');
 
-                    $chart_slug   = $save['options']['chart_slug']    = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
-                    $chart_select = $save['options']['chart_select']  = array_key_exists('chart_select', $_POST) ? $_POST['chart_select'] : null;
+                    $chart_slug   = $save['options']['chart_slug']    = array_key_exists('chart_slug', $data) ? $data['chart_slug'] : null;
+                    $chart_select = $save['options']['chart_select']  = array_key_exists('chart_select', $data) ? $data['chart_select'] : null;
+
+
+
 
                     //if chart slug, differs from chart_select then rename file!
+                    //TODO: phase ii feature rename slugs
+                    /*
                     if($chart_slug!=$chart_select) {
                         system("rm -rf ".escapeshellarg(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_select.'/'));  //system works better than php
 
                         mkdir(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/');  //make directory
                     }
+                    */
 
 
                     break;
@@ -476,18 +393,23 @@ EOD;
                     break;
             }
 
-            if($_POST['animateRotate']=='1') {
+            if($data['animateRotate']=='1') {
                 $save['options']['animateRotate'] = true;
             } else {
                 $save['options']['animateRotate'] = false;
             }
 
-            $save_result = self::cap_map_save_json_file($file,$save);
+            error_log(__FILE__.':'.__LINE__.'- printing data');
+
+            error_log(print_r($data,true));
+
+            $save_result = self::gc_save_json_file(self::get_file_location('charts',$chart_slug).'/index.json',$data);
 
 
             $return = array(
-                'post'=>$_POST,
-                'save_result'=>$save_result
+                'data'=>$data,
+                'save_result'=>$save_result,
+                'save'=>$save_result
             );
 
             wp_send_json($return);
@@ -661,7 +583,7 @@ EOD;
                     $charts_json['charts'][]['description'] =  'New Chart: '.$save['options']['chart_type'];
 
                     //rewrite json file
-                    $this->gc_frontend->cap_map_save_json_file($package_file,$charts_json);
+                    self::gc_save_json_file($package_file,$charts_json);
                 } else {
                     $chart_slug   = $save['options']['chart_slug']  = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
                     $chart_select = $save['options']['chart_select']  = array_key_exists('chart_select', $_POST) ? $_POST['chart_select'] : null;
@@ -686,7 +608,7 @@ EOD;
                     $save['options']['animateRotate'] = false;
                 }
 
-                $save_result = self::cap_map_save_json_file($file,$save);
+                $save_result = self::gc_save_json_file($file,$save);
             }
 
             //if svg_action then save files
@@ -764,6 +686,8 @@ EOD;
          * @return int
          */
         function gc_save_json_file($file,$save) {
+
+            error_log("780: $file");
             $v = explode('.', PHP_VERSION);  //JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES require php 5.4.0
             if ($v[0] == 5 && $v[1] < 2) {
                 die("You need to have at least PHP 5.2 installed to use this. You currently have " . PHP_VERSION);
@@ -993,8 +917,8 @@ EOS;
             $chart_type   = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;  //proper way of getting variables without notice errors
             $d_place      = 'Enter a Slug with Underscores Not Spaces';
 
-            $jsonfile     = self::get_file_location('charts',$chart_slug).'index.json';
-            $jsonfile_uri = self::get_package_uri('charts',$chart_slug).'index.json';
+            $jsonfile     = self::get_file_location('charts',$chart_slug).'/index.json';
+            $jsonfile_uri = self::get_package_uri('charts',$chart_slug).'/index.json';
             //$jsonfile_uri = '/wp-content/plugins/cap-graphics/packages/charts/'.$chart_slug.'/index.json';
 
 
@@ -1455,7 +1379,7 @@ E_ALL;
                 $svg_action = 'new';
             }
 
-            $html = $this->gc_frontend->cap_map_svg_tpl($svg_action,$svg,$js,$css,$json);
+            $html = self::cap_map_svg_tpl($svg_action,$svg,$js,$css,$json);
 
 
 
@@ -1660,10 +1584,14 @@ if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
         add_action( 'wp_ajax_nopriv_gc_chart_action', 'Cap_Graphics::gc_chart_action_callback' );   //ajax for new chart
         add_action( 'wp_ajax_gc_chart_line_action', 'Cap_Graphics::gc_chart_action_line_callback' );  //ajax for adding a line to new chart
         add_action( 'wp_ajax_nopriv_gc_chart_line_action', 'Cap_Graphics::gc_chart_action_line_callback' );   //ajaxfor adding a line to new chart
+
         add_action( 'wp_ajax_gc_chart_save', 'Cap_Graphics::gc_chart_save_callback' );  //save chart
         add_action( 'wp_ajax_nopriv_gc_chart_save', 'Cap_Graphics::gc_chart_save_callback' );   //save chart
-        add_action( 'wp_ajax_gc_chart_save_input', 'Cap_Graphics::gc_chart_save_input_callback' );  //save chart input box
-        add_action( 'wp_ajax_nopriv_gc_chart_save_input', 'Cap_Graphics::gc_chart_save_input_callback' );   //save chart input box
+
+        //TODO: phase ii add autoupdate on input
+        //add_action( 'wp_ajax_gc_chart_save_input', 'Cap_Graphics::gc_chart_save_input_callback' );  //save chart input box
+        //add_action( 'wp_ajax_nopriv_gc_chart_save_input', 'Cap_Graphics::gc_chart_save_input_callback' );   //save chart input box
+
         add_action( 'wp_ajax_gc_chart_view', 'Cap_Graphics::gc_chart_view_callback' );  //view chart
         add_action( 'wp_ajax_nopriv_gc_chart_view', 'Cap_Graphics::gc_chart_view_callback' );   //view chart
 

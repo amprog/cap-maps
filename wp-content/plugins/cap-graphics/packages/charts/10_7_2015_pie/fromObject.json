@@ -1,0 +1,43 @@
+{
+  "chart_name": "Exports to Australia",
+  "chart_source": "http://www.wisertrade.org",
+  "segmentStrokeColor": "#0a0a0a",
+  "height": 300,
+  "width": 300,
+  "name": 0,
+  "source": 0,
+  "legend": 1,
+  "animateRotate": 1,
+  "chart_action": "update",
+  "chart_slug": "10_7_2015_pie",
+  "chart_data[0": {
+    "label": "Industrial Machinery Including Computers",
+    "value": 33,
+    "color": "#ba575a",
+    "highlight": "#a92d31"
+  },
+  "chart_data[1": {
+    "label": "Transportation",
+    "value": 10,
+    "color": "#726d86",
+    "highlight": "#4f4868"
+  },
+  "chart_data[2": {
+    "label": "Miscellaneous",
+    "value": 9,
+    "color": "#3883a7",
+    "highlight": "#066491"
+  },
+  "chart_data[3": {
+    "label": "Electric Machinery",
+    "value": 7,
+    "color": "#388a87",
+    "highlight": "#066d69"
+  },
+  "chart_data[4": {
+    "label": "Other",
+    "value": 41,
+    "color": "#398c66",
+    "highlight": "#076f40"
+  }
+}
