@@ -46,8 +46,8 @@ ul.sub li input {
 }
 
 ul.chart_data_wrap {
-    margin:7px 0 7px 7px;
-    padding:17px;
+    margin:0;
+    padding:0;
 }
 
 ul.chart_data_inner {
@@ -56,8 +56,19 @@ ul.chart_data_inner {
     border: 1px solid #ccc;
 }
 
+
+ul.chart_data_inner span {
+    width: 64px;
+    display: inline-block;
+}
+
+.wp-picker-container {
+    padding-top:10px;
+}
+
+
 ul.chart_data_wrap li {
-    padding:10px;
+    padding:0;
 
 }
 
@@ -328,6 +339,7 @@ ul.chart_data_wrap input {
 .meta li.delete:active {
     background: #ec252c;
     opacity: .7;
+    color: #111;
 }
 
 .meta li:last-child {
@@ -368,6 +380,7 @@ ul.chart_data_wrap input {
     width: 70%;
 }
 
+
 .highlight {
     border: 1px solid #00ba04!important;
     background: #36ec3c!important;
@@ -377,6 +390,18 @@ ul.chart_data_wrap input {
     animation-name: goout;
     animation-duration: 2s;
     animation-delay: 2s;
+}
+
+/* custom grid */
+
+
+.c_1_2 {
+    width: 50% !important;
+}
+
+
+.c_1_4 {
+    width: 25% !important;
 }
 
 

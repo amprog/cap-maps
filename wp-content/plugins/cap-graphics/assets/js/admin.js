@@ -64,7 +64,9 @@ jQuery(document).ready(function($) {
         var c = $(this).attr('class');
         chart = $(this).data('i');
         slug  = $(this).parent().parent().parent().data('slug');
-        dir   = $(this).parent().parent().parent().data('dir');
+        dir   = $(this).data('dir');
+
+        console.log("dir: "+dir);
 
         if(c=='delete') {
             var question = "Are you sure you want to delete this chart?";
@@ -82,33 +84,39 @@ jQuery(document).ready(function($) {
             console.log('copy');
 
         } else if (c=='view') {
-            //TODO: run ajax that will OPEN A LIGHTBOX AND WRITE CHART
-            console.log('view');
+            //inline version is messy but increases scalability and portability
+            var obj = {chart_slug:slug, chart_type:"blah",action:'gc_chart_view'}; console.dir(obj); console.log(ajaxurl);
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: this.href, // preview.php
+                data: obj, // all form fields
+                success: function (data) {
+                    // on success, post (preview) returned data in fancybox
+                    $.fancybox(data, {
+                        // fancybox API options
+                        fitToView: false,
+                        width: '95%',
+                        height: '95%',
+                        autoSize: false,
+                        closeClick: false,
+                        openEffect: 'none',
+                        closeEffect: 'none',
+                        //href: ajaxurl,
+                        href: '/wp-content/plugins/cap-graphics/assets/templates/chart-view.php'
+                    }); // fancybox
+                } // success
+            }); // ajax
 
-            /* templating may seem cleaner, but causes problems with portability and seperation of logic and templating
-            $.fancybox({
-                type: "ajax",
-                'width':'70%',
-                'height':'70%',
-                'autoDimensions':false,
-                'autoSize':false,
-                'scrolling':'no',
-                'href': '/wp-content/plugins/cap-graphics/assets/templates/chart-view.php?slug='+slug,
-                'helpers': {
-                    'overlay': {
-                        'locked': false
-                    }
-                }
-            });
-*/
+            /*
 
+            $.getJSON(dir+slug+'/index.json').done(function( data ) {
 
-            //get json dat now, and use data later
+                json = data;
 
+                html = '<div class="left"><h3>'+json.options.chart_name+'</h3><canvas id="f1" width="'+json.options.width+'" height="'+json.options.height+'"></canvas></div>' +
+                           '<div class="left"><p class="chart_source">'+json.options.chart_source+'</p></div>'
 
-
-
-            $.getJSON( "$jsonfile_uri").done(function( json ) {
 
             })
                 .fail(function( jqxhr, textStatus, error ) {
@@ -117,32 +125,35 @@ jQuery(document).ready(function($) {
                 });
 
 
-            var width = '300';
-            var height = '300';
-            //inline version is messy but increases scalability and portability
+
             $.fancybox({
-                'type': "inline",
-                'width':'70%',
-                'height':'70%',
+                'type': "ajax",
+                'width':'95%',
+                'height':'95%',
                 'autoDimensions':false,
                 'autoSize':false,
                 'scrolling':'no',
-                'content': '<h3>Example of Chart</h3><canvas id="f1" width="'+width+'" height="'+height+'"></canvas>',  //TODO:  there should be a template with this data, that can also be used for shortcode!
+                'href': '',
                 'helpers': {
                     'overlay': {
                         'locked': false
                     }
                 },
-                afterLoad: function(current, previous) {
+                afterLoad: function() {
 
-                    var str = json.options.chart_type.toString();
-                    new Chart(document.getElementById('c1').getContext('2d'))[str](json.data_array[0].chart_data,json.options);
+                    console.dir(json); console.log(json.options.chart_type);
+                    var str = json.options.chart_type.toString();         console.log("str: "+str);
+                    new Chart(document.getElementById('f1').getContext('2d'))[str](json.data_array[0].chart_data,json.options);
+
 
 
                 }
             });
 
+             'content': '<div class="left"><h3>'+json.options.chart_name+'</h3><canvas id="f1" width="'+json.options.width+'" height="'+json.options.height+'"></canvas></div>' +
+             '<div class="left"><p class="chart_source">'+json.options.chart_source+'</p></div>',  //TODO:  there should be a template with this data, that can also be used for shortcode!
 
+             */
 
         } else if (c=='edit') {
             //TODO: run ajax that will get chart data, and replace main div with it

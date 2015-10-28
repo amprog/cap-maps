@@ -858,6 +858,7 @@ EOD;
             $id          = get_the_ID();
             $chart_slug  = get_post_meta($id,'chart_slug',true);
 
+            //TODO: needs work converting to new format
 
             //get frontend css and charts scripts
             wp_enqueue_style('capmapcss', $this->gc_frontend->plugin_uri.'assets/css/frontend.css');
@@ -903,8 +904,6 @@ EOD;
                             <div style="background-color: '.$c['color'].'"></div>
                             <p>'.$c['label'].'</p>
                         </li>';
-
-
                 }
 
                 $legend_html = <<< EOS
@@ -996,7 +995,7 @@ EOS;
 
             $jsonfile     = self::get_file_location('charts',$chart_slug).'index.json';
             $jsonfile_uri = self::get_package_uri('charts',$chart_slug).'index.json';
-            $jsonfile_uri = '/wp-content/plugins/cap-graphics/packages/charts/'.$chart_slug.'/index.json';
+            //$jsonfile_uri = '/wp-content/plugins/cap-graphics/packages/charts/'.$chart_slug.'/index.json';
 
 
             //EDIT: if we have a chart slug, we get data from the json file
@@ -1135,11 +1134,11 @@ EOS;
             </li>
             <li>
                 <dd>Chart Height</dd>
-                <input type="number" name="height" id="height" placeholder="Enter a height for this chart (defaut: 300)" value="$height" />
+                <input type="number"  class="c_1_4" name="height" id="height" placeholder="Enter a height for this chart (defaut: 300)" value="$height" />
             </li>
             <li>
                 <dd>Chart Width</dd>
-                <input type="number" name="width" id="width" placeholder="Enter a width for this chart (defaut: 300)" value="$width" />
+                <input type="number" class="c_1_4" name="width" id="width" placeholder="Enter a width for this chart (defaut: 300)" value="$width" />
             </li>
             <li class="switch">
                 <div>Show Name</div>
@@ -1276,7 +1275,7 @@ EOS;
                                 </li>
                                 <li>
                                     <span>Value</span>
-                                    <input type="text" name="chart_data[$k][value]" value="{$v['value']}" />
+                                    <input type="number" class="c_1_4" name="chart_data[$k][value]" value="{$v['value']}" />
                                 </li>
                                 <li>
                                     <span>Color</span>
@@ -1306,7 +1305,7 @@ EOS;
                     </li>
                     <li>
                         <span>Value</span>
-                        <input type="text" name="chart_data[$id][value]" value="10" />
+                        <input type="number" class="c_1_4" name="chart_data[$id][value]" value="10" />
                     </li>
                     <li>
                         <span>Color</span>
@@ -1342,7 +1341,7 @@ EOS;
                                 </li>
                                 <li>
                                     <dd>Value</dd>
-                                    <input type="text" name="chart_data[$k][value]" value="{$v['value']}" />
+                                    <input type="number" class="c_1_4" name="chart_data[$k][value]" value="{$v['value']}" />
                                 </li>
                                 <li>
                                     <dd>Color</dd>
@@ -1372,7 +1371,7 @@ EOS;
                     </li>
                     <li>
                         <dd>Value</dd>
-                        <input type="text" name="chart_data[$id][value]" value="10" />
+                        <input type="number" class="c_1_4" name="chart_data[$id][value]" value="10" />
                     </li>
                     <li>
                         <dd>Color</dd>
@@ -1523,6 +1522,23 @@ NCURSES_KEY_EOS;
 
         }
 
+
+        /**
+         * AJAX: view file in admin
+         */
+        function gc_chart_view_callback()
+        {
+
+
+            error_log('gc_chart_view_callback');
+            $return   = array(
+                'post'=> $_POST
+            );
+
+            wp_send_json($return);
+            wp_die();
+        }
+
         /**
          * AJAX: save file from textarea
          */
@@ -1648,7 +1664,8 @@ if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
         add_action( 'wp_ajax_nopriv_gc_chart_save', 'Cap_Graphics::gc_chart_save_callback' );   //save chart
         add_action( 'wp_ajax_gc_chart_save_input', 'Cap_Graphics::gc_chart_save_input_callback' );  //save chart input box
         add_action( 'wp_ajax_nopriv_gc_chart_save_input', 'Cap_Graphics::gc_chart_save_input_callback' );   //save chart input box
-
+        add_action( 'wp_ajax_gc_chart_view', 'Cap_Graphics::gc_chart_view_callback' );  //view chart
+        add_action( 'wp_ajax_nopriv_gc_chart_view', 'Cap_Graphics::gc_chart_view_callback' );   //view chart
 
         add_action( 'save_post', 'Cap_Graphics::gc_meta_save' ); //TODO: instead of saving meta, need to save outside of meta
 
