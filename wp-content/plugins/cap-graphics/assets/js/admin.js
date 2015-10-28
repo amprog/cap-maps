@@ -118,6 +118,7 @@ jQuery(document).ready(function($) {
 
         } else if (c=='edit') {
 
+            console.log('edit');
             var data = {
                 'action': 'gc_chart_action',
                 'chart_slug': $( '#l-'+chart).data('slug'),
@@ -306,8 +307,8 @@ jQuery(document).ready(function($) {
             var chart_slug = $('#chart_slug_d').val();
         }
 
-
-        json = JSON.stringify($('#frm_chart_update').serializeObject());
+        data = $('#frm_chart_update').serializeArray();
+        //json = JSON.stringify($('#frm_chart_update').serializeObject());  //not working as expected
 
 
 
@@ -317,7 +318,7 @@ jQuery(document).ready(function($) {
             'action': 'gc_chart_save',
             'chart_action': chart_action,
             'chart_slug': chart_slug,
-            'data': json
+            'data': data
         };
         console.dir(data);
         $.post(ajaxurl, data, function(response) {

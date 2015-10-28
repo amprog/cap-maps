@@ -918,16 +918,16 @@ EOS;
             $list = $disable = '';
             $app_options  = get_option(self::OPTIONS_PREFIX);
             $cap_graphics = new Cap_Graphics();
-            $app_defaults = $cap_graphics->app_defaults;  //what is wrong with this
+            //$app_defaults = $cap_graphics->app_defaults;  //what is wrong with this
             $chart_slug   = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
-            $chart_action = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;  //proper way of getting variables without notice errors
-            //$chart_type   = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;
+            $chart_action = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
             $d_place      = 'Enter a Slug with Underscores Not Spaces';
 
             $jsonfile     = self::get_file_location('charts',$chart_slug).'/index.json';
             $jsonfile_uri = self::get_package_uri('charts',$chart_slug).'/index.json';
-            //$jsonfile_uri = '/wp-content/plugins/cap-graphics/packages/charts/'.$chart_slug.'/index.json';
 
+            error_log("chart_action: $chart_action");
+            error_log("chart_slug: $chart_slug");
 
             //error_log("jsonfile: $jsonfile");
             $json               = file_get_contents($jsonfile); //error_log(print_r($json,true));
@@ -941,6 +941,7 @@ EOS;
             $source             = isset($data['options']['source']) ? $data['options']['source']  : null;
             $legend             = isset($data['options']['legend']) ? $data['options']['legend']  : null;
             $name               = isset($data['options']['name']) ? $data['options']['name']  : null;
+            error_log(__LINE__." - chart_type: $chart_type");
             $chart_data         = self::get_chart_data($chart_type,'',$data);  //error_log("chart_data:"); error_log($chart_data);
             $chart_type_camel   = ucwords($chart_type);
 
@@ -1195,7 +1196,7 @@ EOS;
          */
         function get_chart_data($chart_type,$id,$data = NULL) {
 
-
+            error_log(__LINE__." - chart_type: $chart_type");
             $chart_type = strtolower($chart_type);
             $chart_data = '';
             switch ($chart_type) {
