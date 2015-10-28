@@ -78,8 +78,18 @@ jQuery(document).ready(function($) {
 
             });
         } else if (c=='copy') {
-            //TODO: run ajax that will OPEN A LIGHTBOX, AND ALLOW COPY
+            //TODO: open the same screen for edit, except without disabling slug field
             console.log('copy');
+
+            var data = {
+                'action': 'gc_chart_action',
+                'chart_slug': $( '#l-'+chart).data('slug'),
+                'chart_action': c
+            };
+            jQuery.post(ajaxurl, data, function(response) {
+                $('#list_assets').html(response.html); console.dir(response);
+            });
+
 
         } else if (c=='view') {
             //inline version is messy but increases scalability and portability
@@ -102,63 +112,16 @@ jQuery(document).ready(function($) {
                         closeEffect: 'none',
                         //href: ajaxurl,
                         href: '/wp-content/plugins/cap-graphics/assets/templates/chart-view.php'
-                    }); // fancybox
-                } // success
-            }); // ajax
-
-            /*
-
-            $.getJSON(dir+slug+'/index.json').done(function( data ) {
-
-                json = data;
-
-                html = '<div class="left"><h3>'+json.options.chart_name+'</h3><canvas id="f1" width="'+json.options.width+'" height="'+json.options.height+'"></canvas></div>' +
-                           '<div class="left"><p class="chart_source">'+json.options.chart_source+'</p></div>'
-
-
-            })
-                .fail(function( jqxhr, textStatus, error ) {
-                    var err = textStatus + ", " + error;
-                    console.log( "Request Failed: " + err );
-                });
-
-
-
-            $.fancybox({
-                'type': "ajax",
-                'width':'95%',
-                'height':'95%',
-                'autoDimensions':false,
-                'autoSize':false,
-                'scrolling':'no',
-                'href': '',
-                'helpers': {
-                    'overlay': {
-                        'locked': false
-                    }
-                },
-                afterLoad: function() {
-
-                    console.dir(json); console.log(json.options.chart_type);
-                    var str = json.options.chart_type.toString();         console.log("str: "+str);
-                    new Chart(document.getElementById('f1').getContext('2d'))[str](json.data_array[0].chart_data,json.options);
-
-
-
+                    });
                 }
             });
 
-             'content': '<div class="left"><h3>'+json.options.chart_name+'</h3><canvas id="f1" width="'+json.options.width+'" height="'+json.options.height+'"></canvas></div>' +
-             '<div class="left"><p class="chart_source">'+json.options.chart_source+'</p></div>',  //TODO:  there should be a template with this data, that can also be used for shortcode!
-
-             */
-
         } else if (c=='edit') {
-            //TODO: run ajax that will get chart data, and replace main div with it
 
             var data = {
                 'action': 'gc_chart_action',
-                'chart_slug': $( '#l-'+chart).data('slug')
+                'chart_slug': $( '#l-'+chart).data('slug'),
+                'chart_action': c
             };
             jQuery.post(ajaxurl, data, function(response) {
                 $('#list_assets').html(response.html); console.dir(response);
@@ -327,20 +290,36 @@ jQuery(document).ready(function($) {
     //update canvas and save
     $( ".chart_update" ).live( "click", function() {
 
+        var chart_action = $('#chart_action').val();
+
+        console.log('chart_action: '+chart_action);
+
+        //first check to see if this is copy
+        if(chart_action=='copy') {
+            //make sure the slug name changed
+            if($('#chart_slug_d').val()==$('#chart_slug').val()) {
+                alert('You need to change the slug name since you are copying another chart!');  //TODO: use dissapearing jquery dialogue box
+                return;
+            }
+            var chart_slug = $('#chart_slug').val();
+        } else {
+            var chart_slug = $('#chart_slug_d').val();
+        }
 
 
-        //obj = create_object('#frm_chart_update');  //manhandles the array
+        json = JSON.stringify($('#frm_chart_update').serializeObject());
 
-        //obj = $('#frm_chart_update').serializeArray;  //does not get 3d array
 
-        json =  JSON.stringify(obj);
 
         console.dir(json);
 
         var data = {
             'action': 'gc_chart_save',
+            'chart_action': chart_action,
+            'chart_slug': chart_slug,
             'data': json
         };
+        console.dir(data);
         $.post(ajaxurl, data, function(response) {
             console.dir(response);
             //$('#btn_'+file).removeClass('loading');

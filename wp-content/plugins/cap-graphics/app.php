@@ -327,21 +327,25 @@ EOD;
         function gc_chart_save_callback() {
 
 
-            //TODO:  get data to save in EXACT format that is needed. requires form to be on point
+            //TODO:  CANNOT get data to save in EXACT format that is needed. WILL NEED TO USE JSON TEMPLATE
+
 
             //TODO:  clean post
 
-            $data = $_POST['data'];
-
-            $chart_action  = $data['chart_action']  = array_key_exists('chart_action', $data) ? $data['chart_action'] : null;
-
+            $data          = $_POST['data'];
+            $chart_action  = $_POST['chart_action']  = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
+            $chart_slug    = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
 
 
             error_log(__FILE__.':'.__LINE__."- chart_action: $chart_action");
-            switch ($chart_action) {
-                case 'new':  //
 
-                    $chart_slug   = array_key_exists('chart_slug', $data) ? sanitize_text_field($data['chart_slug']) : null;
+
+
+            switch ($chart_action) {
+                case 'new':
+                case 'copy':
+                    //new and copy should essentially run the same code
+
 
 
                     //TODO: do we need to grab from starter folder
@@ -350,14 +354,9 @@ EOD;
                     $package      = self::get_file_location('charts',$chart_slug);
                     $file         = self::get_file_location('charts',$chart_slug).'/index.json';
 
-
-
-
                     //$charts_json  = json_decode(file_get_contents($file),true);
                     mkdir($file);  //make directory
 
-
-                    update_post_meta( $_POST['ID'], 'chart_select',  $chart_slug);  //update meta so we know what chart is associated with this post
 
                     //TODO: add new chart to array and rewrite
                     $charts_json['charts'][]['slug']        = $chart_slug;
@@ -367,13 +366,11 @@ EOD;
                     //rewrite json file
                     //self::gc_save_json_file($file,$charts_json);
                     break;
-                case 'update':
+                case 'edit':
                     //TODO: fix the updating of charts
+                    error_log(__FILE__.':'.__LINE__."- before slug");
 
-                    $chart_slug   = $save['options']['chart_slug']    = array_key_exists('chart_slug', $data) ? $data['chart_slug'] : null;
-                    $chart_select = $save['options']['chart_select']  = array_key_exists('chart_select', $data) ? $data['chart_select'] : null;
-
-
+                    error_log(__FILE__.':'.__LINE__."- after: $chart_slug");
 
 
                     //if chart slug, differs from chart_select then rename file!
@@ -388,34 +385,43 @@ EOD;
 
 
                     break;
-                case 0:
+                default:
 
-                    break;
+                    error_log(__FILE__.':'.__LINE__."- DEFAULT");
             }
 
+
+            error_log(__FILE__.':'.__LINE__."- still here");
+            /*
             if($data['animateRotate']=='1') {
-                $save['options']['animateRotate'] = true;
+                $data['options']['animateRotate'] = true;
             } else {
-                $save['options']['animateRotate'] = false;
+                $data['options']['animateRotate'] = false;
             }
+*/
 
+            //FIXME: may need to figure out true and false items
+            error_log(__FILE__.':'.__LINE__.'- chart_slug: '.$chart_slug);
             error_log(__FILE__.':'.__LINE__.'- printing data');
 
             error_log(print_r($data,true));
 
             $save_result = self::gc_save_json_file(self::get_file_location('charts',$chart_slug).'/index.json',$data);
 
+            //already have json so just save file, no reason to encode
+            //$save_result = self::gc_save_file(self::get_file_location('charts',$chart_slug).'/index.json',$data);
+
+
+
 
             $return = array(
                 'data'=>$data,
-                'save_result'=>$save_result,
-                'save'=>$save_result
+                'post'=>$_POST,
+                'save_result'=>$save_result
             );
 
             wp_send_json($return);
             wp_die();
-
-
         }
 
 
@@ -913,23 +919,15 @@ EOS;
             $app_options  = get_option(self::OPTIONS_PREFIX);
             $cap_graphics = new Cap_Graphics();
             $app_defaults = $cap_graphics->app_defaults;  //what is wrong with this
-            $chart_slug   = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;  //proper way of getting variables without notice errors
-            $chart_type   = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;  //proper way of getting variables without notice errors
+            $chart_slug   = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
+            $chart_action = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;  //proper way of getting variables without notice errors
+            //$chart_type   = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;
             $d_place      = 'Enter a Slug with Underscores Not Spaces';
 
             $jsonfile     = self::get_file_location('charts',$chart_slug).'/index.json';
             $jsonfile_uri = self::get_package_uri('charts',$chart_slug).'/index.json';
             //$jsonfile_uri = '/wp-content/plugins/cap-graphics/packages/charts/'.$chart_slug.'/index.json';
 
-
-            //EDIT: if we have a chart slug, we get data from the json file
-            if($chart_slug) {
-
-                $chart_action       = 'update';
-            } else {
-
-                $chart_action       = 'new';
-            }
 
             //error_log("jsonfile: $jsonfile");
             $json               = file_get_contents($jsonfile); //error_log(print_r($json,true));
@@ -945,6 +943,26 @@ EOS;
             $name               = isset($data['options']['name']) ? $data['options']['name']  : null;
             $chart_data         = self::get_chart_data($chart_type,'',$data);  //error_log("chart_data:"); error_log($chart_data);
             $chart_type_camel   = ucwords($chart_type);
+
+
+            if($chart_action=='copy') {
+                $message  = 'You are copying an existing chart, so you must change the slug!';
+            } else {
+                $animateRotate  = 0;
+            }
+
+            //message changes depending on chart action
+            switch ($chart_action) {
+                case 'copy':
+                    $message  = 'You are copying an existing chart, so you must change the slug!';
+                    break;
+                case 'edit':
+                    $message  = 'You cannot change the slug of an existing chart!';
+                    break;
+                default:
+                    $message  = '';
+            }
+
 
             if($data['options']['animateRotate']=='1') {
                 $animateRotate  = 1;
@@ -1042,7 +1060,7 @@ EOS;
         <ul class="sub">
             <li>
                 <dd>Chart Slug</dd>
-                <input type="text" name="chart_slug_d" id="chart_slug_d" value="$chart_slug" placeholder="$d_place" disabled />
+                <input type="text" name="chart_slug_d" id="chart_slug_d" value="$chart_slug" placeholder="$d_place" $disable />
             </li>
             <li>
                 <dd>Chart Name</dd>
@@ -1582,6 +1600,7 @@ if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
         //charts
         add_action( 'wp_ajax_gc_chart_action', 'Cap_Graphics::gc_chart_action_callback' );  //ajax for new chart
         add_action( 'wp_ajax_nopriv_gc_chart_action', 'Cap_Graphics::gc_chart_action_callback' );   //ajax for new chart
+
         add_action( 'wp_ajax_gc_chart_line_action', 'Cap_Graphics::gc_chart_action_line_callback' );  //ajax for adding a line to new chart
         add_action( 'wp_ajax_nopriv_gc_chart_line_action', 'Cap_Graphics::gc_chart_action_line_callback' );   //ajaxfor adding a line to new chart
 
