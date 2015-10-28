@@ -125,7 +125,7 @@ jQuery(document).ready(function($) {
                 'chart_action': c
             };
             jQuery.post(ajaxurl, data, function(response) {
-                $('#list_assets').html(response.html); console.dir(response);
+                $('#list_assets').html(response.html);
             });
 
         } else {
@@ -292,7 +292,7 @@ jQuery(document).ready(function($) {
     $( ".chart_update" ).live( "click", function() {
 
         var chart_action = $('#chart_action').val();
-
+        var chart_type   = $('#chart_type').val();
         console.log('chart_action: '+chart_action);
 
         //first check to see if this is copy
@@ -307,22 +307,33 @@ jQuery(document).ready(function($) {
             var chart_slug = $('#chart_slug_d').val();
         }
 
-        data = $('#frm_chart_update').serializeArray();
+        //data = $('#frm_chart_update').serializeArray();
+        data = $('#frm_chart_update').serializeObject();  //works better at least, chart data arrays ruined
+        //data = $('#frm_chart_update').toObject();  //nope
+        //data = $('#frm_chart_update').serializeObject();  create_object
+
+
+
+
+
+
+
         //json = JSON.stringify($('#frm_chart_update').serializeObject());  //not working as expected
-
-
-
-        console.dir(json);
 
         var data = {
             'action': 'gc_chart_save',
             'chart_action': chart_action,
             'chart_slug': chart_slug,
+            'chart_type': chart_type,
+            'count': $('#count').val(),
             'data': data
         };
-        console.dir(data);
+
         $.post(ajaxurl, data, function(response) {
+            console.log('chart_update response');
             console.dir(response);
+
+
             //$('#btn_'+file).removeClass('loading');
         });
     });

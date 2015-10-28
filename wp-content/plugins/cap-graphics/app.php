@@ -335,7 +335,7 @@ EOD;
             $data          = $_POST['data'];
             $chart_action  = $_POST['chart_action']  = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
             $chart_slug    = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
-
+            $chart_type    = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;
 
             error_log(__FILE__.':'.__LINE__."- chart_action: $chart_action");
 
@@ -348,7 +348,7 @@ EOD;
 
 
 
-                    //TODO: do we need to grab from starter folder
+                    //TODO: Instead of grabbing json from starter folder, we need to use the json php file in templates/json
                     //$package_file = ABSPATH.$this->gc_frontend->chart_folder.'/charts.json';
 
                     $package      = self::get_file_location('charts',$chart_slug);
@@ -404,24 +404,105 @@ EOD;
             error_log(__FILE__.':'.__LINE__.'- chart_slug: '.$chart_slug);
             error_log(__FILE__.':'.__LINE__.'- printing data');
 
-            error_log(print_r($data,true));
+            //error_log(print_r($data,true));
 
-            $save_result = self::gc_save_json_file(self::get_file_location('charts',$chart_slug).'/index.json',$data);
 
-            //already have json so just save file, no reason to encode
+            //$save_result = self::gc_save_json_file(self::get_file_location('charts',$chart_slug).'/index.json',$data);
+
+            //FIXME: cannot just write this array to json
             //$save_result = self::gc_save_file(self::get_file_location('charts',$chart_slug).'/index.json',$data);
 
+            //FIXME: cannot use templating system
+            //$file_data = self::gc_get_template($data,'json/'.$chart_type.'.php');
+
+
+            //FIXME: manipulate array and save
+
+
+            $save['options']['chart_type']         = array_key_exists('chart_type', $_POST) ? sanitize_text_field($_POST['chart_type']) : null;
+            $save['options']['chart_name']         = array_key_exists('chart_name', $_POST) ? sanitize_text_field($_POST['chart_name']) : null;
+            $save['options']['segmentStrokeColor'] = array_key_exists('segmentStrokeColor', $_POST) ? $_POST['segmentStrokeColor'] : null;
+            $save['options']['chart_source']       = array_key_exists('chart_source', $_POST) ? $_POST['chart_source'] : null;
+            $save['options']['legend']             = array_key_exists('legend', $_POST) ? $_POST['legend'] : null;
+            $save['options']['source']             = array_key_exists('source', $_POST) ? $_POST['source'] : null;
+            $save['options']['name']               = array_key_exists('name', $_POST) ? $_POST['name'] : null;
+            $save['options']['width']              = array_key_exists('width', $_POST) ? $_POST['width'] : null;
+            $save['options']['height']             = array_key_exists('height', $_POST) ? $_POST['height'] : null;
+            $save['data_array'][0]['chart_data']   = $_POST['chart_data'];
+            $count                                 = array_key_exists('count', $_POST) ? $_POST['count'] : null;  //NEED THIS FOR BROKEN ARRAY
+
+
+            error_log(print_r(  $save['data_array'][0]['chart_data'],true));
+
+//gc_chart_save_callback
+            //$save_result = self::gc_save_file(self::get_file_location('charts',$chart_slug).'/index.json',$save);
+
+            error_log("1: ".$data['chart_data[4']);  //SUCCESS
+            $chart_array_data = '';
+
+
+error_log("count: $count");
+            for ($i = 0; $i <= $count; $i++) {
+
+                foreach($data['chart_data['.$i] as $arr) {
+
+                    error_log("arr: $arr");
+
+                }
+
+            }
+
+
+
+//FIXME:  MAY NEED TO USE INLINE TEMPLATE
+            /*
+             * {
+"options": {
+"chart_type": "Pie",
+"chart_name": "<?=$chart_name;?>",
+"segmentStrokeColor": "#0a0a0a",
+"chart_source": "http://www.wisertrade.org",
+"legend": 1,
+"source": 0,
+"name": 0,
+"width": 300,
+"height": 300,
+"animateRotate": true
+},
+"data_array": [
+{
+"chart_data": [
+<?php $i=0;foreach($chart_data as $data): ?>
+    {
+    "label": "Other",
+    "value": 41,
+    "color": "#398c66",
+    "highlight": "#076f40"
+    }
+    <?php if($i <= count($chart_data)) { echo ','; } ?>
+    <?php $i++; endforeach; ?>
+]
+}
+]
+}
+             */
 
 
 
             $return = array(
                 'data'=>$data,
                 'post'=>$_POST,
-                'save_result'=>$save_result
+                'save_result'=>$save_result,
+                'file_data'=>$file_data
             );
 
             wp_send_json($return);
             wp_die();
+
+
+
+
+
         }
 
 
@@ -916,13 +997,10 @@ EOS;
 
 
             $list = $disable = '';
-            $app_options  = get_option(self::OPTIONS_PREFIX);
-            $cap_graphics = new Cap_Graphics();
-            //$app_defaults = $cap_graphics->app_defaults;  //what is wrong with this
+
             $chart_slug   = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
             $chart_action = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
             $d_place      = 'Enter a Slug with Underscores Not Spaces';
-
             $jsonfile     = self::get_file_location('charts',$chart_slug).'/index.json';
             $jsonfile_uri = self::get_package_uri('charts',$chart_slug).'/index.json';
 
@@ -941,7 +1019,6 @@ EOS;
             $source             = isset($data['options']['source']) ? $data['options']['source']  : null;
             $legend             = isset($data['options']['legend']) ? $data['options']['legend']  : null;
             $name               = isset($data['options']['name']) ? $data['options']['name']  : null;
-            error_log(__LINE__." - chart_type: $chart_type");
             $chart_data         = self::get_chart_data($chart_type,'',$data);  //error_log("chart_data:"); error_log($chart_data);
             $chart_type_camel   = ucwords($chart_type);
 
@@ -1107,6 +1184,7 @@ EOS;
             <li>
                 <input type="hidden" id="chart_action" name="chart_action" value="$chart_action" />
                 <input type="hidden" id="chart_slug" name="chart_slug" value="$chart_slug" />
+                <input type="hidden" id="chart_type" name="chart_type" value="$chart_type" />
             </li>
             <ul class="chart_data_wrap">
                 <li>$chart_data</li>
@@ -1117,8 +1195,8 @@ EOS;
 </div>
 
 <div class="side">
-    <h3>Example and Save button go here</h3>
     <div class="c">
+        <h3>Example and Save button go here</h3>
         <canvas id="c1" width="300" height="300"></canvas>
     </div>
     <div class="short-cnt">
@@ -1337,8 +1415,9 @@ EOS;
                     error_log("out default case: $chart_type");
             }
 
-
+$count = count($data['data_array'][0]['chart_data']);
             $chart_data.= <<<E_ALL
+                    <input type="hidden" id="count" value="$count" />
 <script>
 jQuery(document).ready(function($) {
     if(typeof myfunc == 'wpColorPicker'){
@@ -1549,7 +1628,7 @@ NCURSES_KEY_EOS;
          * @param $template
          */
         function gc_get_template($data,$template) {
-            include(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR.'/assets/templates/'.$template);
+            include(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR.'/assets/templates/'.$template); error_log(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR.'/assets/templates/'.$template);
         }
 
         function gc_get_template2($data,$template) {
@@ -1612,10 +1691,10 @@ if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
         //add_action( 'wp_ajax_gc_chart_save_input', 'Cap_Graphics::gc_chart_save_input_callback' );  //save chart input box
         //add_action( 'wp_ajax_nopriv_gc_chart_save_input', 'Cap_Graphics::gc_chart_save_input_callback' );   //save chart input box
 
-        add_action( 'wp_ajax_gc_chart_view', 'Cap_Graphics::gc_chart_view_callback' );  //view chart
-        add_action( 'wp_ajax_nopriv_gc_chart_view', 'Cap_Graphics::gc_chart_view_callback' );   //view chart
+        //TODO: phase ii may want to also add view button
+        //add_action( 'wp_ajax_gc_chart_view', 'Cap_Graphics::gc_chart_view_callback' );  //view chart
+        //add_action( 'wp_ajax_nopriv_gc_chart_view', 'Cap_Graphics::gc_chart_view_callback' );   //view chart
 
-        add_action( 'save_post', 'Cap_Graphics::gc_meta_save' ); //TODO: instead of saving meta, need to save outside of meta
 
 
     } else {
