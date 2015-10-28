@@ -30,6 +30,3 @@
         </ul>
     </div>
 </div>
-<div id="hidden-info">
-    <input type="hidden" id="package_dir" value="<?php echo $data['package_dir']; ?>" />
-</div>

@@ -104,6 +104,8 @@ if (!class_exists("Cap_Graphics_Options")) {
             $data['packages']        = json_decode($charts,true);
             $data['charts_js_file']  = '/wp-content/plugins/cap-graphics/assets/js/common/'; //TODO: replace all of these with proper constant
             $data['charts_css_file'] = '/wp-content/plugins/cap-graphics/assets/css/';
+
+            $data['dir'] = parent::get_package_uri('charts');
             return parent::gc_get_template($data,'admin/charts_submenu.php');
         }
 

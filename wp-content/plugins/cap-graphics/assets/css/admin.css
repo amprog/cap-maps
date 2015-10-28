@@ -46,9 +46,8 @@ ul.sub li input {
 }
 
 ul.chart_data_wrap {
-    margin:17px 0 17px 27px;
+    margin:7px 0 7px 7px;
     padding:17px;
-    border: 1px solid #ccc;
 }
 
 ul.chart_data_inner {

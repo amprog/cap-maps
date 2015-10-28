@@ -59,8 +59,6 @@ if (!class_exists(APP_CLASS_NAME)) {
                 $options_class   = APP_CLASS_NAME . '_Options';
 
 
-                error_log(__FILE__.':'.__LINE__.' - here');
-
                if (!class_exists($settings_class))
                    require(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR . '/app-settings.php');
                $this->settings = new $settings_class();
@@ -76,7 +74,6 @@ if (!class_exists(APP_CLASS_NAME)) {
 
                 wp_enqueue_style( 'wp-color-picker' );
                 wp_enqueue_script( 'wp-color-picker');
-                error_log(__FILE__.':'.__LINE__.'  did we make it');
                 //error_log(__FILE__.':'.__LINE__.' - cap graphics '.$cap_graphics->APP_NAMESPACE.'-admin');
 
                 $plugin_path = plugin_dir_url(__FILE__);
@@ -360,7 +357,7 @@ EOD;
                 $chart_slug   = array_key_exists('chart_slug', $data) ? sanitize_text_field($data['chart_slug']) : null;
                 //TODO: need to get this from media library!!!
 
-                $file = self::get_file_location('chart',$chart_slug);
+                $file = self::get_file_location('charts',$chart_slug);
 
 
                 $file         = ABSPATH.$this->gc_frontend->chart_folder.$chart_slug.'/'.$chart_slug.'.json';
@@ -456,26 +453,22 @@ EOD;
                     $charts_json['charts'][]['description'] =  'New Chart: '.$save['options']['chart_type'];
 
                     //rewrite json file
-                    self::cap_map_save_json_file($package_file,$charts_json);
+                    self::cap_map_save_json_file($file,$charts_json);
                     break;
                 case 'update':
                     //TODO: fix the updating of charts
+                    error_log(__FILE__.':'.__LINE__.'- made it to update');
 
-
-                    $chart_slug   = $save['options']['chart_slug']  = array_key_exists('chart_slug', $data) ? $data['chart_slug'] : null;
-                    $chart_select = $save['options']['chart_select']  = array_key_exists('chart_select', $data) ? $data['chart_select'] : null;
+                    $chart_slug   = $save['options']['chart_slug']    = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
+                    $chart_select = $save['options']['chart_select']  = array_key_exists('chart_select', $_POST) ? $_POST['chart_select'] : null;
 
                     //if chart slug, differs from chart_select then rename file!
                     if($chart_slug!=$chart_select) {
-                        $file                          = ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
-                        //$del                           = self::deleteDir(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_select.'/');
                         system("rm -rf ".escapeshellarg(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_select.'/'));  //system works better than php
 
                         mkdir(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/');  //make directory
-                    } else {
-                        $file                          = ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/'.$chart_slug.'.json';
                     }
-                    update_post_meta( $data['ID'], 'chart_select',  sanitize_text_field($data['chart_select']));  //update meta so we know what chart is associated with this post
+
 
                     break;
                 case 0:
@@ -483,7 +476,7 @@ EOD;
                     break;
             }
 
-            if($data['animateRotate']=='1') {
+            if($_POST['animateRotate']=='1') {
                 $save['options']['animateRotate'] = true;
             } else {
                 $save['options']['animateRotate'] = false;
@@ -553,8 +546,6 @@ EOD;
          * @return mixed
          */
         function gc_save_array_to_json($jsonfile,$data) {
-
-
             $fh = fopen($jsonfile, "w");
             if ($fh == false) {
                 $saveresult = 0;
@@ -578,11 +569,16 @@ EOD;
 
 
             //TODO: returns local package library for now. But needs to go into media library. check options here
+            //            $options      = Cap_Graphics_Settings::merge_options($app_defaults, $app_options);
+            return plugin_dir_path( __FILE__ ).'packages/'.$type.'/'.$slug.'/';
+        }
 
-            error_log(ABSPATH.self::PLUGIN_DIR.self::APP_DIR.'/'.$type.'/'.$slug.'/');
-
-
-            return ABSPATH.self::PLUGIN_DIR.self::APP_DIR.'/'.$type.'/'.$slug.'/';
+        /**
+         * Return the package URI
+         * @return string
+         */
+        public static function get_package_uri($type,$slug) {
+            return plugin_dir_url( __FILE__ ).'packages/'.$type.'/'.$slug;
         }
 
         /**
@@ -651,7 +647,7 @@ EOD;
 
                 if($chart_action=='new') {
                     $chart_slug   = array_key_exists('chart_slug', $_POST) ? sanitize_text_field($_POST['chart_slug']) : null;
-                    $file         = ABSPATH.$this->gc_frontend->chart_folder.$chart_slug.'/'.$chart_slug.'.json';
+                    $file         = ABSPATH.$this->gc_frontend->chart_folder.$chart_slug.'/index.json';
                     //TODO: rewrite json file of packages
                     $package_file = ABSPATH.$this->gc_frontend->chart_folder.'/charts.json';
                     $charts_json  = json_decode(file_get_contents($package_file),true);
@@ -876,8 +872,9 @@ EOD;
              */
 
             //not as efficient, but for total control from json pull json in php as well
-            $json_file = $this->gc_frontend->plugin_uri."charts/$chart_slug/$chart_slug.json";
-            $json      = json_decode(file_get_contents(ABSPATH.$json_file),true);
+
+            $json_file = self::get_file_location('charts',$chart_slug);
+            $json      = json_decode(file_get_contents($json_file),true);
             $legend    = $json['options']['legend'];
             $name      = $json['options']['name'];
             $source    = $json['options']['source'];
@@ -946,13 +943,14 @@ EOS;
 
         <script>
             jQuery(document).ready(function($) {
-                $.getJSON( "$json_file").done(function( json ) {
+                $.getJSON( $('#dir').val()).done(function( json ) {
                     var str = json.options.chart_type.toString();
                     new Chart(document.getElementById('c1').getContext('2d'))[str](json.data_array[0].chart_data,json.options);
                     console.dir(json);
                 })
                 .fail(function( jqxhr, textStatus, error ) {
                     var err = textStatus + ", " + error;
+                    console.log(962);
                     console.log( "Request Failed: " + err );
                 });
             });
@@ -992,38 +990,26 @@ EOS;
             $app_options  = get_option(self::OPTIONS_PREFIX);
             $cap_graphics = new Cap_Graphics();
             $app_defaults = $cap_graphics->app_defaults;  //what is wrong with this
-            $options      = Cap_Graphics_Settings::merge_options($app_defaults, $app_options);
             $chart_slug   = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;  //proper way of getting variables without notice errors
             $chart_type   = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;  //proper way of getting variables without notice errors
             $d_place      = 'Enter a Slug with Underscores Not Spaces';
 
+            $jsonfile     = self::get_file_location('charts',$chart_slug).'index.json';
+            $jsonfile_uri = self::get_package_uri('charts',$chart_slug).'index.json';
+            $jsonfile_uri = '/wp-content/plugins/cap-graphics/packages/charts/'.$chart_slug.'/index.json';
 
 
             //EDIT: if we have a chart slug, we get data from the json file
             if($chart_slug) {
-                //TODO: figure out media storage
-
-                //TODO: "<p>GET FROM PACKAGES FOLDER IN MEDIA LIBRARY</p>";
-                $jsonfile     = dirname(__FILE__).'/packages/charts/'.$chart_slug.'/'.$chart_slug.'.json';
-
-                $jsonfile_uri = '/wp-content/plugins/cap-graphics/packages/charts/'.$chart_slug.'/'.$chart_slug.'.json';
-                //if there is a chart type, then drop down selected so we grab data
-                /*
-                if($options['all']['storage'] == 'media') {
-                    $package = dirname(__FILE__).'/assets/chart_starter/'.$chart_type.'.json';
-                } else {
-                    $package = dirname(__FILE__).'/assets/chart_starter/'.$chart_type.'.json';
-                }*/
 
                 $chart_action       = 'update';
             } else {
-                //NEW CHART: get json data from chart_starter folder for this chart type
-                $jsonfile           = dirname(__FILE__).'/assets/chart_starter/'.$chart_type.'.json';
+
                 $chart_action       = 'new';
             }
 
             //error_log("jsonfile: $jsonfile");
-            $json               = file_get_contents($jsonfile);
+            $json               = file_get_contents($jsonfile); //error_log(print_r($json,true));
             $data               = json_decode($json,true);
             $chart_name         = isset($data['options']['chart_name']) ? $data['options']['chart_name'] : null;
             $chart_type         = isset($data['options']['chart_type']) ? $data['options']['chart_type']  : null;
@@ -1034,7 +1020,7 @@ EOS;
             $source             = isset($data['options']['source']) ? $data['options']['source']  : null;
             $legend             = isset($data['options']['legend']) ? $data['options']['legend']  : null;
             $name               = isset($data['options']['name']) ? $data['options']['name']  : null;
-            $chart_data         = self::get_chart_data($data,$chart_type,'');
+            $chart_data         = self::get_chart_data($data,$chart_type,'');  //error_log("chart_data:"); error_log($chart_data);
             $chart_type_camel   = ucwords($chart_type);
 
             if($data['options']['animateRotate']=='1') {
@@ -1129,7 +1115,7 @@ EOS;
 
             $html = <<< EOS
 <div class="left">
-    <form method="post" id="frm_chart_update" action="/wp-admin/admin.php?page=cap-graphics-new-chart">
+    <form method="post" id="frm_chart_update">
         <ul class="sub">
             <li>
                 <dd>Chart Slug</dd>
@@ -1195,6 +1181,7 @@ EOS;
     </div>
     <div class="short-cnt">
         <input type="text" value="[cap_chart chart=&quot;10_7_2015_pie&quot;]" class="shortcode">
+        <input type="hidden" id="dir" value="$jsonfile_uri" />
     </div>
     <div class="c">
         <div class="float"><input type="button" class="button button-primary chart_update" name="save_options" value="save"/></div>
@@ -1209,12 +1196,13 @@ EOS;
 
 <script>
  jQuery(document).ready(function($) {
-    $.getJSON( "$jsonfile_uri").done(function( json ) {
+    $.getJSON($('#dir').val()).done(function( json ) {
         var str = json.options.chart_type.toString();
         new Chart(document.getElementById('c1').getContext('2d'))[str](json.data_array[0].chart_data,json.options);
     })
     .fail(function( jqxhr, textStatus, error ) {
         var err = textStatus + ", " + error;
+               console.log(1225);
         console.log( "Request Failed: " + err );
     });
 });
@@ -1241,16 +1229,15 @@ EOS;
          */
         function gc_chart_action_line_callback() {
 
-            $chart_data = '';
-
-            //count current entries
             $chart_type = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;
             $number     = array_key_exists('number', $_POST) ? $_POST['number'] : null;
             $id         = $number+1;
+            $chart_data = self::get_chart_data($_POST,$chart_type,$id);
 
-            $chart_data .= self::get_chart_data('',$chart_type,$id);
 
             $return = array(
+                'id'=>$id,
+                'post'=>$_POST,
                 'chart_data'=>$chart_data
             );
 
@@ -1267,6 +1254,8 @@ EOS;
          */
         function get_chart_data($data,$chart_type,$id) {
 
+
+            $chart_type = strtolower($chart_type);
             $chart_data = '';
             switch ($chart_type) {
                 case 'doughnut':
@@ -1402,9 +1391,8 @@ EOS;
                         break;
 
 
-                case 2:
-                    echo "i equals 2";
-                    break;
+                default:
+                    error_log("out default case: $chart_type");
             }
 
 
@@ -1654,8 +1642,8 @@ if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
         //charts
         add_action( 'wp_ajax_gc_chart_action', 'Cap_Graphics::gc_chart_action_callback' );  //ajax for new chart
         add_action( 'wp_ajax_nopriv_gc_chart_action', 'Cap_Graphics::gc_chart_action_callback' );   //ajax for new chart
-        add_action( 'wp_ajax_cap_map_chart_line_action', 'Cap_Graphics::gc_chart_action_line_callback' );  //ajax for adding a line to new chart
-        add_action( 'wp_ajax_nopriv_cap_map_chart_line_action', 'Cap_Graphics::gc_chart_action_line_callback' );   //ajaxfor adding a line to new chart
+        add_action( 'wp_ajax_gc_chart_line_action', 'Cap_Graphics::gc_chart_action_line_callback' );  //ajax for adding a line to new chart
+        add_action( 'wp_ajax_nopriv_gc_chart_line_action', 'Cap_Graphics::gc_chart_action_line_callback' );   //ajaxfor adding a line to new chart
         add_action( 'wp_ajax_gc_chart_save', 'Cap_Graphics::gc_chart_save_callback' );  //save chart
         add_action( 'wp_ajax_nopriv_gc_chart_save', 'Cap_Graphics::gc_chart_save_callback' );   //save chart
         add_action( 'wp_ajax_gc_chart_save_input', 'Cap_Graphics::gc_chart_save_input_callback' );  //save chart input box

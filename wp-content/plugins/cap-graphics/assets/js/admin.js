@@ -63,7 +63,8 @@ jQuery(document).ready(function($) {
 
         var c = $(this).attr('class');
         chart = $(this).data('i');
-        slug  = $(this).parent().parent().parent().data('slug'); console.log('slug: '+slug);
+        slug  = $(this).parent().parent().parent().data('slug');
+        dir   = $(this).parent().parent().parent().data('dir');
 
         if(c=='delete') {
             var question = "Are you sure you want to delete this chart?";
@@ -103,7 +104,10 @@ jQuery(document).ready(function($) {
 
 
             //get json dat now, and use data later
-            var json_file = $('');
+
+
+
+
             $.getJSON( "$jsonfile_uri").done(function( json ) {
 
             })
@@ -254,7 +258,7 @@ jQuery(document).ready(function($) {
         var chart_type = $(this).data('type');
         if(chart_type) {
             var data = {
-                'action': 'cap_map_chart_line_action',
+                'action': 'gc_chart_line_action',
                 'chart_type': chart_type,
                 'number': $('.chart_data_inner').length
             };console.dir(data);
