@@ -1,0 +1,52 @@
+{
+  "data_array": [
+    {
+      "normal": [
+        {
+          "color": "#ba575a",
+          "highlight": "#a92d31"
+        },
+        {
+          "color": "#726d86",
+          "highlight": "#4f4868"
+        },
+        {
+          "color": "#3883a7",
+          "highlight": "#066491"
+        },
+        {
+          "highlight": "#066d69",
+          "color": "#388a87"
+        },
+        {
+          "color": "#398c66",
+          "highlight": "#076f40"
+        }
+      ]
+    },
+    {
+      "light": [
+        {
+          "color": "#ba575a",
+          "highlight": "#a92d31"
+        },
+        {
+          "color": "#726d86",
+          "highlight": "#4f4868"
+        },
+        {
+          "color": "#3883a7",
+          "highlight": "#066491"
+        },
+        {
+          "highlight": "#066d69",
+          "color": "#388a87"
+        },
+        {
+          "color": "#398c66",
+          "highlight": "#076f40"
+        }
+      ]
+    }
+  ]
+}
