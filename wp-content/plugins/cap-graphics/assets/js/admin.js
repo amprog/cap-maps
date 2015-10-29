@@ -226,6 +226,7 @@ jQuery(document).ready(function($) {
 
     /**
      * Add fields
+     * FIXME:  add field needs to set a _SESSION for count. so that we can get this session in app.php LINE 460
      */
     $( ".add_field" ).live( "click", function() {
         var chart_type = $(this).data('type');

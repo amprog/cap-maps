@@ -457,7 +457,7 @@ EOD;
 "chart_data": [';
 
             //FIXME: to fix count issue, need to pull current json, turn into array, and count
-            //THIS DOESN'T WORK, BECAUSE IT JUST ISN'T WORKING :(
+            //use session to do this
 
             $jsonfile      = self::get_file_location('charts',$chart_slug).'/index.json';
             $existing_data = json_decode(file_get_contents($jsonfile),true);
