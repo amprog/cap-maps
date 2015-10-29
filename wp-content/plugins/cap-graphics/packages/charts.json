@@ -1,28 +1,28 @@
 {
   "charts": [
     {
-      "slug": "10_7_2015_pie",
+      "slug": "example_pie",
       "label": "Pie Chart",
       "description": "Test description",
       "type": "pie",
       "status": 1
     },
     {
-      "slug": "doughnut",
+      "slug": "example_doughnut",
       "label": "Doughnut Chart",
       "description": "Test description",
       "type": "doughnut",
       "status": 1
     },
     {
-      "slug": "bar",
+      "slug": "example_bar",
       "label": "Bar Chart",
       "description": "Test description",
       "type": "bar",
       "status": 1
     },
     {
-      "slug": "line",
+      "slug": "example_line",
       "label": "Line Chart",
       "description": "Test description",
       "type": "line",

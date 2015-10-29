@@ -566,6 +566,17 @@ EOD;
             return plugin_dir_url( __FILE__ ).'packages/'.$type.'/'.$slug;
         }
 
+
+        /**
+         * Get proper location, either in local or media library, then return charts.
+         * @param $type
+         * @return string
+         */
+        public static function gc_get_package($type) {
+            return file_get_contents(dirname(__FILE__).'/packages/'.$type.'.json');  //TODO: needs to pull from options and then media library or local
+        }
+
+
         /**
          * TODO: this used to save meta box, but now we need to save charts outside of post system
          * THIS FUNCTION DECOM NO LONGER USED
@@ -1628,7 +1639,6 @@ NCURSES_KEY_EOS;
             return $list;
         }
     }
-
 }
 
 global $cap_graphics;
