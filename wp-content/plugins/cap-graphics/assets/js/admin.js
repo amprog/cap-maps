@@ -272,22 +272,6 @@ jQuery(document).ready(function($) {
         });
     });
 
-    // form validation
-    /* TODO: may not need this any more
-    $( "#post" ).submit(function( event ) {
-        if($('#chart_action').val()=='new'  && $('.chart_type option:selected').val() == 'Select One') {
-            event.preventDefault();
-            $('.chart_type').addClass('error');
-            window.location.hash='#chart_type_anchor';
-            alert("If adding a new chart please make sure to select one from the dropdown!");
-        }
-        //event.preventDefault();
-    });
-
-    */
-
-
-
     //update canvas and save
     $( ".chart_update" ).live( "click", function() {
 
@@ -307,34 +291,28 @@ jQuery(document).ready(function($) {
             var chart_slug = $('#chart_slug_d').val();
         }
 
-        //data = $('#frm_chart_update').serializeArray();
-        data = $('#frm_chart_update').serializeObject();  //works better at least, chart data arrays ruined
-        //data = $('#frm_chart_update').toObject();  //nope
-        //data = $('#frm_chart_update').serializeObject();  create_object
-
-
-
-
-
-
-
-        //json = JSON.stringify($('#frm_chart_update').serializeObject());  //not working as expected
-
+        //turn a form into an object
+        obj = $('#frm_chart_update').serializeObject();  //works better at least, chart data arrays ruined
         var data = {
             'action': 'gc_chart_save',
             'chart_action': chart_action,
             'chart_slug': chart_slug,
             'chart_type': chart_type,
             'count': $('#count').val(),
-            'data': data
+            'data': obj
         };
 
         $.post(ajaxurl, data, function(response) {
             console.log('chart_update response');
             console.dir(response);
 
+            json = jQuery.parseJSON(response.chart_array_data);
+            console.dir(json);
+            //check for error, and update chart
+            $('#c1_wrap').html('<canvas id="c1" width="300" height="300"></canvas>');
+            var str = json.options.chart_type.toString();
+            new Chart(document.getElementById('c1').getContext('2d'))[str](json.data_array[0].chart_data,json.options);
 
-            //$('#btn_'+file).removeClass('loading');
         });
     });
 

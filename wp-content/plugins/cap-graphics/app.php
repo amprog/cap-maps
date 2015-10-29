@@ -1184,7 +1184,9 @@ EOS;
 <div class="side">
     <div class="c">
         <h3>Example and Save button go here</h3>
-        <canvas id="c1" width="300" height="300"></canvas>
+        <div id="c1_wrap">
+            <canvas id="c1" width="300" height="300"></canvas>
+        </div>
     </div>
     <div class="short-cnt">
         <input type="text" value="[cap_chart chart=&quot;10_7_2015_pie&quot;]" class="shortcode">
