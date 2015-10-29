@@ -277,7 +277,20 @@ jQuery(document).ready(function($) {
 
         var chart_action = $('#chart_action').val();
         var chart_type   = $('#chart_type').val();
-        console.log('chart_action: '+chart_action);
+
+        //check if total value is over 100
+        if(chart_type=='Pie' || chart_type=='Doughnut') {
+
+            var numbers = $( ".chart_data_wrap input[type='number']" ).toArray();
+            var total = 0;
+            $.each(numbers, function( index, value ) {
+                total += parseInt(value.value);
+            });
+            //TODO:  change ALL ALERTS INTO JQUERY BOXES!
+            if(total>100) {
+                alert("Will update chart but dissapearing error message lets user know they are over 100");
+            }
+        }
 
         //first check to see if this is copy
         if(chart_action=='copy') {
