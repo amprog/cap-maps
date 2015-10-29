@@ -441,7 +441,8 @@ EOD;
             for ($i = 0; $i <= 10; $i++) {
                 if(empty($data['chart_data['.$i])) {
                     error_log("breaking at $i");
-                    break 1;
+                    //break 1;
+                    continue;
                 } else {
                     $chart_array_data .= '{';
                     foreach($data['chart_data['.$i] as $k=>$v) {
@@ -1231,7 +1232,6 @@ EOS;
             $id         = $number;  //don't add a 1 because the array starts at 0
             $chart_data = self::get_chart_data($chart_type,$id);
 
-
             $return = array(
                 'id'=>$id,
                 'post'=>$_POST,
@@ -1240,7 +1240,6 @@ EOS;
 
             wp_send_json($return);
             wp_die();
-
         }
 
         /**
@@ -1392,17 +1391,14 @@ EOS;
                     error_log("out default case: $chart_type");
             }
 
-$count = count($data['data_array'][0]['chart_data']);
             $chart_data.= <<<E_ALL
-                    <input type="hidden" id="count" value="$count" />
+
 <script>
+
 jQuery(document).ready(function($) {
-    if(typeof myfunc == 'wpColorPicker'){
-        console.log("exist");
-    }else{
-        $(".colorpicker").wpColorPicker();
-    }
+   checkColor();
 });
+
 </script>
 E_ALL;
 
@@ -1639,14 +1635,9 @@ global $cap_graphics;
 if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
     $cap_graphics = new Cap_Graphics();
 
-
-
     if ( is_admin() ) {
         add_action( 'admin_menu', 'Cap_Graphics::gc_options_admin' );  //options page, TODO: perhaps put chart options here
         add_action( 'add_meta_boxes', "Cap_Graphics::gc_meta"); //TODO: no longer need this
-
-
-        //add_action( 'save_post', 'Cap_Graphics::gc_meta_save' ); //TODO: instead of saving meta, need to save outside of meta
 
         //svg
         add_action( 'wp_ajax_cap_map_svg_action', 'Cap_Graphics::gc_svg_action_callback' );  //ajax for new svg
@@ -1671,8 +1662,6 @@ if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
         //TODO: phase ii may want to also add view button
         //add_action( 'wp_ajax_gc_chart_view', 'Cap_Graphics::gc_chart_view_callback' );  //view chart
         //add_action( 'wp_ajax_nopriv_gc_chart_view', 'Cap_Graphics::gc_chart_view_callback' );   //view chart
-
-
 
     } else {
         add_shortcode( 'cap_svg', 'Cap_Graphics::gc_svg_shortcode' );  //register shortcode for svg

@@ -235,7 +235,7 @@ jQuery(document).ready(function($) {
                 'action': 'gc_chart_line_action',
                 'chart_type': chart_type,
                 'number': $('.chart_data_inner').length
-            };console.dir(data);
+            };console.log('number: '+$('.chart_data_inner').length);
             $.post(ajaxurl, data, function(response) {
                 console.log('add_field response');
                 console.dir(response);
@@ -314,7 +314,7 @@ jQuery(document).ready(function($) {
             'chart_action': chart_action,
             'chart_slug': chart_slug,
             'chart_type': chart_type,
-            'count': $('#count').val(),
+            //'count': $('#count').val(),
             'data': obj
         }; console.dir(data);
         //FIXME:  we need a better way to keep track of counts
@@ -411,4 +411,13 @@ jQuery(document).ready(function($) {
         });
         return obj;
     }
+
 });
+
+function checkColor() {
+    if(typeof myfunc == 'wpColorPicker'){
+        console.log("exist");
+    }else{
+        jQuery(".colorpicker").wpColorPicker();
+    }
+}
