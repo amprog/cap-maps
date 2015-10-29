@@ -8,6 +8,7 @@
 //TODO:  Also put visualizations in media library, just allow picking and link to edit screen
 //TODO: turn svg=slug to id=10
 //TODO: no more saving slugs in the database, everything is in media library
+//TODO: add up the values for pie charts, and make sure it equals 100
 /*
 
 ,
@@ -437,63 +438,44 @@ EOD;
 //gc_chart_save_callback
             //$save_result = self::gc_save_file(self::get_file_location('charts',$chart_slug).'/index.json',$save);
 
-            error_log("1: ".$data['chart_data[4']);  //SUCCESS
-            $chart_array_data = '';
+            error_log("writing json: 1");  //SUCCESS
 
+            //build options and most of json
+            $chart_array_data = '{
+"options": {';
 
-error_log("count: $count");
-            for ($i = 0; $i <= $count; $i++) {
-
-                foreach($data['chart_data['.$i] as $arr) {
-
-                    error_log("arr: $arr");
-
-                }
-
+            foreach($save['options'] as $key=>$option) {
+                $chart_array_data .= '"'.$key.'": "'.$option.'",';
             }
+            $chart_array_data = rtrim($chart_array_data, ","); //cut that last comma off
 
-
-
-//FIXME:  MAY NEED TO USE INLINE TEMPLATE
-            /*
-             * {
-"options": {
-"chart_type": "Pie",
-"chart_name": "<?=$chart_name;?>",
-"segmentStrokeColor": "#0a0a0a",
-"chart_source": "http://www.wisertrade.org",
-"legend": 1,
-"source": 0,
-"name": 0,
-"width": 300,
-"height": 300,
-"animateRotate": true
+            $chart_array_data .= '
 },
 "data_array": [
 {
-"chart_data": [
-<?php $i=0;foreach($chart_data as $data): ?>
-    {
-    "label": "Other",
-    "value": 41,
-    "color": "#398c66",
-    "highlight": "#076f40"
-    }
-    <?php if($i <= count($chart_data)) { echo ','; } ?>
-    <?php $i++; endforeach; ?>
-]
+"chart_data": [';
+
+            for ($i = 0; $i <= $count-1; $i++) {
+                $chart_array_data .= '{';
+                foreach($data['chart_data['.$i] as $k=>$v) {
+                    $chart_array_data .= '"'.$k.'": "'.$v.'",';
+                }
+                $chart_array_data = rtrim($chart_array_data, ","); //cut that last comma off
+                $chart_array_data .= '},';
+            }
+            $chart_array_data = rtrim($chart_array_data, ","); //cut that last comma off
+            $chart_array_data .= ']
 }
 ]
-}
-             */
+}';
 
-
+            $save_result = self::gc_save_file(self::get_file_location('charts',$chart_slug).'/index.json',$chart_array_data);
 
             $return = array(
                 'data'=>$data,
                 'post'=>$_POST,
                 'save_result'=>$save_result,
-                'file_data'=>$file_data
+                'chart_array_data'=>$chart_array_data
             );
 
             wp_send_json($return);
@@ -576,7 +558,7 @@ error_log("count: $count");
          */
         public static function get_file_location($type,$slug) {
 
-
+            error_log('get_file_location: '.plugin_dir_path( __FILE__ ).'packages/'.$type.'/'.$slug.'/');
             //TODO: returns local package library for now. But needs to go into media library. check options here
             //            $options      = Cap_Graphics_Settings::merge_options($app_defaults, $app_options);
             return plugin_dir_path( __FILE__ ).'packages/'.$type.'/'.$slug.'/';
@@ -800,7 +782,7 @@ error_log("count: $count");
          * @return int
          */
         function gc_save_file($file,$save) {
-            $fh = fopen($file, "w");
+            $fh = fopen($file, "w+");
             if ($fh == false) {
                 return 0;
             } else {
