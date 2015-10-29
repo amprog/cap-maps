@@ -314,12 +314,13 @@ jQuery(document).ready(function($) {
             'count': $('#count').val(),
             'data': obj
         };
-
+        //FIXME:  we need a better way to keep track of counts
         $.post(ajaxurl, data, function(response) {
             console.log('chart_update response');
             console.dir(response);
 
             json = jQuery.parseJSON(response.chart_array_data);
+            console.log("response from ajax query gc_chart_save");
             console.dir(json);
             //check for error, and update chart
             $('#c1_wrap').html('<canvas id="c1" width="300" height="300"></canvas>');

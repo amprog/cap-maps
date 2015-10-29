@@ -1,6 +1,6 @@
 <?php
 
-
+//TODO: charts.json and svg.json need to go into packages!@!!!
 //TODO:  build lyvefire version
 //TODO: build option for using oEmbed
 //TODO: add line pie
@@ -431,8 +431,6 @@ EOD;
             $save['options']['width']               = array_key_exists('width', $data) ? $data['width'] : null;
             $save['options']['height']              = array_key_exists('height', $data) ? $data['height'] : null;
             $animateRotate                          = array_key_exists('animateRotate', $data) ? $data['animateRotate']  : null;
-            $count                                  = array_key_exists('count', $_POST) ? $_POST['count'] : null;  //NEED THIS FOR BROKEN ARRAY
-
 
             //build options and most of json
             $chart_array_data = '{
@@ -458,9 +456,25 @@ EOD;
 {
 "chart_data": [';
 
-            for ($i = 0; $i <= $count-1; $i++) {
+            //FIXME: to fix count issue, need to pull current json, turn into array, and count
+            //THIS DOESN'T WORK, BECAUSE IT JUST ISN'T WORKING :(
+
+            $jsonfile      = self::get_file_location('charts',$chart_slug).'/index.json';
+            $existing_data = json_decode(file_get_contents($jsonfile),true);
+
+            $count = count($existing_data['data_array'][0]['chart_data']);
+
+            error_log(print_r($existing_data,true));
+            error_log("newcount: $count");
+
+            for ($i = 0; $i <= 10; $i++) {
                 $chart_array_data .= '{';
                 foreach($data['chart_data['.$i] as $k=>$v) {
+                    error_log("$i: $v");
+                    if(!$v){
+                        error_log("breaking at $i");
+                        break 2;
+                    }
                     if(is_numeric($v)) {
                         $chart_array_data .= '"'.$k.'": '.$v.',';
                     } else {
