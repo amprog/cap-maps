@@ -334,9 +334,9 @@ EOD;
             //TODO:  clean post
 
             $data          = $_POST['data'];
-            $chart_action  = $_POST['chart_action']  = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
-            $chart_slug    = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
-            $chart_type    = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;
+            $chart_action  = $_POST['chart_action']  = array_key_exists('chart_action', $data) ? $data['chart_action'] : null;
+            $chart_slug    = array_key_exists('chart_slug', $data) ? $data['chart_slug'] : null;
+            $chart_type    = array_key_exists('chart_type', $data) ? $data['chart_type'] : null;
 
             error_log(__FILE__.':'.__LINE__."- chart_action: $chart_action");
 
@@ -403,7 +403,8 @@ EOD;
 
             //FIXME: may need to figure out true and false items
             error_log(__FILE__.':'.__LINE__.'- chart_slug: '.$chart_slug);
-            error_log(__FILE__.':'.__LINE__.'- printing data');
+            //error_log(__FILE__.':'.__LINE__.'- printing data');
+
 
             //error_log(print_r($data,true));
 
@@ -420,34 +421,36 @@ EOD;
             //FIXME: manipulate array and save
 
 
-            $save['options']['chart_type']         = array_key_exists('chart_type', $_POST) ? sanitize_text_field($_POST['chart_type']) : null;
-            $save['options']['chart_name']         = array_key_exists('chart_name', $_POST) ? sanitize_text_field($_POST['chart_name']) : null;
-            $save['options']['segmentStrokeColor'] = array_key_exists('segmentStrokeColor', $_POST) ? $_POST['segmentStrokeColor'] : null;
-            $save['options']['chart_source']       = array_key_exists('chart_source', $_POST) ? $_POST['chart_source'] : null;
-            $save['options']['legend']             = array_key_exists('legend', $_POST) ? $_POST['legend'] : null;
-            $save['options']['source']             = array_key_exists('source', $_POST) ? $_POST['source'] : null;
-            $save['options']['name']               = array_key_exists('name', $_POST) ? $_POST['name'] : null;
-            $save['options']['width']              = array_key_exists('width', $_POST) ? $_POST['width'] : null;
-            $save['options']['height']             = array_key_exists('height', $_POST) ? $_POST['height'] : null;
-            $save['data_array'][0]['chart_data']   = $_POST['chart_data'];
-            $count                                 = array_key_exists('count', $_POST) ? $_POST['count'] : null;  //NEED THIS FOR BROKEN ARRAY
+            $save['options']['chart_type']          = array_key_exists('chart_type', $data) ? sanitize_text_field($data['chart_type']) : null;
+            $save['options']['chart_name']          = array_key_exists('chart_name', $data) ? sanitize_text_field($data['chart_name']) : null;
+            $save['options']['segmentStrokeColor']  = array_key_exists('segmentStrokeColor', $data) ? $data['segmentStrokeColor'] : null;
+            $save['options']['chart_source']        = array_key_exists('chart_source', $data) ? $data['chart_source'] : null;
+            $save['options']['legend']              = array_key_exists('legend', $data) ? $data['legend'] : null;
+            $save['options']['source']              = array_key_exists('source', $data) ? $data['source'] : null;
+            $save['options']['name']                = array_key_exists('name', $data) ? $data['name'] : null;
+            $save['options']['width']               = array_key_exists('width', $data) ? $data['width'] : null;
+            $save['options']['height']              = array_key_exists('height', $data) ? $data['height'] : null;
+            $animateRotate                          = array_key_exists('animateRotate', $data) ? $data['animateRotate']  : null;
+            $count                                  = array_key_exists('count', $_POST) ? $_POST['count'] : null;  //NEED THIS FOR BROKEN ARRAY
 
-
-            error_log(print_r(  $save['data_array'][0]['chart_data'],true));
-
-//gc_chart_save_callback
-            //$save_result = self::gc_save_file(self::get_file_location('charts',$chart_slug).'/index.json',$save);
-
-            error_log("writing json: 1");  //SUCCESS
 
             //build options and most of json
             $chart_array_data = '{
 "options": {';
 
             foreach($save['options'] as $key=>$option) {
-                $chart_array_data .= '"'.$key.'": "'.$option.'",';
+                if(is_numeric($option)) {
+                    $chart_array_data .= '"'.$key.'": '.$option.',';
+                } else {
+                    $chart_array_data .= '"'.$key.'": "'.$option.'",';
+                }
             }
-            $chart_array_data = rtrim($chart_array_data, ","); //cut that last comma off
+
+            if($animateRotate==0) {
+                $chart_array_data .= '"animateRotate": false'; //no comma!
+            } else {
+                $chart_array_data .= '"animateRotate": true'; //no comma!
+            }
 
             $chart_array_data .= '
 },
@@ -458,7 +461,11 @@ EOD;
             for ($i = 0; $i <= $count-1; $i++) {
                 $chart_array_data .= '{';
                 foreach($data['chart_data['.$i] as $k=>$v) {
-                    $chart_array_data .= '"'.$k.'": "'.$v.'",';
+                    if(is_numeric($v)) {
+                        $chart_array_data .= '"'.$k.'": '.$v.',';
+                    } else {
+                        $chart_array_data .= '"'.$k.'": "'.$v.'",';
+                    }
                 }
                 $chart_array_data = rtrim($chart_array_data, ","); //cut that last comma off
                 $chart_array_data .= '},';
@@ -480,8 +487,6 @@ EOD;
 
             wp_send_json($return);
             wp_die();
-
-
 
 
 
