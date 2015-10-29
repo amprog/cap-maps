@@ -341,7 +341,7 @@ EOD;
             error_log(__FILE__.':'.__LINE__."- chart_action: $chart_action");
 
 
-
+            //FIXME: may not even need this case statement any more
             switch ($chart_action) {
                 case 'new':
                 case 'copy':
@@ -369,9 +369,9 @@ EOD;
                     break;
                 case 'edit':
                     //TODO: fix the updating of charts
-                    error_log(__FILE__.':'.__LINE__."- before slug");
+                    //error_log(__FILE__.':'.__LINE__."- before slug");
 
-                    error_log(__FILE__.':'.__LINE__."- after: $chart_slug");
+                    //error_log(__FILE__.':'.__LINE__."- after: $chart_slug");
 
 
                     //if chart slug, differs from chart_select then rename file!
@@ -390,35 +390,6 @@ EOD;
 
                     error_log(__FILE__.':'.__LINE__."- DEFAULT");
             }
-
-
-            error_log(__FILE__.':'.__LINE__."- still here");
-            /*
-            if($data['animateRotate']=='1') {
-                $data['options']['animateRotate'] = true;
-            } else {
-                $data['options']['animateRotate'] = false;
-            }
-*/
-
-            //FIXME: may need to figure out true and false items
-            error_log(__FILE__.':'.__LINE__.'- chart_slug: '.$chart_slug);
-            //error_log(__FILE__.':'.__LINE__.'- printing data');
-
-
-            //error_log(print_r($data,true));
-
-
-            //$save_result = self::gc_save_json_file(self::get_file_location('charts',$chart_slug).'/index.json',$data);
-
-            //FIXME: cannot just write this array to json
-            //$save_result = self::gc_save_file(self::get_file_location('charts',$chart_slug).'/index.json',$data);
-
-            //FIXME: cannot use templating system
-            //$file_data = self::gc_get_template($data,'json/'.$chart_type.'.php');
-
-
-            //FIXME: manipulate array and save
 
 
             $save['options']['chart_type']          = array_key_exists('chart_type', $data) ? sanitize_text_field($data['chart_type']) : null;
@@ -461,28 +432,31 @@ EOD;
 
             $jsonfile      = self::get_file_location('charts',$chart_slug).'/index.json';
             $existing_data = json_decode(file_get_contents($jsonfile),true);
-
+            error_log("jsonfile: $jsonfile");
             $count = count($existing_data['data_array'][0]['chart_data']);
 
             error_log(print_r($existing_data,true));
             error_log("newcount: $count");
 
             for ($i = 0; $i <= 10; $i++) {
-                $chart_array_data .= '{';
-                foreach($data['chart_data['.$i] as $k=>$v) {
-                    error_log("$i: $v");
-                    if(!$v){
-                        error_log("breaking at $i");
-                        break 2;
+                if(empty($data['chart_data['.$i])) {
+                    error_log("breaking at $i");
+                    break 1;
+                } else {
+                    $chart_array_data .= '{';
+                    foreach($data['chart_data['.$i] as $k=>$v) {
+                        error_log("$i: $v");
+
+                        if(is_numeric($v)) {
+                            $chart_array_data .= '"'.$k.'": '.$v.',';
+                        } else {
+                            $chart_array_data .= '"'.$k.'": "'.$v.'",';
+                        }
+
                     }
-                    if(is_numeric($v)) {
-                        $chart_array_data .= '"'.$k.'": '.$v.',';
-                    } else {
-                        $chart_array_data .= '"'.$k.'": "'.$v.'",';
-                    }
+                    $chart_array_data = rtrim($chart_array_data, ","); //cut that last comma off
+                    $chart_array_data .= '},';
                 }
-                $chart_array_data = rtrim($chart_array_data, ","); //cut that last comma off
-                $chart_array_data .= '},';
             }
             $chart_array_data = rtrim($chart_array_data, ","); //cut that last comma off
             $chart_array_data .= ']
@@ -1254,7 +1228,7 @@ EOS;
 
             $chart_type = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;
             $number     = array_key_exists('number', $_POST) ? $_POST['number'] : null;
-            $id         = $number+1;
+            $id         = $number;  //don't add a 1 because the array starts at 0
             $chart_data = self::get_chart_data($chart_type,$id);
 
 

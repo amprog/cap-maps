@@ -236,7 +236,9 @@ jQuery(document).ready(function($) {
                 'chart_type': chart_type,
                 'number': $('.chart_data_inner').length
             };console.dir(data);
-            $.post(ajaxurl, data, function(response) { console.dir(response);
+            $.post(ajaxurl, data, function(response) {
+                console.log('add_field response');
+                console.dir(response);
                 $(response.chart_data).prependTo( ".chart_data_wrap").fadeIn("slow");
             });
         } else {
@@ -314,7 +316,7 @@ jQuery(document).ready(function($) {
             'chart_type': chart_type,
             'count': $('#count').val(),
             'data': obj
-        };
+        }; console.dir(data);
         //FIXME:  we need a better way to keep track of counts
         $.post(ajaxurl, data, function(response) {
             console.log('chart_update response');
