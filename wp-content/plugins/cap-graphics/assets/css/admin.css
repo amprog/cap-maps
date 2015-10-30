@@ -252,6 +252,10 @@ ul.chart_data_wrap input {
     width: 50%;
 }
 
+.pl17 {
+    padding-left: 37px;
+}
+
 .side {
     width: 390px;
     position: fixed;
@@ -271,8 +275,10 @@ ul.chart_data_wrap input {
 }
 
 .short-cnt {
-    margin:10px auto;
+    margin: 17px auto;
     text-align: center;
+    clear: both;
+    padding-top: 37px;
 }
 
 .create {
