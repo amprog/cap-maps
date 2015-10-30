@@ -1231,7 +1231,6 @@ EOS;
          */
         public static function gc_side($data,$chart_slug,$chart_type) {
 
-
             if($data['options']['name']) {
                 $chart_name = '<h3>'.$data['options']['chart_name'].'</h3>';
             } else {
@@ -1239,53 +1238,52 @@ EOS;
             }
 
             if($data['options']['source']) {
-                $chart_source = '<p class="chart_source">'.$data['options']['chart_source'].'</p>';
+                $chart_source = '<p class="source">'.$data['options']['chart_source'].'</p>';
             } else {
                 $chart_source = '';
             }
 
+            $lower_chart_type = strtolower($chart_type);
+
             //print_r($json);
-            $canvas_html = '<canvas id="c1"></canvas>';
+            $canvas_html = '<canvas id="c1" width="300" height="300"></canvas>';
             //$canvas_html = '<canvas id="c1" width="'.$data['options']['width'].'" height="'.$data['options']['height'].'"></canvas>';
 
             if($chart_type=='Pie' || $chart_type=='Doughnut') {
-
-            }
-            //error_log(print_r($data['data_array'][0]['chart_data'],true));
-            $legend_inner = $canvas_type = '';
-            if($data['options']['legend']=='1') {
-                $legend_inner = '<div class="left">
-                    <div class="legend pl17">
-                        <ul>';
-                foreach ($data['data_array'][0]['chart_data'] as $c) {
-                    //error_log("color: ".$c['color']);
-                    $legend_inner .= '
-                        <li>
-                            <div style="background-color: ' . $c['color'] . '"></div>
-                            <p>' . $c['label'] . '</p>
-                        </li>';
-
+                $legend_inner = $canvas_type = '';
+                if($data['options']['legend']=='1') {
+                    $legend_inner = '<div class="left">
+                        <div class="legend">
+                            <ul>';
+                    foreach ($data['data_array'][0]['chart_data'] as $c) {
+                        //error_log("color: ".$c['color']);
+                        $legend_inner .= '
+                            <li>
+                                <div style="background-color: ' . $c['color'] . '"></div>
+                                <p>' . $c['label'] . '</p>
+                            </li>';
+                    }
+                    $legend_inner .= '</ul>
+                        </div>
+                    </div>';
+                    $canvas_type = 'class="left"';
                 }
-                $legend_inner .= '</ul>
-                    </div>
-                </div>';
-                $canvas_type = 'class="left"';
             }
+
 
                 return  <<< EOS
 
-            <div class="c_1_1 {$data['chart_slug']}">
+            <div class="chart $chart_slug $lower_chart_type">
                 {$chart_name}
                 <div $canvas_type>$canvas_html {$chart_source}</div>
                 $legend_inner
+            </div>
+            <div class="clear">
                 <div class="short-cnt">
-                    <input type="text" value="[cap_chart chart="$chart_slug" class="shortcode" />
+                    <input type="text" value="[cap_chart chart='$chart_slug']" class="shortcode" />
                 </div>
-                <div class="c">
-                    <div class="float"><input type="button" class="button button-primary chart_update" name="save_options" value="save"/></div>
-                    <div class="float"><input type="button" class="button button-primary goback" value="go back"/></div>
-                </div>
-
+                <div class="float"><input type="button" class="button button-primary chart_update" name="save_options" value="save"/></div>
+                <div class="float"><input type="button" class="button button-primary goback" value="go back"/></div>
             </div>
 
 EOS;

@@ -48,6 +48,7 @@ svg {
     margin: 0;
     line-height: 12px;
     font-size:14px;
+    text-align: left;
 }
 
 .legend div {
@@ -60,4 +61,25 @@ svg {
 .legend li:hover {
     padding-left:7px;
     color: #000;
+}
+
+
+/* default chart css that can be overridden */
+
+.chart  {
+    border: 1px solid #ccc;
+    margin-top:10px;
+    overflow: hidden;
+}
+
+.chart h3,.chart .source {
+    text-align: center;
+}
+
+.chart .legend {
+    padding-left: 47px;
+}
+
+.chart canvas {
+    margin-left:17px;
 }

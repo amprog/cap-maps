@@ -278,7 +278,6 @@ ul.chart_data_wrap input {
     margin: 17px auto;
     text-align: center;
     clear: both;
-    padding-top: 37px;
 }
 
 .create {
@@ -464,4 +463,3 @@ ul.chart_data_wrap input {
 .icon-eye:before {
     content: "\e904";
 }
-

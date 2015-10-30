@@ -138,10 +138,10 @@ jQuery(document).ready(function($) {
     $( ".shortcode" ).live( "click", function() {
         var copy  = $(this).addClass('highlight');
         var short = copy.val();
-        copy.val('copied!');
         var $temp = $("<input>");
         $("body").append($temp);
         $temp.val($(this).val()).select();
+        copy.val('copied!');
         document.execCommand("copy");
         $temp.remove();
         setTimeout(function() {
