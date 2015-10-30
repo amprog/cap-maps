@@ -77,10 +77,9 @@ if (!class_exists(APP_CLASS_NAME)) {
                 wp_enqueue_script( 'wp-color-picker');
                 //error_log(__FILE__.':'.__LINE__.' - cap graphics '.$cap_graphics->APP_NAMESPACE.'-admin');
 
-                $plugin_path = plugin_dir_url(__FILE__);
 
-                wp_enqueue_style( self::APP_NAMESPACE.'admin',  $plugin_path . 'assets/css/admin.css');
-                wp_enqueue_script( self::APP_NAMESPACE.'admin', $plugin_path . 'assets/js/admin.js');
+                wp_enqueue_style( self::APP_NAMESPACE.'admin',  plugin_dir_url(__FILE__) . 'assets/css/admin.css');
+                wp_enqueue_script( self::APP_NAMESPACE.'admin', plugin_dir_url(__FILE__) . 'assets/js/admin.js');
 
 
             } else {
@@ -856,28 +855,42 @@ EOD;
          * @param $atts
          * @return string
          */
-        function gc_chart_shortcode( $atts ){
+        public static function gc_chart_shortcode( $atts ){
             $content = $legend_html = $legend_inner = $canvas_html = '';
 
-            $id          = get_the_ID();
-            $chart_slug  = get_post_meta($id,'chart_slug',true);
+            $id         = get_the_ID();
+            $chart_slug = $atts['chart'];
 
             //get frontend css and charts scripts
-            wp_enqueue_style('capmapcss', $this->gc_frontend->plugin_uri.'assets/css/frontend.css');
-            wp_enqueue_script('charts',  $this->gc_frontend->plugin_uri.'assets/js/common/Chart.min.js','','1',true);
-            wp_enqueue_script('charts',  $this->gc_frontend->plugin_uri.'assets/js/common/charts.options.js','','1',true);
+            wp_enqueue_style('capmapcss', plugin_dir_url(__FILE__).'assets/css/frontend.css');
+            wp_enqueue_script('charts',  plugin_dir_url(__FILE__).'assets/js/common/Chart.min.js','','1',true);
+            wp_enqueue_script('charts',  plugin_dir_url(__FILE__).'assets/js/common/charts.options.js','','1',true);
 
+            //instead of all this , just call new function
+            $json_file    = self::get_file_location('charts',$chart_slug).'/index.json';             error_log("json_file: $json_file");
+            $jsonfile_uri = self::get_package_uri('charts',$chart_slug).'/index.json';            error_log("jsonfile_uri: $jsonfile_uri");
+            $data         = json_decode(file_get_contents($json_file),true);    error_log("chart_slug: $chart_slug");
+            error_log('chart_type: '.$data['options']['chart_type']);            error_log(print_r($data,true));
+            $html = self::gc_side($data,$chart_slug,$data['options']['chart_type']);
+            $html .= <<< EOS
+<script>
+ jQuery(document).ready(function($) {
+    $.getJSON("$jsonfile_uri").done(function( json ) {
+        var str = json.options.chart_type.toString();
+        new Chart(document.getElementById('c1').getContext('2d'))[str](json.data_array[0].chart_data,json.options);
+    })
+    .fail(function( jqxhr, textStatus, error ) {
+        var err = textStatus + ", " + error;
+               console.log(1225);
+        console.log( "Request Failed: " + err );
+    });
+});
+</script>
+EOS;
+
+            return $html;
 
             /*
-             *        $('#import_export_line').appear(function() {
-                        new Chart(document.getElementById('import_export_line').getContext('2d')).Line(json.data_array,json.options);
-                    },{accX: 0, accY: -200});
-             */
-
-            //not as efficient, but for total control from json pull json in php as well
-
-            $json_file = self::get_file_location('charts',$chart_slug);
-            $json      = json_decode(file_get_contents($json_file),true);
             $legend    = $json['options']['legend'];
             $name      = $json['options']['name'];
             $source    = $json['options']['source'];
@@ -976,7 +989,6 @@ EOS;
             */
 
 
-            return $content;
         }
 
 
@@ -1125,7 +1137,7 @@ EOS;
 
 
             //get from template function
-            $side = self::gc_side($data,$chart_slug,$chart_type);
+            $side = self::gc_side($data,$chart_slug,$chart_type,1);
 
             $html = <<< EOS
 <div class="left">
@@ -1229,7 +1241,7 @@ EOS;
          * @param $data
          * @return string
          */
-        public static function gc_side($data,$chart_slug,$chart_type) {
+        public static function gc_side($data,$chart_slug,$chart_type,$admin = NULL) {
 
             if($data['options']['name']) {
                 $chart_name = '<h3>'.$data['options']['chart_name'].'</h3>';
@@ -1245,9 +1257,6 @@ EOS;
 
             $lower_chart_type = strtolower($chart_type);
 
-            //print_r($json);
-            $canvas_html = '<canvas id="c1" width="300" height="300"></canvas>';
-            //$canvas_html = '<canvas id="c1" width="'.$data['options']['width'].'" height="'.$data['options']['height'].'"></canvas>';
 
             if($chart_type=='Pie' || $chart_type=='Doughnut') {
                 $legend_inner = $canvas_type = '';
@@ -1256,7 +1265,6 @@ EOS;
                         <div class="legend">
                             <ul>';
                     foreach ($data['data_array'][0]['chart_data'] as $c) {
-                        //error_log("color: ".$c['color']);
                         $legend_inner .= '
                             <li>
                                 <div style="background-color: ' . $c['color'] . '"></div>
@@ -1271,6 +1279,27 @@ EOS;
             }
 
 
+            if($admin) {
+                $canvas_html = '<canvas id="c1" width="300" height="300"></canvas>';  //on admin page, keep chart small
+                $admin_html = <<<EOS
+<div class="clear"> 
+    <div class="short-cnt">
+        <input type="text" value="[cap_chart chart='$chart_slug']" class="[cap_chart chart='example_pie']" />
+    </div> 
+    <div class="float">
+        <input type="button" class="button button-primary chart_update" name="save_options" value="save"/>
+    </div> 
+    <div class="float">
+        <input type="button" class="button button-primary goback" value="go back"/>
+    </div> 
+</div>
+EOS;
+            } else {
+                $canvas_html = '<canvas id="c1" width="'.$data['options']['width'].'" height="'.$data['options']['height'].'"></canvas>';
+                $admin_html = '';
+            }
+
+
                 return  <<< EOS
 
             <div class="chart $chart_slug $lower_chart_type">
@@ -1278,40 +1307,8 @@ EOS;
                 <div $canvas_type>$canvas_html {$chart_source}</div>
                 $legend_inner
             </div>
-            <div class="clear">
-                <div class="short-cnt">
-                    <input type="text" value="[cap_chart chart='$chart_slug']" class="shortcode" />
-                </div>
-                <div class="float"><input type="button" class="button button-primary chart_update" name="save_options" value="save"/></div>
-                <div class="float"><input type="button" class="button button-primary goback" value="go back"/></div>
-            </div>
-
+            $admin_html
 EOS;
-
-
-
-/*
-                return <<<EOS
-
-<div class="side">
-    <div class="c">
-        <h3>$show_chart_name</h3>
-        <div id="c1_wrap">
-            <canvas id="c1" width="300" height="300"></canvas>
-        </div>
-    </div>
-    <div class="short-cnt">
-        <input type="text" value="[cap_chart chart="$chart_slug" class="shortcode" />
-        <input type="hidden" id="dir" value="$jsonfile_uri" />
-    </div>
-    <div class="c">
-        <div class="float"><input type="button" class="button button-primary chart_update" name="save_options" value="save"/></div>
-        <div class="float"><input type="button" class="button button-primary goback" value="go back"/></div>
-    </div>
-</div>
-EOS;
-
-*/
 
         }
 
