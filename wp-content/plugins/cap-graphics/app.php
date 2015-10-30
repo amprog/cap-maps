@@ -467,6 +467,9 @@ EOD;
 
             $save_result = self::gc_save_file(self::get_file_location('charts',$chart_slug).'/index.json',$chart_array_data);
 
+            //return html as chart update
+
+
             $return = array(
                 'data'=>$data,
                 'post'=>$_POST,
@@ -1043,12 +1046,14 @@ EOS;
                     $name_enable     = '';
                     $name_1          = '';
                     $name_2          = 'checked';
+                    $show_chart_name = '';
                     break;
                 case 1:
                     $name_enable     = 'selected';
                     $name_disable    = '';
                     $name_1          = 'checked';
                     $name_2          = '';
+                    $show_chart_name = $chart_name;
                     break;
                 default:
                     $name_disable    = 'selected';
@@ -1117,7 +1122,9 @@ EOS;
                     $animateRotate_2        = 'checked';
             }
 
-            //$self = $_SERVER['PHP_SELF'];
+
+            //get from template function
+            $side = self::gc_side($data,$chart_data);
 
             $html = <<< EOS
 <div class="left">
@@ -1177,26 +1184,10 @@ EOS;
                 <li>$chart_data</li>
             </ul>
         </ul>
-
     </form>
 </div>
-
-<div class="side">
-    <div class="c">
-        <h3>Example and Save button go here</h3>
-        <div id="c1_wrap">
-            <canvas id="c1" width="300" height="300"></canvas>
-        </div>
-    </div>
-    <div class="short-cnt">
-        <input type="text" value="[cap_chart chart=&quot;10_7_2015_pie&quot;]" class="shortcode">
-        <input type="hidden" id="dir" value="$jsonfile_uri" />
-    </div>
-    <div class="c">
-        <div class="float"><input type="button" class="button button-primary chart_update" name="save_options" value="save"/></div>
-        <div class="float"><input type="button" class="button button-primary goback" value="go back"/></div>
-    </div>
-
+<div class="left">
+    $side
 </div>
 EOS;
 
@@ -1205,7 +1196,7 @@ EOS;
 
 <script>
  jQuery(document).ready(function($) {
-    $.getJSON($('#dir').val()).done(function( json ) {
+    $.getJSON("$jsonfile_uri").done(function( json ) {
         var str = json.options.chart_type.toString();
         new Chart(document.getElementById('c1').getContext('2d'))[str](json.data_array[0].chart_data,json.options);
     })
@@ -1230,6 +1221,93 @@ EOS;
 
             wp_send_json($return);
             wp_die();
+        }
+
+
+        /**
+         * @param $data
+         * @return string
+         */
+        public static function gc_side($data,$chart_data) {
+
+
+            if($data['options']['name']) {
+                $chart_name = '<h3>'.$data['options']['chart_name'].'</h3>';
+            } else {
+                $chart_name = '';
+            }
+
+            if($data['options']['source']) {
+                $chart_source = '<p class="chart_source">'.$data['options']['chart_source'].'</p>';
+            } else {
+                $chart_source = '';
+            }
+
+            //print_r($json);
+            $canvas_html = '<canvas id="c1" width="300" height="300"></canvas>';
+            //$canvas_html = '<canvas id="c1" width="'.$data['options']['width'].'" height="'.$data['options']['height'].'"></canvas>';
+            $legend_inner = '';
+            if($data['options']['legend']=='1') {
+                foreach ($data['data_array'][0]['chart_data'] as $c) {
+                    $legend_inner .= '
+                        <li>
+                            <div style="background-color: ' . $c['color'] . '"></div>
+                            <p>' . $c['label'] . '</p>
+                        </li>';
+
+                }
+            }
+
+                return  <<< EOS
+
+            <div class="c_1_1 {$data['chart_slug']}">
+                {$chart_name}
+                <div class="left">$canvas_html {$chart_source}</div>
+                <div class="left">
+                    <div class="legend">
+                        <ul>
+                            $legend_inner
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="short-cnt">
+                    <input type="text" value="[cap_chart chart="{$data['chart_slug']}" class="shortcode" />
+                </div>
+                <div class="c">
+                    <div class="float"><input type="button" class="button button-primary chart_update" name="save_options" value="save"/></div>
+                    <div class="float"><input type="button" class="button button-primary goback" value="go back"/></div>
+                </div>
+
+            </div>
+
+EOS;
+
+
+
+/*
+                return <<<EOS
+
+<div class="side">
+    <div class="c">
+        <h3>$show_chart_name</h3>
+        <div id="c1_wrap">
+            <canvas id="c1" width="300" height="300"></canvas>
+        </div>
+    </div>
+    <div class="short-cnt">
+        <input type="text" value="[cap_chart chart="$chart_slug" class="shortcode" />
+        <input type="hidden" id="dir" value="$jsonfile_uri" />
+    </div>
+    <div class="c">
+        <div class="float"><input type="button" class="button button-primary chart_update" name="save_options" value="save"/></div>
+        <div class="float"><input type="button" class="button button-primary goback" value="go back"/></div>
+    </div>
+</div>
+EOS;
+
+*/
+
         }
 
 

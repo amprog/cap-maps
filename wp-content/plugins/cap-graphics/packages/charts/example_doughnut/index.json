@@ -1,7 +1,7 @@
 {
   "options": {
-    "chart_type": "Pie",
-    "chart_name": "Example Pie Chart",
+    "chart_type": "Doughnut",
+    "chart_name": "Example Doughnut Chart",
     "segmentStrokeColor": "#0a0a0a",
     "chart_source": "http://www.google.com.org",
     "legend": 1,

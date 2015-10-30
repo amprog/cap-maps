@@ -285,13 +285,17 @@ jQuery(document).ready(function($) {
         if(chart_type=='Pie' || chart_type=='Doughnut') {
 
             var numbers = $( ".chart_data_wrap input[type='number']" ).toArray();
-            var total = 0;
+            var total   = 0;
             $.each(numbers, function( index, value ) {
                 total += parseInt(value.value);
             });
             //TODO:  change ALL ALERTS INTO JQUERY BOXES!
             if(total>100) {
                 alert("Will update chart but dissapearing error message lets user know they are over 100");
+            } else if((total<=100)) {
+                alert("Less than 100");
+            } else {
+
             }
         }
 
@@ -308,7 +312,7 @@ jQuery(document).ready(function($) {
         }
 
         //turn a form into an object
-        obj = $('#frm_chart_update').serializeObject();  //works better at least, chart data arrays ruined
+        obj = $('#frm_chart_update').serializeObject();
         var data = {
             'action': 'gc_chart_save',
             'chart_action': chart_action,
@@ -326,7 +330,8 @@ jQuery(document).ready(function($) {
             console.log("response from ajax query gc_chart_save");
             console.dir(json);
             //check for error, and update chart
-            $('#c1_wrap').html('<canvas id="c1" width="300" height="300"></canvas>');
+            //$('#c1_wrap').html('<canvas id="c1" width="300" height="300"></canvas>');
+            $('#c1_wrap').html(response.html);
             var str = json.options.chart_type.toString();
             new Chart(document.getElementById('c1').getContext('2d'))[str](json.data_array[0].chart_data,json.options);
 
