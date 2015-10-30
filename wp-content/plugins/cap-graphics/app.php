@@ -867,12 +867,11 @@ EOD;
             wp_enqueue_script('charts',  plugin_dir_url(__FILE__).'assets/js/common/charts.options.js','','1',true);
 
             //instead of all this , just call new function
-            $json_file    = self::get_file_location('charts',$chart_slug).'/index.json';             error_log("json_file: $json_file");
-            $jsonfile_uri = self::get_package_uri('charts',$chart_slug).'/index.json';            error_log("jsonfile_uri: $jsonfile_uri");
-            $data         = json_decode(file_get_contents($json_file),true);    error_log("chart_slug: $chart_slug");
-            error_log('chart_type: '.$data['options']['chart_type']);            error_log(print_r($data,true));
-            $html = self::gc_side($data,$chart_slug,$data['options']['chart_type']);
-            $html .= <<< EOS
+            $json_file    = self::get_file_location('charts',$chart_slug).'/index.json';
+            $jsonfile_uri = self::get_package_uri('charts',$chart_slug).'/index.json';
+            $data         = json_decode(file_get_contents($json_file),true);
+            $html         = self::gc_side($data,$chart_slug,$data['options']['chart_type']);
+            $html        .= <<< EOS
 <script>
  jQuery(document).ready(function($) {
     $.getJSON("$jsonfile_uri").done(function( json ) {
@@ -889,106 +888,6 @@ EOD;
 EOS;
 
             return $html;
-
-            /*
-            $legend    = $json['options']['legend'];
-            $name      = $json['options']['name'];
-            $source    = $json['options']['source'];
-
-            if($name) {
-                $chart_name = '<h3>'.$json['options']['chart_name'].'</h3>';
-            } else {
-                $chart_name = '';
-            }
-
-            if($source) {
-                $chart_source = '<p class="chart_source">'.$json['options']['chart_source'].'</p>';
-            } else {
-                $chart_source = '';
-            }
-
-            //print_r($json);
-
-            $canvas_html = '<canvas id="c1" width="'.$json['options']['width'].'" height="'.$json['options']['height'].'"></canvas>';
-            if($legend=='1') {
-
-
-                foreach($json['data_array'][0]['chart_data'] as $c) {
-                    $legend_inner .= '
-                        <li>
-                            <div style="background-color: '.$c['color'].'"></div>
-                            <p>'.$c['label'].'</p>
-                        </li>';
-                }
-
-                $legend_html = <<< EOS
-
-            <div class="c_1_1 $chart_slug">
-                $chart_name
-                <div class="left">$canvas_html $chart_source</div>
-                <div class="left">
-                    <div class="legend">
-                        <ul>
-                            $legend_inner
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-EOS;
-
-
-            } else {
-
-                $legend_html = <<< EOS
-
-            <div class="c_1_1">
-                $chart_name
-                $canvas_html
-                $chart_source
-            </div>
-
-EOS;
-            }
-
-            $content = <<< EOS
-
-        $legend_html
-
-        <script>
-            jQuery(document).ready(function($) {
-                $.getJSON( $('#dir').val()).done(function( json ) {
-                    var str = json.options.chart_type.toString();
-                    new Chart(document.getElementById('c1').getContext('2d'))[str](json.data_array[0].chart_data,json.options);
-                    console.dir(json);
-                })
-                .fail(function( jqxhr, textStatus, error ) {
-                    var err = textStatus + ", " + error;
-                    console.log(962);
-                    console.log( "Request Failed: " + err );
-                });
-            });
-        </script>
-
-EOS;
-
-
-
-
-
-            /*
-            //instead of php build php here
-            if(file_exists($svg_file)) {
-                include($svg_file);
-            } else {
-                echo 'no svg file found';
-            }
-
-
-            echo $id;
-            */
-
-
         }
 
 
