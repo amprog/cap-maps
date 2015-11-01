@@ -84,12 +84,14 @@ if (!class_exists("Cap_Graphics_Options")) {
             $data['var'] ='data var';
             $var = 'var var';
 
+            $atts['svg'] = '';
 
 
-            parent::gc_get_template($data,'admin/svg_submenu.php');
+            $svg                     = parent::gc_get_package('svg');
+            $data['packages']        = json_decode($svg,true);
 
+            return parent::gc_get_template($data,'admin/svg_submenu.php');
 
-            return parent::gc_chart_action_callback();
 
             //return parent::gc_get_template2($data,'admin/svg_submenu.php');
 

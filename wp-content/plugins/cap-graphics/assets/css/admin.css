@@ -396,9 +396,12 @@ ul.chart_data_wrap input {
     animation-delay: 2s;
 }
 
+#svg_content {
+    clear: both;
+    display: block;
+}
+
 /* custom grid */
-
-
 .c_1_2 {
     width: 50% !important;
 }

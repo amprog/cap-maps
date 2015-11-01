@@ -1,36 +1,28 @@
+<?php if($data['d3']): ?>
+    <script src="<?php echo $data['d3_file']; ?>custom/jquery.object.js"></script>
+<?php endif; ?>
 <div class="wrap">
-    <?php echo "<p>var: $var</p>"; echo $data['var']; ?>
-    svg_Submenu
-    <ul class="list">
-        <li class="svg_li">
-            <div id="svg_select_wrap">
-                <div class="left">
-                    <span class="loading h"></span>
-                        <span id="svg_select_inner">
-                            <span><strong>Select SVG Graphic</strong></span>
-                            <select class="svg_select" name="svg_select">
-                                <option>Select One</option>
-                                <?php foreach($packages->svg as $package): ?>
-                                    <?php if($svg_select==$package->slug): ?>
-                                        <option value="<?php echo $package->slug; ?>" selected><?php echo $package->label; ?></option>
-                                    <?php else: ?>
-                                        <option value="<?php echo $package->slug; ?>"><?php echo $package->label; ?></option>
-                                    <?php endif; ?>
-                                <?php endforeach; ?>
-                            </select>
-                        </span>
-                </div>
-                <div class="left r">
-                    <button type="button" class="create" data-type="svg">NEW SVG GRAPHIC</button>
-                </div>
-            </div>
-            <div id="svg_slug_wrap"></div>
-            <div id="svg_new"><?php echo $svg_new; ?></div>
-            <input type="hidden" id="ID" value="<?php echo $post->ID; ?>" />
-        </li>
-    </ul>
-    <div class="note">
-        <p>Place the following short code where you want an SVG file to appear: [cap_svg]</p>
-        <p>Place multiple charts on the page by using the svg slug: [cap_svg svg="PACKAGE_SLUG"]</p>
+    <h2>Current SVG Graphics</h2>
+    <div id="list_assets">
+        <ul class="l">
+            <?php $i=1; foreach($data['packages']['svg'] as $svg): ?>
+                <li data-slug="<?php echo $svg['slug']; ?>" class="current_chart" id="l-<?php echo $i; ?>">
+                    <h3><?php echo $svg['label']; ?></h3>
+                    <div class="starter <?php echo $svg['type']; ?>"></div>
+                    <p><?php echo $svg['description']; ?></p>
+                    <input type="text" value='[cap_chart chart="<?php echo $svg['slug']; ?>"]' class="shortcode" />
+
+                    <div class="meta">
+                        <ul>
+                            <li class="edit" data-i="<?php echo $i; ?>" data-type="<?php echo $svg['type']; ?>"><i class="icon icon-pencil2"></i>  edit</li>
+                            <li class="copy" data-i="<?php echo $i; ?>"><i class="icon icon-copy"></i>  copy</li>
+                            <li class="delete" data-i="<?php echo $i; ?>"><i class="icon icon-bin"></i>  delete</li>
+                        </ul>
+                    </div>
+
+                </li>
+                <?php $i++; endforeach; ?>
+        </ul>
     </div>
+    <div id="svg_content"></div>
 </div>

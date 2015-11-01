@@ -805,45 +805,40 @@ EOD;
          * @return string
          */
         function gc_svg_shortcode( $atts ){
-            //TODO: think about putting every fiule, json, js, css into one "package" or in ONE folder
 
+            $content  = '';
             $id       = get_the_ID();
 
             //TODO: if short code is [cap_svg svg="slug"]
-            if($atts['svg']) {
-                $svg_raw  = $atts['svg'];
-            } else {
-                $svg_raw  = get_post_meta($id,'svg_select',true);
-            }
-            $content  = '';
-            echo dirname(__FILE__).'/assets/css/frontend.css<br><Br>';
-            //always include front end css
+
+            $svg_raw  = $atts['svg'];
+
             wp_enqueue_style('capmapcss', dirname(__FILE__).'/assets/css/frontend.css');
 
-            if($svg_raw != 'Select One') {
-                //$svg_file   = self::APP_FRONTEND->svg_folder.$svg_raw.'/'.$svg_raw.'.svg';
-                $custom_js  = $svg_file . $svg_raw . 'js';
-                $custom_css = $svg_file . $svg_raw . 'css';
 
-                //if no svg, error out
-                if (file_exists(ABSPATH . $svg_file)) {
-                    $svg_data =  file_get_contents(ABSPATH.$svg_file);
-                }
+            //$svg_file   = self::APP_FRONTEND->svg_folder.$svg_raw.'/'.$svg_raw.'.svg';
+            $custom_js  = $svg_file . $svg_raw . 'js';
+            $custom_css = $svg_file . $svg_raw . 'css';
 
-                //include js and css IF exists
-                if (file_exists(ABSPATH . $custom_js)) {
-                    wp_enqueue_script('js-' . $id, $custom_js, '', '1', true);
-                }
-
-                if (file_exists(ABSPATH . $custom_css)) {
-                    wp_enqueue_style('css-' . $id, $custom_css);
-                }
-
-                $content .= '<div class="svg_wrap"><div class="svg_meta"></div>';
-                $content .= $svg_data;
-                $content .= '</div>';
-
+            //if no svg, error out
+            if (file_exists(ABSPATH . $svg_file)) {
+                $svg_data =  file_get_contents(ABSPATH.$svg_file);
             }
+
+            //include js and css IF exists
+            if (file_exists(ABSPATH . $custom_js)) {
+                wp_enqueue_script('js-' . $id, $custom_js, '', '1', true);
+            }
+
+            if (file_exists(ABSPATH . $custom_css)) {
+                wp_enqueue_style('css-' . $id, $custom_css);
+            }
+
+            $content .= '<div class="svg_wrap"><div class="svg_meta"></div>';
+            $content .= $svg_data;
+            $content .= '</div>';
+
+
             return $content;
         }
 
@@ -1626,7 +1621,6 @@ if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
 
     if ( is_admin() ) {
         add_action( 'admin_menu', 'Cap_Graphics::gc_options_admin' );  //options page, TODO: perhaps put chart options here
-        add_action( 'add_meta_boxes', "Cap_Graphics::gc_meta"); //TODO: no longer need this
 
         //svg
         add_action( 'wp_ajax_cap_map_svg_action', 'Cap_Graphics::gc_svg_action_callback' );  //ajax for new svg
