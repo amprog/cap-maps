@@ -6,20 +6,18 @@
     <div id="list_assets">
         <ul class="l">
             <?php $i=1; foreach($data['packages']['svg'] as $svg): ?>
-                <li data-slug="<?php echo $svg['slug']; ?>" class="current_chart" id="l-<?php echo $i; ?>">
+                <li data-slug="<?php echo $svg['slug']; ?>" class="current_svg" id="l-<?php echo $i; ?>">
                     <h3><?php echo $svg['label']; ?></h3>
                     <div class="starter <?php echo $svg['type']; ?>"></div>
                     <p><?php echo $svg['description']; ?></p>
-                    <input type="text" value='[cap_chart chart="<?php echo $svg['slug']; ?>"]' class="shortcode" />
-
+                    <input type="text" value='[cap_svg svg="<?php echo $svg['slug']; ?>"]' class="shortcode" />
                     <div class="meta">
                         <ul>
-                            <li class="edit" data-i="<?php echo $i; ?>" data-type="<?php echo $svg['type']; ?>"><i class="icon icon-pencil2"></i>  edit</li>
+                            <li class="edit" data-i="<?php echo $i; ?>"><i class="icon icon-pencil2"></i>  edit</li>
                             <li class="copy" data-i="<?php echo $i; ?>"><i class="icon icon-copy"></i>  copy</li>
                             <li class="delete" data-i="<?php echo $i; ?>"><i class="icon icon-bin"></i>  delete</li>
                         </ul>
                     </div>
-
                 </li>
                 <?php $i++; endforeach; ?>
         </ul>

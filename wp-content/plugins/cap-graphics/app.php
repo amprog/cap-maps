@@ -286,39 +286,8 @@ EOD;
                 $data['json'] = file_get_contents($folder.$svg_select.'/'.$svg_select.'.json', "w");
                 //$svg_new      = $this->gc_frontend->cap_map_svg_tpl('update',$svg,$js,$css,$json);
             }
-
-
-
             return self::gc_get_template($data,'admin/svg_edit.php');
-
         }
-
-
-        /**
-         * Custom callback function for CHARTS box'
-         * DONT TODO:  THINK THIS IS USED any more
-         */
-        function gc_chart_callback($post) {
-
-            $gc          = new Cap_Map();  //this should not be necessary!!!!
-            $data['folder']           = ABSPATH.$this->gc_frontend->chart_folder;
-            $data['package_json']       = file_get_contents($folder.'charts.json');
-            $data['packages']          = json_decode($package_json);
-            $data['chart_select']       = esc_attr(get_post_meta( $post->ID, 'chart_select', true ));
-
-            //if there is already a chart selected, show this chart
-            if($chart_select!='' || $chart_select!='Select One') {
-                //TODO: get data here instead of javascript
-
-            }
-
-
-            wp_nonce_field( 'cap_map_meta_save', 'admin_meta_box_nonce' );
-
-            return self::gc_get_template($data,'admin/gc_chart_callback.php');
-
-        }
-
 
         /**
          * AJAX:  NEW Update charts, on the fly and save all data with AJAX
@@ -811,33 +780,37 @@ EOD;
 
             //TODO: if short code is [cap_svg svg="slug"]
 
-            $svg_raw  = $atts['svg'];
+            $svg_slug  = $atts['svg'];
 
-            wp_enqueue_style('capmapcss', dirname(__FILE__).'/assets/css/frontend.css');
+            wp_enqueue_style('gc', plugin_dir_url(__FILE__).'assets/css/frontend.css');
+            error_log("svg_slug: $svg_slug");
 
+            $package = self::get_file_location('svg',$svg_slug);
 
             //$svg_file   = self::APP_FRONTEND->svg_folder.$svg_raw.'/'.$svg_raw.'.svg';
-            $custom_js  = $svg_file . $svg_raw . 'js';
-            $custom_css = $svg_file . $svg_raw . 'css';
+            $custom_js  = $package . '/index.js';
+            $custom_css = $package. '/index.css';
+            $svg_file   = $package. '/index.svg';
+
 
             //if no svg, error out
-            if (file_exists(ABSPATH . $svg_file)) {
-                $svg_data =  file_get_contents(ABSPATH.$svg_file);
+            if (file_exists($svg_file)) {
+                $svg_data =  file_get_contents($svg_file);
             }
-
+            error_log("svg_file: $svg_file");
             //include js and css IF exists
-            if (file_exists(ABSPATH . $custom_js)) {
+            if (file_exists($custom_js)) {
                 wp_enqueue_script('js-' . $id, $custom_js, '', '1', true);
             }
 
-            if (file_exists(ABSPATH . $custom_css)) {
+            if (file_exists($custom_css)) {
                 wp_enqueue_style('css-' . $id, $custom_css);
             }
 
             $content .= '<div class="svg_wrap"><div class="svg_meta"></div>';
             $content .= $svg_data;
             $content .= '</div>';
-
+error_log($content);
 
             return $content;
         }
@@ -857,7 +830,7 @@ EOD;
             $chart_slug = $atts['chart'];
 
             //get frontend css and charts scripts
-            wp_enqueue_style('capmapcss', plugin_dir_url(__FILE__).'assets/css/frontend.css');
+            wp_enqueue_style('gc', plugin_dir_url(__FILE__).'assets/css/frontend.css');
             wp_enqueue_script('charts',  plugin_dir_url(__FILE__).'assets/js/common/Chart.min.js','','1',true);
             wp_enqueue_script('charts',  plugin_dir_url(__FILE__).'assets/js/common/charts.options.js','','1',true);
 
@@ -1509,8 +1482,6 @@ NCURSES_KEY_EOS;
         function gc_chart_view_callback()
         {
 
-
-            error_log('gc_chart_view_callback');
             $return   = array(
                 'post'=> $_POST
             );
