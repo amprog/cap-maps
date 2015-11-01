@@ -1,20 +1,13 @@
 jQuery(document).ready(function($) {
 
-    //$('.svg_wrap').height($(window).height()-300);
-
-    //get snap script
-    //$.getScript( "/wp-content/plugins/cap-map/assets/js/common/snap.min.js" )
-    //.done(function( script, textStatus ) {
-    //console.log( textStatus );
-    //s = Snap('#us_congressional_districts');
-
-    $.getJSON( "/wp-content/plugins/cap-map/data/us_congressional_districts.json")
+    //TODO: this represents a problem, perhaps use php as js. needs to get automatically from media library, or local
+    $.getJSON( "/wp-content/plugins/cap-graphics/packages/svg/electoral/index.json")
         .done(function( data ) {
             el = data;
             $('.svg_meta').before( $('<h3>'+data.elections[0].name+'</h3><p>'+data.elections[0].description+'</p>'));
 
             //iterate through all years and write to page
-            $.each( data.elections, function( i, value ) {
+            $.each( data.elections, function( i, value ) {console.log(value);
                 $('.svg_meta').before( $( '<a class="y" href="javascript:void(0);" data-i="'+i+'">'+value.year+'</a>' ) );
             });
 
@@ -38,10 +31,4 @@ jQuery(document).ready(function($) {
             $('path[id^="'+v.abbreviation+'"').attr("class", v.color); //jquery can't add class to svg path
         });
     });
-    //})
-
-    //.fail(function( jqxhr, settings, exception ) {
-    //    $( "div.log" ).text( "Triggered ajaxError handler." );
-    //});
-
 });
