@@ -243,45 +243,6 @@ jQuery(document).ready(function($) {
         }
     });
 
-    //charting
-    /* TODO: MAY NOT NEED OR WILL USE THIS ANY MORE
-    $( "#chart_select_wrap .chart_select" ).change(function() {
-        var chart_select =    $( this ).val()
-        if(chart_select!='Select One') {
-            $('#chart_select_wrap .loading').removeClass('h');
-            var data = {
-                'action': 'cap_map_chart_action',
-                'chart_slug': chart_select
-            };
-            jQuery.post(ajaxurl, data, function(response) {
-                $('#chart_new').html(response.html);
-                $('#chart_select_wrap .loading').addClass('h');
-            });
-        }
-    });
-
-
-    //svg
-    $( "#svg_select_wrap .svg_select" ).live( "change", function() {
-    //$( "#svg_select_wrap .svg_select" ).change(function() {
-        var svg_select =  $( this ).val(); console.log(svg_select);
-        var loading    =  $('#svg_select_wrap .loading');
-        if(svg_select!='Select One') {
-            loading.removeClass('h');
-            var data = {
-                'action': 'cap_map_svg_action',
-                'svg_slug': svg_select
-            };console.dir(data);
-            jQuery.post(ajaxurl, data, function(response) {
-                $('#svg_new').html(response.html);console.dir(response);
-                loading.addClass('h');
-            });
-        }
-    });
-     */
-
-
-
     //switches
     $( ".cb-enable" ).live( "click", function() {
         var parent = $(this).parents('.switch');
@@ -330,24 +291,17 @@ jQuery(document).ready(function($) {
     //file save
     $( ".btn.save" ).live( "click", function() {
         $(this).addClass('loading');
-        file     =  $(this).data('file');
+        file         =  $(this).data('file');
+        var svg_slug = $('#svg_slug').val();
 
-        if($('#svg_slug').val()) {
-            var svg_slug = $('#svg_slug').val();
-        } else if($('.svg_select').val()) {
-            var svg_slug = $('.svg_select option:selected').val();
-        } else {
-            alert("Please enter a slug for this SVG Graphic");
-        }
         var data = {
-            'action': 'cap_map_file_save_action',
-            'ID': $('.svg_li #ID').val(),
+            'action': 'gc_file_save_action',
             'file': file,
             'svg_slug': svg_slug,
             'data': $("textarea[name='"+$(this).data('file')+"']").val()
-        };console.dir(data);
-        $.post(ajaxurl, data, function(response) { console.dir(response);
-            $('#btn_'+file).removeClass('loading');
+        };
+        $.post(ajaxurl, data, function(response) {
+            $(this).removeClass('loading');
         });
     });
 

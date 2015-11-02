@@ -79,12 +79,12 @@ ul.chart_data_wrap input {
     padding-top:17px;
 }
 
-#svg_new .svg_edit span {
+.svg_edit span {
     display: block;
     margin:27px 0 10px 0;
 }
 
-#svg_new .svg_edit textarea {
+.svg_edit textarea {
     display: block;
     width: 90%;
     height: 200px;

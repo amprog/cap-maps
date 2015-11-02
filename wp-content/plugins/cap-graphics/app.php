@@ -775,25 +775,16 @@ EOD;
          */
         function gc_svg_shortcode( $atts ){
 
-            $content  = '';
-            $id       = get_the_ID();
-
-            //TODO: if short code is [cap_svg svg="slug"]
-
-            $svg_slug  = $atts['svg'];
-
             wp_enqueue_style('gc', plugin_dir_url(__FILE__).'assets/css/frontend.css');
-            error_log("svg_slug: $svg_slug");
 
+            $content     = '';
+            $id          = get_the_ID();
+            $svg_slug    = $atts['svg'];
             $package_dir = self::get_file_location('svg',$svg_slug);
             $package_uri = self::get_package_uri('svg',$svg_slug);
-
-
-            //$svg_file   = self::APP_FRONTEND->svg_folder.$svg_raw.'/'.$svg_raw.'.svg';
-            $custom_js  = $package_uri . '/index.js';
-            $custom_css = $package_uri. '/index.css';
-            $svg_file   = $package_dir. '/index.svg';
-
+            $custom_js   = $package_uri . '/index.js';
+            $custom_css  = $package_uri. '/index.css';
+            $svg_file    = $package_dir. '/index.svg';
 
             //if no svg, error out
             if (file_exists($svg_file)) {
@@ -1371,35 +1362,35 @@ E_ALL;
          */
         function gc_svg_action_callback()
         {
-            $svg = $js = $css = $json = '';
-            //TODO: best way to do this, no example. leave that for print preview.  show 3 boxes allow edit of json, svg, and js
-            //TODO: may need upload for svg, large ones could cause problems for text edit box
-            $time_start = self::timer();
-            $html       = '';
-            $gc    = new Cap_Map();
-            $svg_slug   = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
-            $folder     = ABSPATH.$this->gc_frontend->svg_folder.$svg_slug.'/';
+            $svg = $js = $css = $json = $html = '';
+
+            $time_start  = self::timer();
+            $svg_slug    = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
+            $package_dir = self::get_file_location('svg',$svg_slug);
+            //$package_uri = self::get_package_uri('svg',$svg_slug);
+            error_log("svg_slug: $svg_slug");
+
 
 
             if($svg_slug) {
                 $svg_action = 'update';
 
-                $js_file = $folder.$svg_slug.'.js';
+                $js_file = $package_dir.'index.js';
                 if(file_exists($js_file)) {
                     $js = file_get_contents($js_file);
                 }
 
-                $css_file = $folder.$svg_slug.'.css';
+                $css_file = $package_dir.'index.css';
                 if(file_exists($css_file)) {
                     $css = file_get_contents($css_file);
                 }
 
-                $svg_file = $folder.$svg_slug.'.svg';
+                $svg_file = $package_dir.'index.svg';
                 if(file_exists($svg_file)) {
                     $svg = file_get_contents($svg_file);
                 }
 
-                $json_file = $folder.$svg_slug.'.json';
+                $json_file = $package_dir.'index.json';
                 if(file_exists($json_file)) {
                     $json = file_get_contents($json_file);
                 }
@@ -1409,8 +1400,7 @@ E_ALL;
                 $svg_action = 'new';
             }
 
-            $html = self::cap_map_svg_tpl($svg_action,$svg,$js,$css,$json);
-
+            $html = self::gc_svg_tpl($svg_action,$svg_slug,$svg,$js,$css,$json);
 
 
             //$html = $this->gc_frontend->cap_map_svg_tpl($svg_action,$svg,$js,$css,$json);
@@ -1434,7 +1424,7 @@ E_ALL;
          * @param $json
          * @return string
          */
-        function gc_svg_tpl($svg_action,$svg,$js,$css,$json) {
+        function gc_svg_tpl($svg_action,$svg_slug,$svg,$js,$css,$json) {
 
             return <<<NCURSES_KEY_EOS
 
@@ -1470,6 +1460,7 @@ E_ALL;
     <textarea name="json">$json</textarea>
 </li>
 <li><input type="hidden" id="svg_action" name="svg_action" value="$svg_action" /></li>
+<li><input type="hidden" id="svg_slug" name="svg_slug" value="$svg_slug" /></li>
 </ul>
 NCURSES_KEY_EOS;
 
@@ -1497,13 +1488,14 @@ NCURSES_KEY_EOS;
         function gc_file_save_action_callback($post)
         {
             $time_start = self::timer();
-            $gc    = new Cap_Map();
+
             $ID         = array_key_exists('ID', $_POST) ? $_POST['ID'] : null;
             $svg_slug   = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
             $data       = array_key_exists('data', $_POST) ? stripslashes($_POST['data']) : null;  //use strip slashes because of MAGIC QUOTES
             $file       = array_key_exists('file', $_POST) ? $_POST['file'] : null;
-            $folder     = ABSPATH.$this->gc_frontend->svg_folder.$svg_slug.'/';
-            $filename   = $folder.$svg_slug.'.'.$file;
+            $folder     = self::get_file_location('svg',$svg_slug);
+
+            $filename   = $folder.'index.'.$file;
 
             if(!file_exists($folder)) {
                 mkdir($folder);
@@ -1515,7 +1507,6 @@ NCURSES_KEY_EOS;
             } else {
                 fputs($fh, $data);
                 fclose($fh);
-                update_post_meta($ID, 'svg_select',  sanitize_text_field($svg_slug));
                 $result = 1;
             }
             $time_end = self::timer();
@@ -1523,8 +1514,7 @@ NCURSES_KEY_EOS;
                 'result'=> $result,
                 'file'=> $filename,
                 'svg_slug'=> $svg_slug,
-                'timer'=> $time_end - $time_start,
-                'ID'=>$ID
+                'timer'=> $time_end - $time_start
             );
 
             wp_send_json($return);
