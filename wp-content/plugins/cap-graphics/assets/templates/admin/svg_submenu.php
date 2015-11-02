@@ -3,12 +3,11 @@
 <?php endif; ?>
 <div class="wrap">
     <h2>Current SVG Graphics</h2>
-    <div id="list_assets">
+    <div id="list_assets" class="svg_admin">
         <ul class="l">
             <?php $i=1; foreach($data['packages']['svg'] as $svg): ?>
                 <li data-slug="<?php echo $svg['slug']; ?>" class="current_svg" id="l-<?php echo $i; ?>">
                     <h3><?php echo $svg['label']; ?></h3>
-                    <div class="starter <?php echo $svg['type']; ?>"></div>
                     <p><?php echo $svg['description']; ?></p>
                     <input type="text" value='[cap_svg svg="<?php echo $svg['slug']; ?>"]' class="shortcode" />
                     <div class="meta">

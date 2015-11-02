@@ -1595,10 +1595,10 @@ if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
         add_action( 'admin_menu', 'Cap_Graphics::gc_options_admin' );  //options page, TODO: perhaps put chart options here
 
         //svg
-        add_action( 'wp_ajax_cap_map_svg_action', 'Cap_Graphics::gc_svg_action_callback' );  //ajax for new svg
-        add_action( 'wp_ajax_nopriv_cap_map_svg_action', 'Cap_Graphics::gc_svg_action_callback' );   //ajax for new svg
-        add_action( 'wp_ajax_cap_map_file_save_action', 'Cap_Graphics::gc_file_save_action_callback' );  //ajax for saving files
-        add_action( 'wp_ajax_nopriv_cap_map_file_save_action', 'Cap_Graphics::gc_file_save_action_callback' );   //ajax for saving files
+        add_action( 'wp_ajax_gc_svg_action', 'Cap_Graphics::gc_svg_action_callback' );  //ajax for new svg
+        add_action( 'wp_ajax_nopriv_gc_svg_action', 'Cap_Graphics::gc_svg_action_callback' );   //ajax for new svg
+        add_action( 'wp_ajax_gc_file_save_action', 'Cap_Graphics::gc_file_save_action_callback' );  //ajax for saving files
+        add_action( 'wp_ajax_nopriv_gc_file_save_action', 'Cap_Graphics::gc_file_save_action_callback' );   //ajax for saving files
 
         //charts
         add_action( 'wp_ajax_gc_chart_action', 'Cap_Graphics::gc_chart_action_callback' );  //ajax for new chart

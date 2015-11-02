@@ -6,7 +6,7 @@
 <script src="<?php echo $data['charts_js_file']; ?>custom/jquery.object.js"></script>
 <div class="wrap">
     <h2>Current Charts</h2>
-    <div id="list_assets">
+    <div id="list_assets" class="charts_admin">
         <ul class="l">
             <?php $i=1; foreach($data['packages']['charts'] as $chart): ?>
                 <li data-slug="<?php echo $chart['slug']; ?>" class="current_chart" id="l-<?php echo $i; ?>">

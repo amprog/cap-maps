@@ -58,8 +58,8 @@ jQuery(document).ready(function($) {
 */
 
 
-    //handle all button clicks
-    $( ".meta ul li" ).live( "click", function(e) {
+    //all button clicks for charts
+    $( ".charts_admin .meta ul li" ).live( "click", function(e) {
 
         var c = $(this).attr('class');
         chart = $(this).data('i');
@@ -115,7 +115,6 @@ jQuery(document).ready(function($) {
                     });
                 }
             });
-
         } else if (c=='edit') {
 
             console.log('edit');
@@ -123,6 +122,83 @@ jQuery(document).ready(function($) {
                 'action': 'gc_chart_action',
                 'chart_slug': $( '#l-'+chart).data('slug'),
                 'chart_action': c
+            };
+            jQuery.post(ajaxurl, data, function(response) {
+                $('#list_assets').html(response.html);
+            });
+
+        } else {
+
+        }
+    });
+
+    //all button clicks for svg
+    $( ".svg_admin .meta ul li" ).live( "click", function(e) {
+
+        var c = $(this).attr('class');
+        svg   = $(this).data('i');
+        slug  = $(this).parent().parent().parent().data('slug');
+        dir   = $(this).data('dir');
+
+        console.log("dir: "+dir);
+
+        if(c=='delete') {
+            var question = "Are you sure you want to delete this chart?";
+            confirmation(question).then(function (answer) {
+                if(answer=='true'){
+                    //TODO: run ajax that will delete chart from json
+                    $('#l-'+svg).remove();
+                } else {
+                    console.dir('else');
+                }
+
+            });
+        } else if (c=='copy') {
+            //TODO: open the same screen for edit, except without disabling slug field
+            console.log('copy');
+
+            var data = {
+                'action': 'gc_svg_action',
+                'svg_slug': $( '#l-'+svg).data('slug'),
+                'svg_action': c
+            };
+            jQuery.post(ajaxurl, data, function(response) {
+                $('#list_assets').html(response.html); console.dir(response);
+            });
+
+
+        } else if (c=='view') {
+            //inline version is messy but increases scalability and portability
+            var obj = {chart_slug:slug, chart_type:"blah",action:'gc_svg_view'}; console.dir(obj); console.log(ajaxurl);
+            $.ajax({
+                type: "POST",
+                cache: false,
+                url: this.href, // preview.php
+                data: obj, // all form fields
+                success: function (data) {
+                    // on success, post (preview) returned data in fancybox
+                    $.fancybox(data, {
+                        // fancybox API options
+                        fitToView: false,
+                        width: '95%',
+                        height: '95%',
+                        autoSize: false,
+                        closeClick: false,
+                        openEffect: 'none',
+                        closeEffect: 'none',
+                        //href: ajaxurl,
+                        href: '/wp-content/plugins/cap-graphics/assets/templates/svg-view.php'
+                    });
+                }
+            });
+
+        } else if (c=='edit') {
+
+            console.log('edit');
+            var data = {
+                'action': 'gc_svg_action',
+                'svg_slug': $( '#l-'+svg).data('slug'),
+                'svg_action': c
             };
             jQuery.post(ajaxurl, data, function(response) {
                 $('#list_assets').html(response.html);
