@@ -522,10 +522,22 @@ EOD;
          * @return mixed
          */
         public static function get_file_location($type,$slug) {
+            global $options;
 
-            error_log('get_file_location: '.plugin_dir_path( __FILE__ ).'packages/'.$type.'/'.$slug.'/');
+
+
             //TODO: returns local package library for now. But needs to go into media library. check options here
-            //            $options      = Cap_Graphics_Settings::merge_options($app_defaults, $app_options);
+
+            //error_log('get_file_location: '.plugin_dir_path( __FILE__ ).'packages/'.$type.'/'.$slug.'/');
+
+            //$settings = new Cap_Graphics_Settings();
+            //$options = Cap_Graphics_Settings::merge_options($settings->$app_defaults, $settings->$app_options);
+
+            error_log(print_r($options,true));
+
+            $upload_dir = wp_upload_dir();
+            error_log(print_r($upload_dir,true));
+
             return plugin_dir_path( __FILE__ ).'packages/'.$type.'/'.$slug.'/';
         }
 
@@ -1485,16 +1497,13 @@ NCURSES_KEY_EOS;
         /**
          * AJAX: save file from textarea
          */
-        function gc_file_save_action_callback($post)
+        function gc_file_save_action_callback()
         {
-            $time_start = self::timer();
 
-            $ID         = array_key_exists('ID', $_POST) ? $_POST['ID'] : null;
             $svg_slug   = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
             $data       = array_key_exists('data', $_POST) ? stripslashes($_POST['data']) : null;  //use strip slashes because of MAGIC QUOTES
             $file       = array_key_exists('file', $_POST) ? $_POST['file'] : null;
             $folder     = self::get_file_location('svg',$svg_slug);
-
             $filename   = $folder.'index.'.$file;
 
             if(!file_exists($folder)) {
@@ -1509,12 +1518,11 @@ NCURSES_KEY_EOS;
                 fclose($fh);
                 $result = 1;
             }
-            $time_end = self::timer();
+
             $return   = array(
                 'result'=> $result,
                 'file'=> $filename,
-                'svg_slug'=> $svg_slug,
-                'timer'=> $time_end - $time_start
+                'svg_slug'=> $svg_slug
             );
 
             wp_send_json($return);

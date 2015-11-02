@@ -23,8 +23,8 @@ if (!class_exists("Cap_Graphics_Settings")) {
             //get options and pass to other methods
             $this->app_options = get_option(parent::OPTIONS_PREFIX);
             $this->app_defaults = array(
-                    'pdf' => array(
-                    'left_margin' => '.25in'
+                    'all' => array(
+                    'storage' => 'plugin'
                 )
             );
         }
@@ -57,8 +57,6 @@ if (!class_exists("Cap_Graphics_Settings")) {
                 'data' => $a1,
                 'desc' => '<span class="description">Where should graphics packages be stored?</span>'
             ));
-
-
 
             add_settings_section(parent::SETTINGS_SECTION_ID, parent::SETTINGS_PAGE_SUBTITLE1, array($this, 'section_text1'), parent::SETTINGS_PAGE1);
 

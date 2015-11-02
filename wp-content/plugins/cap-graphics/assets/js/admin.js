@@ -301,7 +301,7 @@ jQuery(document).ready(function($) {
             'data': $("textarea[name='"+$(this).data('file')+"']").val()
         };
         $.post(ajaxurl, data, function(response) {
-            $(this).removeClass('loading');
+            $('#btn_'+file).removeClass('loading');
         });
     });
 
