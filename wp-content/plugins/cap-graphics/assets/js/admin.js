@@ -169,7 +169,7 @@ jQuery(document).ready(function($) {
 
         } else if (c=='view') {
             //inline version is messy but increases scalability and portability
-            var obj = {chart_slug:slug, chart_type:"blah",action:'gc_svg_view'}; console.dir(obj); console.log(ajaxurl);
+            var obj = { _slug:slug, chart_type:"blah",action:'gc_svg_view'}; console.dir(obj); console.log(ajaxurl);
             $.ajax({
                 type: "POST",
                 cache: false,
