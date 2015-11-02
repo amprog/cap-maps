@@ -1,4 +1,6 @@
-
+.main_wrap p {
+    padding-right: 27px;
+}
 
 ul.list li > span  {
     display: inline-block;

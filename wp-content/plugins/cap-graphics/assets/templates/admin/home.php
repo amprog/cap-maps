@@ -1,4 +1,4 @@
-<div class="wrap" xmlns="http://www.w3.org/1999/html">
+<div class="main_wrap">
     <h2>CAP GRAPHICS</h2>
     <p>This plugin will allow you to easily create charts and svg graphics using the wordpress admin.  There are two seperate pages for different types of graphics you can create using this plugin.</p>
 
@@ -23,19 +23,13 @@
     </div>
 
     <div class="left">
-        svg chart here
+        <?php  echo Cap_Graphics::gc_svg_shortcode( array('svg'=>'electoral') );    //echo do_shortcode('[cap_svg svg="electoral"]'); ?>
     </div>
     <script src="/wp-content/plugins/cap-graphics/assets/js/common/Chart.min.js"></script>
     <script>
-
         jQuery(document).ready(function($) {
-
             $.getJSON('/wp-content/plugins/cap-graphics/assets/templates/admin/home.json')
                 .done(function( data ) {
-                    console.log('ok');
-
-                    console.dir(data);
-
                     var data = {
                         labels: ["January", "February", "March", "April", "May", "June", "July"],
                         datasets: [
@@ -57,20 +51,12 @@
                             }
                         ]
                     };
-
-
-                    var barChart = new Chart(document.getElementById("chart").getContext("2d")).Bar(data, data.options);
-
-
-
-
+                    new Chart(document.getElementById("chart").getContext("2d")).Bar(data, data.options);
                 })
                 .fail(function( jqxhr, textStatus, error ) {
                     var err = textStatus + ", " + error;
                     console.log( "Request Failed: " + err );
                 });
-
-
             });
     </script>
 
