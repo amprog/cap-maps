@@ -314,9 +314,6 @@ EOD;
                 case 'new':
                 case 'copy':
                     //new and copy should essentially run the same code
-
-
-
                     //TODO: Instead of grabbing json from starter folder, we need to use the json php file in templates/json
                     //$package_file = ABSPATH.$this->gc_frontend->chart_folder.'/charts.json';
 
@@ -902,16 +899,11 @@ EOS;
             $chart_type_camel   = ucwords($chart_type);
 
 
-            if($chart_action=='copy') {
-                $message  = 'You are copying an existing chart, so you must change the slug!';
-            } else {
-                $animateRotate  = 0;
-            }
-
             //message changes depending on chart action
             switch ($chart_action) {
                 case 'copy':
-                    $message  = 'You are copying an existing chart, so you must change the slug!';
+                    $message     = 'You are copying an existing chart, so you must change the slug!';
+                    $chart_slug  = $chart_slug.'_copy';
                     break;
                 case 'edit':
                     $message  = 'You cannot change the slug of an existing chart!';
@@ -1081,6 +1073,7 @@ EOS;
 EOS;
 
 //TODO: phase II on update, text fields update chart
+            //TODO: add dissapearing js error with $message
             $html .= <<< EOS
 
 <script>
