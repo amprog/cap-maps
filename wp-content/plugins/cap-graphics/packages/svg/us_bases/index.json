@@ -1,0 +1,758 @@
+{
+  "us_bases": [
+    {
+      "year": "2012",
+      "name": "2012 Election Results",
+      "winner": "d",
+      "description": "Select a year below to see election results by party for that year.",
+      "type": "svg_map",
+      "parties": [
+        {
+          "republicans": {
+            "electoral": 191,
+            "popular": 234234
+          },
+          "democrats": {
+            "electoral": 500,
+            "popular": 54648855
+          }
+        }
+      ],
+      "data": [
+        {
+          "id": 1,
+          "name": "Alabama",
+          "abbreviation": "AL",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "id": 2,
+          "name": "Alaska",
+          "abbreviation": "AK",
+          "color": "red",
+          "number": 3
+        },
+        {
+          "name": "American Samoa",
+          "abbreviation": "AS",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Arizona",
+          "abbreviation": "AZ",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Arkansas",
+          "abbreviation": "AR",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "California",
+          "abbreviation": "CA",
+          "color": "blue",
+          "number": 9
+        },
+        {
+          "name": "Colorado",
+          "abbreviation": "CO",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Connecticut",
+          "abbreviation": "CT",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Delaware",
+          "abbreviation": "DE",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "District Of Columbia",
+          "abbreviation": "DC",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Federated States Of Micronesia",
+          "abbreviation": "FM",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Florida",
+          "abbreviation": "FL",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Georgia",
+          "abbreviation": "GA",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Guam",
+          "abbreviation": "GU",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Hawaii",
+          "abbreviation": "HI",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Idaho",
+          "abbreviation": "ID",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Illinois",
+          "abbreviation": "IL",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Indiana",
+          "abbreviation": "IN",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Iowa",
+          "abbreviation": "IA",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Kansas",
+          "abbreviation": "KS",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Kentucky",
+          "abbreviation": "KY",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Louisiana",
+          "abbreviation": "LA",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Maine",
+          "abbreviation": "ME",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Marshall Islands",
+          "abbreviation": "MH",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Maryland",
+          "abbreviation": "MD",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Massachusetts",
+          "abbreviation": "MA",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Michigan",
+          "abbreviation": "MI",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Minnesota",
+          "abbreviation": "MN",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Mississippi",
+          "abbreviation": "MS",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Missouri",
+          "abbreviation": "MO",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Montana",
+          "abbreviation": "MT",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Nebraska",
+          "abbreviation": "NE",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Nevada",
+          "abbreviation": "NV",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "New Hampshire",
+          "abbreviation": "NH",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "New Jersey",
+          "abbreviation": "NJ",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "New Mexico",
+          "abbreviation": "NM",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "New York",
+          "abbreviation": "NY",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "North Carolina",
+          "abbreviation": "NC",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "North Dakota",
+          "abbreviation": "ND",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Northern Mariana Islands",
+          "abbreviation": "MP",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Ohio",
+          "abbreviation": "OH",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Oklahoma",
+          "abbreviation": "OK",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Oregon",
+          "abbreviation": "OR",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Palau",
+          "abbreviation": "PW",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Pennsylvania",
+          "abbreviation": "PA",
+          "color": "blue",
+          "number": 9
+        },
+        {
+          "name": "Puerto Rico",
+          "abbreviation": "PR",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Rhode Island",
+          "abbreviation": "RI",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "South Carolina",
+          "abbreviation": "SC",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "South Dakota",
+          "abbreviation": "SD",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Tennessee",
+          "abbreviation": "TN",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Texas",
+          "abbreviation": "TX",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Utah",
+          "abbreviation": "UT",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Vermont",
+          "abbreviation": "VT",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Virgin Islands",
+          "abbreviation": "VI",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Virginia",
+          "abbreviation": "VA",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Washington",
+          "abbreviation": "WA",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "West Virginia",
+          "abbreviation": "WV",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Wisconsin",
+          "abbreviation": "WI",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Wyoming",
+          "abbreviation": "WY",
+          "color": "red",
+          "number": 9
+        }
+      ]
+    },
+    {
+      "year": "2008",
+      "name": "2008 Election Results",
+      "winner": "r",
+      "description": "Red state blue state election results",
+      "type": "svg_map",
+      "parties": [
+        {
+          "republicans": {
+            "electoral": 191,
+            "popular": 234234
+          },
+          "democrats": {
+            "electoral": 500,
+            "popular": 54648855
+          }
+        }
+      ],
+      "data": [
+        {
+          "id": 1,
+          "name": "Alabama",
+          "abbreviation": "AL",
+          "color": "blue",
+          "number": 9
+        },
+        {
+          "id": 2,
+          "name": "Alaska",
+          "abbreviation": "AK",
+          "color": "red",
+          "number": 3
+        },
+        {
+          "name": "American Samoa",
+          "abbreviation": "AS",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Arizona",
+          "abbreviation": "AZ",
+          "color": "blue",
+          "number": 9
+        },
+        {
+          "name": "Arkansas",
+          "abbreviation": "AR",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "California",
+          "abbreviation": "CA",
+          "color": "blue",
+          "number": 9
+        },
+        {
+          "name": "Colorado",
+          "abbreviation": "CO",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Connecticut",
+          "abbreviation": "CT",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Delaware",
+          "abbreviation": "DE",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "District Of Columbia",
+          "abbreviation": "DC",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Federated States Of Micronesia",
+          "abbreviation": "FM",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Florida",
+          "abbreviation": "FL",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Georgia",
+          "abbreviation": "GA",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Guam",
+          "abbreviation": "GU",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Hawaii",
+          "abbreviation": "HI",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Idaho",
+          "abbreviation": "ID",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Illinois",
+          "abbreviation": "IL",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Indiana",
+          "abbreviation": "IN",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Iowa",
+          "abbreviation": "IA",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Kansas",
+          "abbreviation": "KS",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Kentucky",
+          "abbreviation": "KY",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Louisiana",
+          "abbreviation": "LA",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Maine",
+          "abbreviation": "ME",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Marshall Islands",
+          "abbreviation": "MH",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Maryland",
+          "abbreviation": "MD",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Massachusetts",
+          "abbreviation": "MA",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Michigan",
+          "abbreviation": "MI",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Minnesota",
+          "abbreviation": "MN",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Mississippi",
+          "abbreviation": "MS",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Missouri",
+          "abbreviation": "MO",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Montana",
+          "abbreviation": "MT",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Nebraska",
+          "abbreviation": "NE",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Nevada",
+          "abbreviation": "NV",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "New Hampshire",
+          "abbreviation": "NH",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "New Jersey",
+          "abbreviation": "NJ",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "New Mexico",
+          "abbreviation": "NM",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "New York",
+          "abbreviation": "NY",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "North Carolina",
+          "abbreviation": "NC",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "North Dakota",
+          "abbreviation": "ND",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Northern Mariana Islands",
+          "abbreviation": "MP",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Ohio",
+          "abbreviation": "OH",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Oklahoma",
+          "abbreviation": "OK",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Oregon",
+          "abbreviation": "OR",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Palau",
+          "abbreviation": "PW",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Pennsylvania",
+          "abbreviation": "PA",
+          "color": "purple",
+          "number": 9
+        },
+        {
+          "name": "Puerto Rico",
+          "abbreviation": "PR",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Rhode Island",
+          "abbreviation": "RI",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "South Carolina",
+          "abbreviation": "SC",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "South Dakota",
+          "abbreviation": "SD",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Tennessee",
+          "abbreviation": "TN",
+          "color": "blue",
+          "number": 9
+        },
+        {
+          "name": "Texas",
+          "abbreviation": "TX",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Utah",
+          "abbreviation": "UT",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Vermont",
+          "abbreviation": "VT",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Virgin Islands",
+          "abbreviation": "VI",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Virginia",
+          "abbreviation": "VA",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Washington",
+          "abbreviation": "WA",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "West Virginia",
+          "abbreviation": "WV",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Wisconsin",
+          "abbreviation": "WI",
+          "color": "red",
+          "number": 9
+        },
+        {
+          "name": "Wyoming",
+          "abbreviation": "WY",
+          "color": "red",
+          "number": 9
+        }
+      ]
+    }
+  ]
+}

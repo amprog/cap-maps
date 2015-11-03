@@ -1,7 +1,6 @@
 jQuery(document).ready(function($) {
 
-    //TODO: this represents a problem, perhaps use php as js. needs to get automatically from media library, or local
-    $.getJSON( "/wp-content/plugins/cap-graphics/packages/svg/electoral/index.json")
+    $.getJSON( "/wp-content/plugins/cap-graphics/packages/svg/us_bases/index.json")
         .done(function( data ) {
             el  = data;
             pre = $('.svg_pre');
