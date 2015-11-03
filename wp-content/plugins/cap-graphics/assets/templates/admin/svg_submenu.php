@@ -1,5 +1,7 @@
+<script src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>
+<link rel='stylesheet' href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.css" type='text/css'  />
 <?php if($data['d3']): ?>
-    <script src="<?php echo $data['d3_file']; ?>custom/jquery.object.js"></script>
+    <script src="<?php echo $data['d3_file']; ?>common/d3.min.js"></script>
 <?php endif; ?>
 <div class="wrap">
     <h2>Current SVG Graphics</h2>
@@ -14,11 +16,11 @@
                         <ul>
                             <li class="edit" data-i="<?php echo $i; ?>"><i class="icon icon-pencil2"></i>  edit</li>
                             <li class="copy" data-i="<?php echo $i; ?>"><i class="icon icon-copy"></i>  copy</li>
-                            <li class="delete" data-i="<?php echo $i; ?>"><i class="icon icon-bin"></i>  delete</li>
+                            <li class="delete" data-i="<?php echo $i; ?>" data-type="svg"><i class="icon icon-bin"></i>  delete</li>
                         </ul>
                     </div>
                 </li>
-                <?php $i++; endforeach; ?>
+            <?php $i++; endforeach; ?>
         </ul>
     </div>
     <div id="svg_content"></div>

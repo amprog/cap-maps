@@ -77,24 +77,21 @@ if (!class_exists("Cap_Graphics_Options")) {
         }
 
         /**
-         *
+         * Return svg packages with status of 1
          */
         function svg_submenu()
         {
-            $data['var'] ='data var';
-            $var = 'var var';
 
-            $atts['svg'] = '';
-
-
-            $svg                     = parent::gc_get_package('svg');
-            $data['packages']        = json_decode($svg,true);
-
+            $svg  = parent::gc_get_package('svg');
+            $json = json_decode($svg,true);
+            $new  = array();
+            foreach($json['svg'] as $k=>$v) { error_log(print_r($v,true));
+                if($v['status']==1) {
+                    $new['svg'][] = $v;
+                }
+            }
+            $data['packages']   = $new;
             return parent::gc_get_template($data,'admin/svg_submenu.php');
-
-
-            //return parent::gc_get_template2($data,'admin/svg_submenu.php');
-
         }
 
         /**
@@ -102,11 +99,17 @@ if (!class_exists("Cap_Graphics_Options")) {
          */
         function charts_submenu()
         {
-            $charts                  = parent::gc_get_package('charts');
-            $data['packages']        = json_decode($charts,true);
+            $charts = parent::gc_get_package('charts');
+            $json   = json_decode($charts,true);
+            $new    = array();
+            foreach($json['charts'] as $k=>$v) { error_log(print_r($v,true));
+                if($v['status']==1) {
+                    $new['charts'][] = $v;
+                }
+            }
+            $data['packages']        = $new;
             $data['charts_js_file']  = '/wp-content/plugins/cap-graphics/assets/js/'; //TODO: replace all of these with proper constant
             $data['charts_css_file'] = '/wp-content/plugins/cap-graphics/assets/css/';
-            //$data['dir']             = parent::get_package_uri('charts');
 
             return parent::gc_get_template($data,'admin/charts_submenu.php');
         }

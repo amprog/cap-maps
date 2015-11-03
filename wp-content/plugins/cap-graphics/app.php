@@ -511,7 +511,6 @@ EOD;
                 $saveresult = 1;
             }
 
-
             return $saveresult;
         }
 
@@ -523,8 +522,6 @@ EOD;
          */
         public static function get_file_location($type,$slug) {
             global $options;
-
-
 
             //TODO: returns local package library for now. But needs to go into media library. check options here
 
@@ -549,14 +546,22 @@ EOD;
             return plugin_dir_url( __FILE__ ).'packages/'.$type.'/'.$slug;
         }
 
+        /**
+         * Get just the filename
+         * @param $type
+         * @return string
+         */
+        public static function gc_get_package_file($type) {
+            return plugin_dir_path(__FILE__).'/packages/'.$type.'.json';  //TODO: needs to pull from options and then media library or local
+        }
 
         /**
          * Get proper location, either in local or media library, then return charts.
          * @param $type
          * @return string
          */
-        public static function gc_get_package($type) {
-            return file_get_contents(dirname(__FILE__).'/packages/'.$type.'.json');  //TODO: needs to pull from options and then media library or local
+        public static function gc_get_package($type) { error_log("gc_get_package: ".self::gc_get_package_file($type));
+            return file_get_contents(self::gc_get_package_file($type));  //TODO: needs to pull from options and then media library or local
         }
 
 
@@ -1529,6 +1534,43 @@ NCURSES_KEY_EOS;
             wp_die();
         }
 
+
+        /**
+         * change status of item.
+         */
+        public static function gc_item_status_callback() {
+
+            $slug       = array_key_exists('slug', $_POST) ? $_POST['slug'] : null;
+            $type       = array_key_exists('type', $_POST) ? $_POST['type'] : null;
+            $status     = array_key_exists('status', $_POST) ? intval($_POST['status']) : null;
+            $file       = self::gc_get_package_file($type); error_log("file: $file");
+            $packages   = self::gc_get_package($type);
+            $json       = json_decode($packages,true);
+
+            //rearrange array
+            $new = array();
+            foreach($json[$type] as $k=>$v) {
+                if($v['slug']==$slug) {
+                    $v['status'] = $status;
+                }
+                $new[$type][] = $v;
+            }
+
+            //save new array as json
+            $result = self::gc_save_array_to_json($file,json_encode($new));
+
+
+
+
+            $return   = array(
+                'new'=> $new,
+                'result'=> $result
+            );
+
+            wp_send_json($return);
+            wp_die();
+        }
+
         /**
          * UTILITY: Delete a directory with files
          * @param $path
@@ -1607,6 +1649,10 @@ if (class_exists(APP_CLASS_NAME) && !$cap_graphics) {
 
         add_action( 'wp_ajax_gc_chart_save', 'Cap_Graphics::gc_chart_save_callback' );  //save chart
         add_action( 'wp_ajax_nopriv_gc_chart_save', 'Cap_Graphics::gc_chart_save_callback' );   //save chart
+
+        add_action( 'wp_ajax_gc_item_status', 'Cap_Graphics::gc_item_status_callback' );  //save chart
+        add_action( 'wp_ajax_nopriv_gc_item_status', 'Cap_Graphics::gc_item_status_callback' );   //save chart
+
 
         //TODO: phase ii add autoupdate on input
         //add_action( 'wp_ajax_gc_chart_save_input', 'Cap_Graphics::gc_chart_save_input_callback' );  //save chart input box

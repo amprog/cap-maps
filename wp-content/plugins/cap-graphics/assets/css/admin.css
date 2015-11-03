@@ -468,3 +468,9 @@ ul.chart_data_wrap input {
 .icon-eye:before {
     content: "\e904";
 }
+
+/* jquery ui overrides */
+.ui-widget-header {
+    border: 1px solid #0004e7!important;
+    background: #0004e7!important;
+}

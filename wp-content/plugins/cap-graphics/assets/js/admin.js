@@ -69,13 +69,17 @@ jQuery(document).ready(function($) {
         if(c=='delete') {
             var question = "Are you sure you want to delete this chart?";
             confirmation(question).then(function (answer) {
-                if(answer=='true'){
-                    //TODO: run ajax that will delete chart from json
-                    $('#l-'+chart).remove();
-                } else {
-                    console.dir('else');
+                if(answer=='true') {
+                    var data = {
+                        'action': 'gc_delete_item',
+                        'type': $(this).data('type'),
+                        'slug': slug
+                    };
+                    console.dir(data);
+                    jQuery.post(ajaxurl, data, function (response) {
+                        $('#l-' + svg).remove();
+                    });
                 }
-
             });
         } else if (c=='copy') {
             //TODO: open the same screen for edit, except without disabling slug field
@@ -138,20 +142,26 @@ jQuery(document).ready(function($) {
         var c = $(this).attr('class');
         svg   = $(this).data('i');
         slug  = $(this).parent().parent().parent().data('slug');
-        dir   = $(this).data('dir');
-
-        console.log("dir: "+dir);
-
+        type  = $(this).data('type');
+console.log("slug: "+slug);
         if(c=='delete') {
-            var question = "Are you sure you want to delete this chart?";
-            confirmation(question).then(function (answer) {
-                if(answer=='true'){
-                    //TODO: run ajax that will delete chart from json
-                    $('#l-'+svg).remove();
-                } else {
-                    console.dir('else');
-                }
 
+            var question = "Are you sure you want to delete this SVG package?";
+            confirmation(question).then(function (answer) {
+                if(answer=='true') {
+                    var data = {
+                        'action': 'gc_item_status',
+                        'type': type,
+                        'slug': slug,
+                        'status': 0
+
+                    };
+                    console.dir(data);
+                    jQuery.post(ajaxurl, data, function (response) {
+                        console.log(response);
+                        $('#l-' + svg).remove();
+                    });
+                }
             });
         } else if (c=='copy') {
             //TODO: open the same screen for edit, except without disabling slug field
@@ -413,6 +423,7 @@ jQuery(document).ready(function($) {
                 title: 'Confirmation',
                 buttons: {
                     "Yes": function () {//TODO: build delete functionality
+                        defer.resolve("true")
                         $(this).dialog("close");
                     },
                     "No": function () {
