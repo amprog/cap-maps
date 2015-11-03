@@ -1559,9 +1559,6 @@ NCURSES_KEY_EOS;
             //save new array as json
             $result = self::gc_save_array_to_json($file,json_encode($new));
 
-
-
-
             $return   = array(
                 'new'=> $new,
                 'result'=> $result

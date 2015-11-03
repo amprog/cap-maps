@@ -65,19 +65,22 @@ jQuery(document).ready(function($) {
         chart = $(this).data('i');
         slug  = $(this).parent().parent().parent().data('slug');
         dir   = $(this).data('dir');
+        type  = $(this).data('type');
 
         if(c=='delete') {
             var question = "Are you sure you want to delete this chart?";
             confirmation(question).then(function (answer) {
                 if(answer=='true') {
                     var data = {
-                        'action': 'gc_delete_item',
-                        'type': $(this).data('type'),
-                        'slug': slug
+                        'action': 'gc_item_status',
+                        'type': type,
+                        'slug': slug,
+                        'status': 0
+
                     };
-                    console.dir(data);
                     jQuery.post(ajaxurl, data, function (response) {
-                        $('#l-' + svg).remove();
+                        console.log(response);
+                        $('#l-' + chart).remove();
                     });
                 }
             });
@@ -143,7 +146,7 @@ jQuery(document).ready(function($) {
         svg   = $(this).data('i');
         slug  = $(this).parent().parent().parent().data('slug');
         type  = $(this).data('type');
-console.log("slug: "+slug);
+
         if(c=='delete') {
 
             var question = "Are you sure you want to delete this SVG package?";

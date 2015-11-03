@@ -20,7 +20,7 @@
                             <!--<li class="view" data-i="<?php echo $i; ?>" data-dir="<?php echo $data['dir']; ?>"><i class="icon icon-eye"></i>  view</li>-->
                             <li class="edit" data-i="<?php echo $i; ?>" data-type="<?php echo $chart['type']; ?>"><i class="icon icon-pencil2"></i>  edit</li>
                             <li class="copy" data-i="<?php echo $i; ?>"><i class="icon icon-copy"></i>  copy</li>
-                            <li class="delete" data-i="<?php echo $i; ?>"><i class="icon icon-bin"></i>  delete</li>
+                            <li class="delete" data-i="<?php echo $i; ?>" data-type="charts"><i class="icon icon-bin"></i>  delete</li>
                         </ul>
                     </div>
 
