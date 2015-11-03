@@ -816,7 +816,7 @@ EOD;
 
             $content .= '<div id="svg-'.$svg_slug.'" class="svg_wrap"><div class="svg_pre"></div>';
             $content .= $svg_data;
-            $content .= '<div class="svg_post"></div></div>';
+            $content .= '<div class="svg_post_meta"></div><div class="svg_post"></div></div>';
 
             return $content;
         }

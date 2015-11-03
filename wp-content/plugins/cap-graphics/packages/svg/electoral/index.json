@@ -9,12 +9,14 @@
       "parties": [
         {
           "republicans": {
-            "electoral": 191,
-            "popular": 234234
+            "electoral": 206,
+            "popular": 59142004,
+            "color": "#D22532"
           },
           "democrats": {
-            "electoral": 500,
-            "popular": 54648855
+            "electoral": 332,
+            "popular": 62615406,
+            "color": "#244999"
           }
         }
       ],
