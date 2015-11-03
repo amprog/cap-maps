@@ -321,7 +321,7 @@ EOD;
                     $file         = self::get_file_location('charts',$chart_slug).'/index.json';
 
                     //$charts_json  = json_decode(file_get_contents($file),true);
-                    mkdir($file);  //make directory
+                    mkdir($package);  //make directory
 
 
                     //TODO: add new chart to array and rewrite
@@ -802,7 +802,7 @@ EOD;
 
             //if no svg, error out
             if (file_exists($svg_file)) {
-                $svg_data =  file_get_contents($svg_file);
+                $data['svg_data'] =  file_get_contents($svg_file);
             }
 
             //include js and css IF exists
@@ -813,10 +813,8 @@ EOD;
             if (file_exists($package_dir.'index.css')) {
                 wp_enqueue_style('css-' . $id, $custom_css);
             }
-
-            $content .= '<div id="svg-'.$svg_slug.'" class="svg_wrap"><div class="svg_pre"></div>';
-            $content .= $svg_data;
-            $content .= '<div class="svg_post_meta"></div><div class="svg_post"></div></div>';
+            $data['svg_slug'] = $svg_slug;
+            $content          .= self::gc_get_template($data,'svg-view.php');
 
             return $content;
         }
@@ -1472,6 +1470,7 @@ E_ALL;
 <li><input type="hidden" id="svg_action" name="svg_action" value="$svg_action" /></li>
 <li><input type="hidden" id="svg_slug" name="svg_slug" value="$svg_slug" /></li>
 </ul>
+<div id="svg_preview">$svg_data</div>
 NCURSES_KEY_EOS;
 
 

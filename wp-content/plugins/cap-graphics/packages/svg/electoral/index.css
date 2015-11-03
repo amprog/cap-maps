@@ -86,10 +86,33 @@ tspan {
     padding:10px;
 }
 
+
+#svg-electoral .hbar p {
+    margin:0;
+    padding: 0;
+    display: inline;
+}
+
 #svg-electoral .hbar.democrats {
     background: #244999;
 }
 
 #svg-electoral .hbar.republicans {
     background: #D22532;
+}
+
+#svg-electoral .hbar.republicans span {
+    float: right;
+}
+
+#svg-electoral .hbar.republicans p {
+    float: left;
+}
+
+#svg-electoral .hbar.democrats span {
+    float: left;
+}
+
+#svg-electoral .hbar.democrats p {
+    float: right;
 }

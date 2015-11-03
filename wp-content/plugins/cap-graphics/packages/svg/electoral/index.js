@@ -34,7 +34,7 @@ jQuery(document).ready(function($) {
             var total_electoral = 0;
             $.each( data.elections[0].parties[0], function( k, v ) {
                 //electoral bars first or electoral with stripes
-                post.append('<div class="hbar '+k+'">'+ v.electoral+'</div>');
+                post.append('<div class="hbar '+k+'"><span>'+ v.electoral+'</span><p>'+ v.popular+'</p></div>');
                 total_electoral += parseInt(v.electoral);
             });
 
