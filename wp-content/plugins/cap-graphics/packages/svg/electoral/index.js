@@ -3,13 +3,16 @@ jQuery(document).ready(function($) {
     //TODO: this represents a problem, perhaps use php as js. needs to get automatically from media library, or local
     $.getJSON( "/wp-content/plugins/cap-graphics/packages/svg/electoral/index.json")
         .done(function( data ) {
-            el = data;
-            $('.svg_meta').before( $('<h3>'+data.elections[0].name+'</h3><p>'+data.elections[0].description+'</p>'));
+            el  = data;
+            pre = $('.svg_pre');
+            pre.html( $('<h3>'+data.elections[0].name+'</h3><p>'+data.elections[0].description+'</p><div class="y">'));
 
             //iterate through all years and write to page
             $.each( data.elections, function( i, value ) {console.log(value);
-                $('.svg_meta').before( $( '<a class="y" href="javascript:void(0);" data-i="'+i+'">'+value.year+'</a>' ) );
+                $('.y').append( $( '<a href="javascript:void(0);" data-i="'+i+'" class="'+value.winner+'">'+value.year+'</a>' ) );
             });
+
+            pre.append( $('</div>'));
 
             //only apply colors to 1st entry when user first lands here
             $.each( data.elections[0].data, function( k, v ) {

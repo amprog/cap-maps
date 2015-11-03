@@ -1,24 +1,50 @@
-
-
-
 tspan {
     font-size: 20px;
 }
 
-.y {
-    margin:0 14px 0 0;
+#svg-electoral h3 {
+    margin:0;
+    padding:0;
+}
+
+#svg-electoral p {
+    margin: 7px 0;
 }
 
 
-.red {
+#svg-electoral .y {
+    margin: 0 0 27px 0;
+}
+
+
+#svg-electoral .y a, #svg-electoral .y a:visited {
+    margin:0 14px 0 0;
+    padding: 17px 0;
+    text-decoration: none!important;
+    border-bottom: none;
+}
+
+#svg-electoral .y a:hover {
+
+}
+
+#svg-electoral .y .d {
+    color: rgb(36, 73, 153)!important;
+}
+
+#svg-electoral .y .r {
+    color: rgb(210, 37, 50)!important;
+}
+
+#svg-electoral .red {
     fill: rgb(210, 37, 50)!important;
 }
 
-.blue {
+#svg-electoral .blue {
     fill: rgb(36, 73, 153)!important;
 }
 
-.purple {
+#svg-electoral .purple {
 
     fill: rgb(138, 19, 153) !important;
 
@@ -30,7 +56,7 @@ tspan {
     background-size: 50px 50px!important;
 }
 
-.purple-diag {
+#svg-electoral .purple-diag {
     background-color: gray!important;
     background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.5) 35px, rgba(255,255,255,.5) 70px)!important;
     background-color: gray!important;

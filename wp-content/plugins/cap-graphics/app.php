@@ -814,9 +814,9 @@ EOD;
                 wp_enqueue_style('css-' . $id, $custom_css);
             }
 
-            $content .= '<div class="svg_wrap"><div class="svg_meta"></div>';
+            $content .= '<div id="svg-'.$svg_slug.'" class="svg_wrap"><div class="svg_pre"></div>';
             $content .= $svg_data;
-            $content .= '</div>';
+            $content .= '<div class="svg_post"></div></div>';
 
             return $content;
         }

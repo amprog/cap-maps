@@ -3,7 +3,8 @@
     {
       "year": "2012",
       "name": "2012 Election Results",
-      "description": "Red state blue state election results",
+      "winner": "d",
+      "description": "Select a year below to see election results by party for that year.",
       "type": "svg_map",
       "parties": [
         {
@@ -379,6 +380,7 @@
     {
       "year": "2008",
       "name": "2008 Election Results",
+      "winner": "r",
       "description": "Red state blue state election results",
       "type": "svg_map",
       "parties": [
