@@ -1409,11 +1409,11 @@ E_ALL;
             }
 
 
-            //$html = self::gc_svg_tpl($svg,$svg_action,$svg_slug,$svg,$js,$css,$json);
+            $html = self::gc_svg_tpl($data);
             error_log("data");
             //$html = self::gc_get_template($data,'admin/svg-edit.php');  //doesn't work
             //$html = self::gc_get_template($data,'admin/svg-edit.php');
-            $html = 'asfdsadfasdf';
+
             error_log($data);
             error_log("after data");
             //$html = $this->gc_frontend->cap_map_svg_tpl($svg_action,$svg,$js,$css,$json);
@@ -1437,7 +1437,7 @@ E_ALL;
          * @param $json
          * @return string
          */
-        function gc_svg_tpl($svg_data,$svg_action,$svg_slug,$svg,$js,$css,$json) {
+        function gc_svg_tpl($data) {
 
             return <<<NCURSES_KEY_EOS
 
@@ -1449,7 +1449,7 @@ E_ALL;
      <div class="btns_data">
         <a href="javascript:void(0);" class="btn save" data-file="svg" id="btn_svg">save</a>
     </div>
-    <textarea name="svg">$svg</textarea>
+    <textarea name="svg">{$data['svg']}</textarea>
 </li>
 <li>
     <span>Javascript Code</span>
