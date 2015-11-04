@@ -1,6 +1,7 @@
 <ul class="sub svg_edit">
+
     <li>
-        <span>SVG File</span>
+        <span>SVG File svg edit</span>
         <div class="btns_data">
             <a href="javascript:void(0);" class="btn save" data-file="svg" id="btn_svg">save</a>
         </div>

@@ -1370,8 +1370,8 @@ E_ALL;
          */
         function gc_svg_action_callback()
         {
-            $svg = $js = $css = $json = $html = '';
-
+            //$svg = $js = $css = $json = $html = '';
+            $html        = '';
             $time_start  = self::timer();
             $svg_slug    = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
             $package_dir = self::get_file_location('svg',$svg_slug);
@@ -1381,36 +1381,41 @@ E_ALL;
 
 
             if($svg_slug) {
-                $svg_action = 'update';
+                $data['svg_action'] = 'update';
 
                 $js_file = $package_dir.'index.js';
                 if(file_exists($js_file)) {
-                    $js = file_get_contents($js_file);
+                    $data['js'] = file_get_contents($js_file);
                 }
 
                 $css_file = $package_dir.'index.css';
                 if(file_exists($css_file)) {
-                    $css = file_get_contents($css_file);
+                    $data['css'] = file_get_contents($css_file);
                 }
 
                 $svg_file = $package_dir.'index.svg';
                 if(file_exists($svg_file)) {
-                    $svg = file_get_contents($svg_file);
+                    $data['svg'] = file_get_contents($svg_file);
                 }
 
                 $json_file = $package_dir.'index.json';
                 if(file_exists($json_file)) {
-                    $json = file_get_contents($json_file);
+                    $data['json'] = file_get_contents($json_file);
                 }
 
             } else {
 
-                $svg_action = 'new';
+                $data['svg_action'] = 'new';
             }
 
-            $html = self::gc_svg_tpl($svg_action,$svg_slug,$svg,$js,$css,$json);
 
-
+            //$html = self::gc_svg_tpl($svg,$svg_action,$svg_slug,$svg,$js,$css,$json);
+            error_log("data");
+            //$html = self::gc_get_template($data,'admin/svg-edit.php');  //doesn't work
+            //$html = self::gc_get_template($data,'admin/svg-edit.php');
+            $html = 'asfdsadfasdf';
+            error_log($data);
+            error_log("after data");
             //$html = $this->gc_frontend->cap_map_svg_tpl($svg_action,$svg,$js,$css,$json);
             $time_end = self::timer();
 
@@ -1432,7 +1437,7 @@ E_ALL;
          * @param $json
          * @return string
          */
-        function gc_svg_tpl($svg_action,$svg_slug,$svg,$js,$css,$json) {
+        function gc_svg_tpl($svg_data,$svg_action,$svg_slug,$svg,$js,$css,$json) {
 
             return <<<NCURSES_KEY_EOS
 
@@ -1587,7 +1592,7 @@ NCURSES_KEY_EOS;
          * @param $template
          */
         function gc_get_template($data,$template) {
-            include(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR.'/assets/templates/'.$template); error_log(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR.'/assets/templates/'.$template);
+            include(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR.'/assets/templates/'.$template); //error_log(WP_CONTENT_DIR . self::PLUGIN_DIR . self::APP_DIR.'/assets/templates/'.$template);
         }
 
         function gc_get_template2($data,$template) {

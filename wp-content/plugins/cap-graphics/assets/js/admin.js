@@ -76,7 +76,6 @@ jQuery(document).ready(function($) {
                         'type': type,
                         'slug': slug,
                         'status': 0
-
                     };
                     jQuery.post(ajaxurl, data, function (response) {
                         console.log(response);
@@ -182,7 +181,7 @@ jQuery(document).ready(function($) {
 
         } else if (c=='view') {
             //inline version is messy but increases scalability and portability
-            var obj = { _slug:slug, chart_type:"blah",action:'gc_svg_view'}; console.dir(obj); console.log(ajaxurl);
+            var obj = { slug:slug, chart_type:"blah",action:'gc_svg_view'}; console.dir(obj); console.log(ajaxurl);
             $.ajax({
                 type: "POST",
                 cache: false,
@@ -207,13 +206,13 @@ jQuery(document).ready(function($) {
 
         } else if (c=='edit') {
 
-            console.log('edit');
+
             var data = {
                 'action': 'gc_svg_action',
                 'svg_slug': $( '#l-'+svg).data('slug'),
                 'svg_action': c
-            };
-            jQuery.post(ajaxurl, data, function(response) {
+            };console.log("dbla");
+            jQuery.post(ajaxurl, data, function(response) { console.log("response"); console.log(response);
                 $('#list_assets').html(response.html);
             });
 
