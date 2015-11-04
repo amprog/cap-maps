@@ -51,8 +51,7 @@ jQuery(document).ready(function($) {
             console.log( "Request Failed: " + err );
         });
 
-
-    $( ".y a" ).live( "click", function( event ) {
+    $( ".y a" ).live( "click", function() {
         $( ".y a" ).removeClass('active');
         var i = $(this).data('i');
 

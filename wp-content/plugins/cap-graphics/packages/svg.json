@@ -29,6 +29,12 @@
       "label": "World Governments",
       "description": "Show right wing/left wing and fascist governments throughout the world.  Info about last elections.  ",
       "status": 1
+    },
+    {
+      "slug": "us_bases_d3",
+      "label": "US Bases around the world D3",
+      "description": "D3 Example ",
+      "status": 1
     }
   ]
 }

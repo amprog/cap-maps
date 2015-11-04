@@ -16,34 +16,25 @@ tspan {
     margin: 0 0 27px 0;
 }
 
-#svg-electoral .y {
-    margin: 0 0 27px 0;
-}
 
 #svg-electoral .y a, #svg-electoral .y a:visited {
     margin:0 14px 0 0;
-    padding: 17px 0 5px 0;
+    padding: 17px 0;
     text-decoration: none!important;
     border-bottom: none;
 }
 
+#svg-electoral .y a:hover {
+
+}
 
 #svg-electoral .y .d {
     color: rgb(36, 73, 153)!important;
 }
 
-#svg-electoral .y .d.active {
-    border-bottom: 4px solid rgb(36, 73, 153)!important;
-}
-
 #svg-electoral .y .r {
     color: rgb(210, 37, 50)!important;
 }
-
-#svg-electoral .y .r.active {
-    border-bottom: 4px solid rgb(210, 37, 50)!important;
-}
-
 
 #svg-electoral .red {
     fill: rgb(210, 37, 50)!important;
@@ -70,49 +61,4 @@ tspan {
     background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.5) 35px, rgba(255,255,255,.5) 70px)!important;
     background-color: gray!important;
     background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.5) 35px, rgba(255,255,255,.5) 70px)!important;
-}
-
-#svg-electoral .svg_post {
-    margin:17px 0;
-}
-
-    /*hbars */
-#svg-electoral .hbar {
-    height: 40px;
-    float: left;
-    margin:7px 0 17px 0;
-    color: #fff;
-    font-size: 14px;
-    padding:10px;
-    opacity: .7;
-}
-
-#svg-electoral .hbar p {
-    margin:0;
-    padding: 0;
-    display: inline;
-}
-
-#svg-electoral .hbar.democrats {
-    background: #244999;
-}
-
-#svg-electoral .hbar.republicans {
-    background: #D22532;
-}
-
-#svg-electoral .hbar.republicans span {
-    float: right;
-}
-
-#svg-electoral .hbar.republicans p {
-    float: left;
-}
-
-#svg-electoral .hbar.democrats span {
-    float: left;
-}
-
-#svg-electoral .hbar.democrats p {
-    float: right;
 }
