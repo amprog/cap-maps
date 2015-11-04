@@ -44,7 +44,7 @@
 			</div><!-- .site-branding -->
 		</header><!-- .site-header -->
 
-		<?php get_sidebar(); ?>
+		<?php //get_sidebar(); ?>
 	</div><!-- .sidebar -->
 
 	<div id="content" class="site-content">
