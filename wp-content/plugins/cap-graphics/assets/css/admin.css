@@ -269,9 +269,14 @@ ul.chart_data_wrap input {
     text-align: center;
 }
 
+.meta-top {
+    display: block;
+    clear: both;
+    height: 40px;
+}
 
 .float {
-    width: 50%;
+    width: 49%;
     float: left;
     text-align: center;
 }
@@ -401,6 +406,13 @@ ul.chart_data_wrap input {
 #svg_content {
     clear: both;
     display: block;
+}
+
+#svg-preview {
+    clear: both;
+    display: block;
+    width:90%;
+    margin:37px 0;
 }
 
 /* custom grid */

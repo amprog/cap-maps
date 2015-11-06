@@ -17,7 +17,6 @@ jQuery(document).ready(function($) {
                 } else {
                     $('.y').append( $( '<a href="javascript:void(0);" data-i="'+i+'" class="'+value.winner+'">'+value.year+'</a>' ) );
                 }
-
             });
 
             pre.append( $('</div>'));

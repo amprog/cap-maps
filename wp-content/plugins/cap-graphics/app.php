@@ -820,9 +820,6 @@ EOD;
         }
 
         /**
-         *
-        //TODO: needs work converting to new format
-
          * Return chart depending on options selected for this ID
          * @param $atts
          * @return string
@@ -869,19 +866,13 @@ EOS;
          */
         function gc_chart_action_callback() {
 
-
             $list = $disable = '';
 
-            $chart_slug   = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
-            $chart_action = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
-            $d_place      = 'Enter a Slug with Underscores Not Spaces';
-            $jsonfile     = self::get_file_location('charts',$chart_slug).'/index.json';
-            $jsonfile_uri = self::get_package_uri('charts',$chart_slug).'/index.json';
-
-            error_log("chart_action: $chart_action");
-            error_log("chart_slug: $chart_slug");
-
-            //error_log("jsonfile: $jsonfile");
+            $chart_slug         = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
+            $chart_action       = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
+            $d_place            = 'Enter a Slug with Underscores Not Spaces';
+            $jsonfile           = self::get_file_location('charts',$chart_slug).'/index.json';
+            $jsonfile_uri       = self::get_package_uri('charts',$chart_slug).'/index.json';
             $json               = file_get_contents($jsonfile); //error_log(print_r($json,true));
             $data               = json_decode($json,true);
             $chart_name         = isset($data['options']['chart_name']) ? $data['options']['chart_name'] : null;
@@ -1071,7 +1062,7 @@ EOS;
 EOS;
 
 //TODO: phase II on update, text fields update chart
-            //TODO: add dissapearing js error with $message
+//TODO: add dissapearing js error with $message
             $html .= <<< EOS
 
 <script>
@@ -1157,7 +1148,7 @@ EOS;
         <input type="button" class="button button-primary chart_update" name="save_options" value="save"/>
     </div> 
     <div class="float">
-        <input type="button" class="button button-primary goback" value="go back"/>
+        <input type="button" class="button button-primary goback" value="go back" data-url="/wp-admin/admin.php?page=cap-graphics-charts" />
     </div> 
 </div>
 EOS;
@@ -1375,7 +1366,7 @@ E_ALL;
             $time_start  = self::timer();
             $svg_slug    = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
             $package_dir = self::get_file_location('svg',$svg_slug);
-            //$package_uri = self::get_package_uri('svg',$svg_slug);
+            $package_uri = self::get_package_uri('svg',$svg_slug);
             error_log("svg_slug: $svg_slug");
 
 
@@ -1402,6 +1393,19 @@ E_ALL;
                 if(file_exists($json_file)) {
                     $data['json'] = file_get_contents($json_file);
                 }
+
+                //keep preview simple
+                //error_log("package_uri: $package_uri");
+                //wp_enqueue_style( $svg_slug,  $package_uri . '/index.css');
+                //wp_enqueue_script( $svg_slug, $package_uri. '/index.js');
+                //enqueue files
+                $data['svg_slug'] = $svg_slug;
+                $data['svg_data'] = '<div id="svg-'.$svg_slug.'" class="svg_wrap">
+    <div class="svg_pre"></div>
+    <div class="svg_wrap">'.$data['svg'].'</div>
+    <div class="svg_post_meta"></div>
+    <div class="svg_post"></div>
+</div>';
 
             } else {
 
@@ -1437,13 +1441,20 @@ E_ALL;
          * @param $json
          * @return string
          */
-        function gc_svg_tpl($data) {
+        public static function gc_svg_tpl($data) {
 
             return <<<NCURSES_KEY_EOS
+<div class="meta-top">
+<div class="left">
+<h3>Edit SVG Graphic:  {$data['svg_slug']} </h3>
+</div>
+<div class="left r">
+ <input type="button" class="button button-primary goback" value="go back" data-url="/wp-admin/admin.php?page=cap-graphics-svg" />
+ </div>
+</div>
 
 
-
-        <ul class="sub svg_edit">
+<ul class="sub svg_edit">
 <li>
     <span>SVG File</span>
      <div class="btns_data">
@@ -1456,26 +1467,26 @@ E_ALL;
     <div class="btns_data">
         <a href="javascript:void(0);" class="btn save" data-file="js" id="btn_js">save</a>
     </div>
-    <textarea name="js">$js</textarea>
+    <textarea name="js">{$data['js']}</textarea>
 </li>
 <li>
     <span>CSS Styles</span>
     <div class="btns_data">
         <a href="javascript:void(0);" class="btn save" data-file="css" id="btn_css">save</a>
     </div>
-    <textarea name="css">$css</textarea>
+    <textarea name="css">{$data['css']}</textarea>
 </li>
 <li>
     <span>JSON Data</span>
     <div class="btns_data">
         <a href="javascript:void(0);" class="btn save" data-file="json" id="btn_json">save</a>
     </div>
-    <textarea name="json">$json</textarea>
+    <textarea name="json">{$data['json']}</textarea>
 </li>
-<li><input type="hidden" id="svg_action" name="svg_action" value="$svg_action" /></li>
-<li><input type="hidden" id="svg_slug" name="svg_slug" value="$svg_slug" /></li>
+<li><input type="hidden" id="svg_action" name="svg_action" value="{$data['svg_action']}" /></li>
+<li><input type="hidden" id="svg_slug" name="svg_slug" value="{$data['svg_slug']}" /></li>
 </ul>
-<div id="svg_preview">$svg_data</div>
+<div id="svg-preview"><h3>SVG Preview:  {$data['svg_slug']}</h3><p>This is meant to be a simple preview of the SVG file.  </p>{$data['svg_data']}</div>
 NCURSES_KEY_EOS;
 
 

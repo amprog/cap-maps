@@ -380,6 +380,12 @@ jQuery(document).ready(function($) {
         });
     });
 
+    //go back button
+    $(".goback").live( "click", function() {
+        window.location.href = $(this).data('url');
+    });
+
+
     //autoupdate
     /* TODO: add autoupdate feature
     $('#frm_chart_update').change(function() {
