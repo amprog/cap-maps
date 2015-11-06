@@ -173,7 +173,7 @@ jQuery(document).ready(function($) {
                 'action': 'gc_svg_action',
                 'svg_slug': $( '#l-'+svg).data('slug'),
                 'svg_action': c
-            };
+            }; console.log("gc_svg_action copy"); console.dir(data);
             jQuery.post(ajaxurl, data, function(response) {
                 $('#list_assets').html(response.html); console.dir(response);
             });

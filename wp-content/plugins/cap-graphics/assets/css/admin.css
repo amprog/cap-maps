@@ -486,3 +486,8 @@ ul.chart_data_wrap input {
     border: 1px solid #4f94d9 !important;
     background: #5B9DD9!important;
 }
+
+
+.svg_wrap {
+    margin:17px 0;
+}

@@ -1365,10 +1365,24 @@ E_ALL;
             $html        = '';
             $time_start  = self::timer();
             $svg_slug    = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
+            $svg_action  = array_key_exists('svg_action', $_POST) ? $_POST['svg_action'] : null;
+
             $package_dir = self::get_file_location('svg',$svg_slug);
             $package_uri = self::get_package_uri('svg',$svg_slug);
             error_log("svg_slug: $svg_slug");
 
+            switch ($svg_action) {
+                case 'copy':
+                    $data['svg_admin'] = '<input type="text" placeholder="Enter a slug" id="svg_slug" /> <br />';
+
+                    break;
+                case 'edit':
+                    $data['svg_admin'] = '';
+                    break;
+                case 2:
+
+                    break;
+            }
 
 
             if($svg_slug) {
@@ -1446,7 +1460,8 @@ E_ALL;
             return <<<NCURSES_KEY_EOS
 <div class="meta-top">
 <div class="left">
-<h3>Edit SVG Graphic:  {$data['svg_slug']} </h3>
+<h3>SVG Graphic:  {$data['svg_slug']} </h3>
+{$data['svg_admin']}
 </div>
 <div class="left r">
  <input type="button" class="button button-primary goback" value="go back" data-url="/wp-admin/admin.php?page=cap-graphics-svg" />
