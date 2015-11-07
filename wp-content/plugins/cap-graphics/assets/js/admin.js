@@ -291,7 +291,7 @@ jQuery(document).ready(function($) {
                 $(response.chart_data).prependTo( ".chart_data_wrap").fadeIn("slow");
             });
         } else {
-            alert("You must first choose a chart type before adding data!");
+            msg("You must first choose a chart type before adding data!",3000,'warning');
         }
     });
 
@@ -319,13 +319,8 @@ jQuery(document).ready(function($) {
                 $('#btn_'+file).removeClass('loading');
             });
         } else {
-
-
-
-            alert('Please enter a slug');  //TODO: dissapearing error messages
+            msg("Please enter a slug",3000,'warning');
         }
-
-
     });
 
     //update canvas and save
@@ -342,11 +337,10 @@ jQuery(document).ready(function($) {
             $.each(numbers, function( index, value ) {
                 total += parseInt(value.value);
             });
-            //TODO:  change ALL ALERTS INTO JQUERY BOXES!
             if(total==100) {
 
             } else {
-                msg("This pie chart adds up to "+total);
+                msg("This pie chart adds up to "+total,3000,'warning');
             }
         }
 
@@ -354,9 +348,7 @@ jQuery(document).ready(function($) {
         if(chart_action=='copy') {
             //make sure the slug name changed
             if($('#chart_slug_d').val()==$('#chart_slug').val()) {
-                //alert('You need to change the slug name since you are copying another chart!');  //TODO: use dissapearing jquery dialogue box
-                $('.message').html('You need to change the slug name since you are copying another chart!');
-
+                msg('You need to change the slug name since you are copying another chart!',3000,'danger')
                 return;
             }
             var chart_slug = $('#chart_slug').val();
@@ -397,9 +389,6 @@ jQuery(document).ready(function($) {
     });
 
 
-
-
-
     //autoupdate
     /* TODO: add autoupdate feature
     $('#frm_chart_update').change(function() {
@@ -434,13 +423,13 @@ jQuery(document).ready(function($) {
      *
      * @param msg
      */
-    function msg(message) {
+    function msg(message,delay,type) {
 
         $.notify({
             message: message
         },{
-            type: 'pastel-warning',
-            delay: 5000000,
+            type: 'pastel-'+type,
+            delay: delay,
             template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
             '<span data-notify="title">{1}</span>' +
             '<span data-notify="message">{2}</span>' +
