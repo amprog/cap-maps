@@ -4,6 +4,7 @@
     <script src="<?php echo $data['d3_file']; ?>common/d3.min.js"></script>
 <?php endif; ?>
 <div class="wrap">
+    <div class="message"></div>
     <h2>Current SVG Graphics</h2>
     <div id="list_assets" class="svg_admin">
         <ul class="l">

@@ -79,7 +79,9 @@ if (!class_exists(APP_CLASS_NAME)) {
 
 
                 wp_enqueue_style( self::APP_NAMESPACE.'admin',  plugin_dir_url(__FILE__) . 'assets/css/admin.css');
+                wp_enqueue_style( self::APP_NAMESPACE.'animate',  plugin_dir_url(__FILE__) . 'assets/css/animate.css');
                 wp_enqueue_script( self::APP_NAMESPACE.'admin', plugin_dir_url(__FILE__) . 'assets/js/admin.js');
+                wp_enqueue_script( self::APP_NAMESPACE.'notify', plugin_dir_url(__FILE__) . 'assets/js/common/bootstrap-notify.min.js');
 
 
             } else {

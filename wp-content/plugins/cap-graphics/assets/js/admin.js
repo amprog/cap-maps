@@ -343,12 +343,10 @@ jQuery(document).ready(function($) {
                 total += parseInt(value.value);
             });
             //TODO:  change ALL ALERTS INTO JQUERY BOXES!
-            if(total>100) {
-                alert("Will update chart but dissapearing error message lets user know they are over 100");
-            } else if((total<=100)) {
-                alert("Less than 100");
-            } else {
+            if(total==100) {
 
+            } else {
+                msg("This pie chart adds up to "+total);
             }
         }
 
@@ -356,7 +354,9 @@ jQuery(document).ready(function($) {
         if(chart_action=='copy') {
             //make sure the slug name changed
             if($('#chart_slug_d').val()==$('#chart_slug').val()) {
-                alert('You need to change the slug name since you are copying another chart!');  //TODO: use dissapearing jquery dialogue box
+                //alert('You need to change the slug name since you are copying another chart!');  //TODO: use dissapearing jquery dialogue box
+                $('.message').html('You need to change the slug name since you are copying another chart!');
+
                 return;
             }
             var chart_slug = $('#chart_slug').val();
@@ -397,6 +397,9 @@ jQuery(document).ready(function($) {
     });
 
 
+
+
+
     //autoupdate
     /* TODO: add autoupdate feature
     $('#frm_chart_update').change(function() {
@@ -427,6 +430,23 @@ jQuery(document).ready(function($) {
     });
 
 
+    /**
+     *
+     * @param msg
+     */
+    function msg(message) {
+
+        $.notify({
+            message: message
+        },{
+            type: 'pastel-warning',
+            delay: 5000000,
+            template: '<div data-notify="container" class="col-xs-11 col-sm-3 alert alert-{0}" role="alert">' +
+            '<span data-notify="title">{1}</span>' +
+            '<span data-notify="message">{2}</span>' +
+            '</div>'
+        });
+    }
     /**
      * Popup with confirmation
      * @param question

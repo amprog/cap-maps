@@ -5,6 +5,7 @@
 <script src="<?php echo $data['charts_js_file']; ?>common/jquery.fancybox.pack.js"></script>
 <script src="<?php echo $data['charts_js_file']; ?>custom/jquery.object.js"></script>
 <div class="wrap">
+    <div class="message"></div>
     <h2>Current Charts</h2>
     <div id="list_assets" class="charts_admin">
         <ul class="l">
