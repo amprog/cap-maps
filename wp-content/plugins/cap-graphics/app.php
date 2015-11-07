@@ -1373,11 +1373,11 @@ E_ALL;
 
             switch ($svg_action) {
                 case 'copy':
-                    $data['svg_admin'] = '<div class="admin-meta"><input type="text" placeholder="Enter a slug" id="svg_slug" /> </div><p>Click on any of the save icons to save a new SVG Graphic</p>';
+                    $data['svg_admin'] = '<div class="admin-meta"><input type="text" value="'.$svg_slug.'_copy" id="svg_slug" /> </div><p>Click on any of the save icons to save a new SVG Graphic</p>';
 
                     break;
                 case 'edit':
-                    $data['svg_admin'] = '';
+                    $data['svg_admin'] = '<li><input type="hidden" id="svg_slug" name="svg_slug" value="'.$svg_slug.'" /></li>';
                     break;
                 case 2:
 
@@ -1420,46 +1420,42 @@ NCURSES_KEY_EOS;
 */
 
 
-            if($svg_slug) {
-                $data['svg_action'] = 'update';
 
-                $js_file = $package_dir.'index.js';
-                if(file_exists($js_file)) {
-                    $data['js'] = file_get_contents($js_file);
-                }
 
-                $css_file = $package_dir.'index.css';
-                if(file_exists($css_file)) {
-                    $data['css'] = file_get_contents($css_file);
-                }
+            $js_file = $package_dir.'index.js';
+            if(file_exists($js_file)) {
+                $data['js'] = file_get_contents($js_file);
+            }
 
-                $svg_file = $package_dir.'index.svg';
-                if(file_exists($svg_file)) {
-                    $data['svg'] = file_get_contents($svg_file);
-                }
+            $css_file = $package_dir.'index.css';
+            if(file_exists($css_file)) {
+                $data['css'] = file_get_contents($css_file);
+            }
 
-                $json_file = $package_dir.'index.json';
-                if(file_exists($json_file)) {
-                    $data['json'] = file_get_contents($json_file);
-                }
+            $svg_file = $package_dir.'index.svg';
+            if(file_exists($svg_file)) {
+                $data['svg'] = file_get_contents($svg_file);
+            }
 
-                //keep preview simple
-                //error_log("package_uri: $package_uri");
-                //wp_enqueue_style( $svg_slug,  $package_uri . '/index.css');
-                //wp_enqueue_script( $svg_slug, $package_uri. '/index.js');
-                //enqueue files
-                $data['svg_slug'] = $svg_slug;
-                $data['svg_data'] = '<div id="svg-'.$svg_slug.'" class="svg-wrap">
-    <div class="svg_pre"></div>
-    <div class="svg_wrap">'.$data['svg'].'</div>
-    <div class="svg_post_meta"></div>
-    <div class="svg_post"></div>
+            $json_file = $package_dir.'index.json';
+            if(file_exists($json_file)) {
+                $data['json'] = file_get_contents($json_file);
+            }
+
+            //keep preview simple
+            //error_log("package_uri: $package_uri");
+            //wp_enqueue_style( $svg_slug,  $package_uri . '/index.css');
+            //wp_enqueue_script( $svg_slug, $package_uri. '/index.js');
+            //enqueue files
+            $data['svg_slug'] = $svg_slug;
+            $data['svg_data'] = '<div id="svg-'.$svg_slug.'" class="svg-wrap">
+<div class="svg_pre"></div>
+<div class="svg_wrap">'.$data['svg'].'</div>
+<div class="svg_post_meta"></div>
+<div class="svg_post"></div>
 </div>';
 
-            } else {
 
-                $data['svg_action'] = 'new';
-            }
 
 
             $html = self::gc_svg_tpl($data);
@@ -1534,7 +1530,6 @@ NCURSES_KEY_EOS;
     <textarea name="json">{$data['json']}</textarea>
 </li>
 <li><input type="hidden" id="svg_action" name="svg_action" value="{$data['svg_action']}" /></li>
-<li><input type="hidden" id="svg_slug" name="svg_slug" value="{$data['svg_slug']}" /></li>
 </ul>
 <div id="svg-preview"><h3>SVG Preview:  {$data['svg_slug']}</h3><p>This is meant to be a simple preview of the SVG file.  </p>{$data['svg_data']}</div>
 NCURSES_KEY_EOS;

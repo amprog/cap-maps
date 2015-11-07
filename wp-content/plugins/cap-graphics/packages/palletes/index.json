@@ -2,6 +2,7 @@
   "data_array": [
     {
       "normal": [
+        {"segmentStrokeColor": "#ffffff" },
         {
           "color": "#ba575a",
           "highlight": "#a92d31"
@@ -26,6 +27,7 @@
     },
     {
       "light": [
+        {"segmentStrokeColor": "#ffffff" },
         {
           "color": "#ba575a",
           "highlight": "#a92d31"

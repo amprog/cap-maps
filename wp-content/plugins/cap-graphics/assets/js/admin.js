@@ -306,15 +306,24 @@ jQuery(document).ready(function($) {
         file         =  $(this).data('file');
         var svg_slug = $('#svg_slug').val();
 
-        var data = {
-            'action': 'gc_file_save_action',
-            'file': file,
-            'svg_slug': svg_slug,
-            'data': $("textarea[name='"+$(this).data('file')+"']").val()
-        };
-        $.post(ajaxurl, data, function(response) {
-            $('#btn_'+file).removeClass('loading');
-        });
+        if(svg_slug) {
+            var data = {
+                'action': 'gc_file_save_action',
+                'file': file,
+                'svg_slug': validSlug(svg_slug),
+                'data': $("textarea[name='"+$(this).data('file')+"']").val()
+            };
+            $.post(ajaxurl, data, function(response) {
+                $('#btn_'+file).removeClass('loading');
+            });
+        } else {
+
+
+
+            alert('Please enter a slug');  //TODO: dissapearing error messages
+        }
+
+
     });
 
     //update canvas and save
@@ -474,4 +483,16 @@ function checkColor() {
     }else{
         jQuery(".colorpicker").wpColorPicker();
     }
+}
+
+/**
+ * check for valid slug, clean and return valid slug if possible
+ * @param str
+ * @returns {*}
+ */
+function validSlug(str) {
+    str = str.replace(/[^a-zA-Z0-9\s]/g,"_");
+    str = str.toLowerCase();
+    str = str.replace(/\s/g,'_');
+    return str;
 }
