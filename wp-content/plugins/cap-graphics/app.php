@@ -1373,7 +1373,7 @@ E_ALL;
 
             switch ($svg_action) {
                 case 'copy':
-                    $data['svg_admin'] = '<input type="text" placeholder="Enter a slug" id="svg_slug" /> <br />';
+                    $data['svg_admin'] = '<div class="admin-meta"><input type="text" placeholder="Enter a slug" id="svg_slug" /> </div><p>Click on any of the save icons to save a new SVG Graphic</p>';
 
                     break;
                 case 'edit':
@@ -1383,6 +1383,41 @@ E_ALL;
 
                     break;
             }
+
+            //set up the d3 support switches DO NOT build this in
+/*
+            switch ($d3) {
+                case 0:
+                    $d3_disable    = 'selected';
+                    $d3_enable     = '';
+                    $d3_1          = '';
+                    $d3_2          = 'checked';
+                    break;
+                case 1:
+                    $d3_enable     = 'selected';
+                    $d3_disable    = '';
+                    $d3_1          = 'checked';
+                    $d3_2          = '';
+                    break;
+                default:
+                    $d3_disable    = 'selected';
+                    $d3_enable     = '';
+                    $d3_1          = '';
+                    $d3_2          = 'checked';
+            }
+
+
+
+            $data['svg_admin'] .= <<<NCURSES_KEY_EOS
+        <ul>
+            <li class="switch">
+                <div>Enable D3 Support</div>
+                <label class="cb-enable $d3_enable" data-class="name"><span>Yes</span></label> <input type="checkbox" name="name" value="1" id="name_enabled" $d3_1 />
+                <label class="cb-disable $d3_disable" data-class="name"><span>No</span></label> <input type="checkbox" name="name" value="0" id="name_disabled" $d3_2 />
+            </li>
+        </ul>
+NCURSES_KEY_EOS;
+*/
 
 
             if($svg_slug) {
@@ -1414,7 +1449,7 @@ E_ALL;
                 //wp_enqueue_script( $svg_slug, $package_uri. '/index.js');
                 //enqueue files
                 $data['svg_slug'] = $svg_slug;
-                $data['svg_data'] = '<div id="svg-'.$svg_slug.'" class="svg_wrap">
+                $data['svg_data'] = '<div id="svg-'.$svg_slug.'" class="svg-wrap">
     <div class="svg_pre"></div>
     <div class="svg_wrap">'.$data['svg'].'</div>
     <div class="svg_post_meta"></div>
@@ -1459,13 +1494,13 @@ E_ALL;
 
             return <<<NCURSES_KEY_EOS
 <div class="meta-top">
-<div class="left">
-<h3>SVG Graphic:  {$data['svg_slug']} </h3>
-{$data['svg_admin']}
-</div>
-<div class="left r">
- <input type="button" class="button button-primary goback" value="go back" data-url="/wp-admin/admin.php?page=cap-graphics-svg" />
- </div>
+    <div class="left">
+        <h3>SVG Graphic:  {$data['svg_slug']} </h3>
+        {$data['svg_admin']}
+    </div>
+    <div class="left r">
+        <input type="button" class="button button-primary goback" value="go back" data-url="/wp-admin/admin.php?page=cap-graphics-svg" />
+    </div>
 </div>
 
 

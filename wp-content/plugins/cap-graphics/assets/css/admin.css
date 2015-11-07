@@ -84,6 +84,7 @@ ul.chart_data_wrap input {
 .svg_edit span {
     display: block;
     margin:27px 0 10px 0;
+    clear: both;
 }
 
 .svg_edit textarea {
@@ -488,6 +489,12 @@ ul.chart_data_wrap input {
 }
 
 
-.svg_wrap {
+.svg-wrap {
     margin:17px 0;
+}
+
+.admin-meta {
+    margin:7px 0;
+    display: block;
+    clear: both;
 }
