@@ -1364,6 +1364,7 @@ E_ALL;
             //$svg = $js = $css = $json = $html = '';
             $html        = '';
             $time_start  = self::timer();
+            $id          = array_key_exists('id', $_POST) ? $_POST['id'] : null;
             $svg_slug    = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
             $svg_action  = array_key_exists('svg_action', $_POST) ? $_POST['svg_action'] : null;
 
@@ -1373,16 +1374,37 @@ E_ALL;
 
             switch ($svg_action) {
                 case 'copy':
-                    $data['svg_admin'] = '<div class="admin-meta"><input type="text" value="'.$svg_slug.'_copy" id="svg_slug" /> </div><p>Click on any of the save icons to save a new SVG Graphic</p>';
-
+                    $data['svg_admin']        = '<ul class="sub"><li><dd>SVG Slug</dd><input type="text" value="'.$svg_slug.'_copy" id="svg_slug" /><div class="note">Click on any of the save icons to save a new SVG Graphic</div></li>';
+                    $data['svg_name']         = '';
+                    $data['svg_description']  = '';
                     break;
                 case 'edit':
-                    $data['svg_admin'] = '<li><input type="hidden" id="svg_slug" name="svg_slug" value="'.$svg_slug.'" /></li>';
+                    $data['svg_admin'] = '<ul class="sub"><li><input type="hidden" id="svg_slug" name="svg_slug" value="'.$svg_slug.'" /></li>';
+                    //get name and desc from db
+                    $results = self::gc_sql_get_graphic($id);
+    error_log(print_r($results,true));
                     break;
                 case 2:
 
                     break;
             }
+
+
+            //name and description
+            $data['svg_admin'] .= <<<NCURSES_KEY_EOS
+        <li>
+            <dd>SVG Name</dd>
+            <input type="text" id="svg_name" value="{$data['svg_name']}" />
+            <input type="hidden" id="id" value="$id" />
+        </li>
+        <li>
+            <dd>SVG Description</dd>
+            <textarea id="svg_description" class="text">{$data['svg_description']}</textarea>
+        </li>
+        </ul>
+NCURSES_KEY_EOS;
+
+
 
             //set up the d3 support switches DO NOT build this in
 /*
@@ -1557,12 +1579,57 @@ NCURSES_KEY_EOS;
          */
         function gc_file_save_action_callback()
         {
+            $svg_action      = array_key_exists('svg_action', $_POST) ? $_POST['svg_action'] : null;
+            $id              = array_key_exists('id', $_POST) ? $_POST['id'] : null;
+            $svg_slug        = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
+            $svg_name        = array_key_exists('svg_name', $_POST) ? $_POST['svg_name'] : null;
+            $svg_description = array_key_exists('svg_description', $_POST) ? $_POST['svg_description'] : null;
+            $data            = array_key_exists('data', $_POST) ? stripslashes($_POST['data']) : null;  //use strip slashes because of MAGIC QUOTES
+            $file            = array_key_exists('file', $_POST) ? $_POST['file'] : null;
+            $folder          = self::get_file_location('svg',$svg_slug);
+            $filename        = $folder.'index.'.$file;
 
-            $svg_slug   = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
-            $data       = array_key_exists('data', $_POST) ? stripslashes($_POST['data']) : null;  //use strip slashes because of MAGIC QUOTES
-            $file       = array_key_exists('file', $_POST) ? $_POST['file'] : null;
-            $folder     = self::get_file_location('svg',$svg_slug);
-            $filename   = $folder.'index.'.$file;
+            //TODO:  could be a copy. only way to tell, is by checking :(  if this has to happen, stored procedure would be nice
+            switch ($svg_action) {
+                case 'copy':
+                    //save in database, but may already exist
+
+                    $select = self::gc_sql_get_graphic($id);
+
+                    if($select) {
+
+                    } else {
+                        //insert into database as a new
+                        global $wpdb;
+
+                        $wpdb->insert(
+                            '_gc_graphics',
+                            array(
+                                'type' => 'svg',
+                                'slug' => $svg_slug,
+                                'name' => $svg_name,
+                                'description' => $svg_description,
+                                'status' => 1,
+                            ),
+                            array(
+                                '%s',
+                                '%s',
+                                '%s',
+                                '%s',
+                                '%s'
+                            )
+                        );
+
+                    }
+
+                    break;
+                case 1:
+                    echo "i equals 1";
+                    break;
+                case 2:
+                    echo "i equals 2";
+                    break;
+            }
 
             if(!file_exists($folder)) {
                 mkdir($folder);
@@ -1585,6 +1652,32 @@ NCURSES_KEY_EOS;
 
             wp_send_json($return);
             wp_die();
+        }
+
+        /**
+         * Simple get query, returns all
+         * @param $id
+         * @return array|null|object
+         */
+        public static function gc_sql_get_graphic($id) {
+
+            global $wpdb;
+
+            $sql =  "SELECT * FROM _gc_graphics WHERE id = $id;";
+            $results = $wpdb->get_results($sql, OBJECT );
+            return $results;
+        }
+
+        /**
+         * Simple get query, returns all
+         * @return array|null|object
+         */
+        public static function gc_sql_get_all_graphics() {
+            global $wpdb;
+
+            $sql =  'SELECT * FROM _gc_graphics;';
+            $results = $wpdb->get_results($sql, OBJECT );
+            return $results;
         }
 
 

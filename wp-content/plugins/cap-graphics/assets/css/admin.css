@@ -498,3 +498,14 @@ ul.chart_data_wrap input {
     display: block;
     clear: both;
 }
+
+.text {
+    width: 350px;
+    height: 70px;
+}
+
+.note {
+    font-style: italic;
+    color: #ff1213;
+    padding-bottom: 10px;
+}

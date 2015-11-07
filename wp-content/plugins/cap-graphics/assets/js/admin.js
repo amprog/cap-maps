@@ -310,7 +310,9 @@ jQuery(document).ready(function($) {
             var data = {
                 'action': 'gc_file_save_action',
                 'file': file,
+                'svg_action': $('#svg_action').val(),
                 'svg_slug': validSlug(svg_slug),
+                'id': $('#id').val(),
                 'data': $("textarea[name='"+$(this).data('file')+"']").val()
             };
             $.post(ajaxurl, data, function(response) {
