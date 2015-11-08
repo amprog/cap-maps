@@ -525,7 +525,7 @@ ul.chart_data_wrap input {
     letter-spacing: 1px;
 }
 [data-notify="container"].alert-pastel-info {
-    border-left-color: rgb(255, 179, 40);
+    border-left-color: rgb(126, 140, 255);
 }
 [data-notify="container"].alert-pastel-danger {
     border-left-color: rgb(255, 103, 76);

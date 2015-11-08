@@ -338,7 +338,7 @@ jQuery(document).ready(function($) {
                 total += parseInt(value.value);
             });
             if(total==100) {
-
+                msg("Chart saved",3000,'info');
             } else {
                 msg("This pie chart adds up to "+total,3000,'warning');
             }
@@ -424,7 +424,6 @@ jQuery(document).ready(function($) {
      * @param msg
      */
     function msg(message,delay,type) {
-
         $.notify({
             message: message
         },{

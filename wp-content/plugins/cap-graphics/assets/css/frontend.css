@@ -70,6 +70,7 @@ svg,canvas {
     border: 1px solid #ccc;
     margin-top:10px;
     overflow: hidden;
+    padding: 17px 0;
 }
 
 .chart h3,.chart .source {

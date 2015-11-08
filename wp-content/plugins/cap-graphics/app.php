@@ -1,14 +1,10 @@
 <?php
 
-//TODO: charts.json and svg.json need to go into packages!@!!!
-//TODO:  build lyvefire version
+//TODO: charts.json and svg.json need to go into DATABASE
+//TODO: need to put everything into s3 bucket
 //TODO: build option for using oEmbed
+//TODO:  build lyvefire version
 //TODO: add line pie
-
-//TODO:  Also put visualizations in media library, just allow picking and link to edit screen
-//TODO: turn svg=slug to id=10
-//TODO: no more saving slugs in the database, everything is in media library
-//TODO: add up the values for pie charts, and make sure it equals 100
 /*
 
 ,
@@ -320,7 +316,7 @@ EOD;
                     //$package_file = ABSPATH.$this->gc_frontend->chart_folder.'/charts.json';
 
                     $package      = self::get_file_location('charts',$chart_slug);
-                    $file         = self::get_file_location('charts',$chart_slug).'/index.json';
+                    //$file         = self::get_file_location('charts',$chart_slug).'/index.json';
 
                     //$charts_json  = json_decode(file_get_contents($file),true);
                     mkdir($package);  //make directory
