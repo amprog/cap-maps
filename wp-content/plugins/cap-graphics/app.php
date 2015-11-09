@@ -457,12 +457,6 @@ EOD;
 
             error_log('id: '.$_POST['id']);
 
-            //first open svg file
-
-            //try and do all logic here and not in js
-
-
-
             switch ($_POST['id']) {
                 case 'chart_name':
 

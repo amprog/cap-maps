@@ -121,7 +121,7 @@ if (!class_exists("Cap_Graphics_Options")) {
         function charts_new() {
 
             //check for post data, if it exists, save
-
+            //TODO: get starter charts from database
             if($_POST) {
                 echo '<pre>';
                  print_r($_POST);
