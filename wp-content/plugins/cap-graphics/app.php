@@ -550,17 +550,28 @@ EOD;
          * @return string
          */
         public static function gc_get_package($type) { error_log("gc_get_package: ".self::gc_get_package_file($type));
-            return file_get_contents(self::gc_get_package_file($type));  //TODO: needs to pull from options and then media library or local
+            return file_get_contents(self::gc_get_package_file($type));
         }
 
         /**
          * Get charts or svg from database
          * @param $type
-         * @return string
+         * @param $status
+         * @return array|null|object
          */
-        public static function gc_get_package_db($type) {
+        public static function gc_get_package_db($type,$status) {
+
+            global $wpdb;
+
+            if($type=='svg') {
+                $sql =  "SELECT * FROM _gc_svg WHERE status = $status;";
+            } else {
+                $sql =  "SELECT * FROM _gc_charts WHERE status = $status;";
+            }
 
 
+            $results = $wpdb->get_results($sql, ARRAY_A );
+            return $results;
         }
 
         /**

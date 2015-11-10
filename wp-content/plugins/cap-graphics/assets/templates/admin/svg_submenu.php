@@ -1,16 +1,13 @@
 <script src="https://code.jquery.com/ui/1.11.3/jquery-ui.min.js"></script>
 <link rel='stylesheet' href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.4/jquery-ui.css" type='text/css'  />
-<?php if($data['d3']): ?>
-    <script src="<?php echo $data['d3_file']; ?>common/d3.min.js"></script>
-<?php endif; ?>
 <div class="wrap">
     <div class="message"></div>
     <h2>Current SVG Graphics</h2>
     <div id="list_assets" class="svg_admin">
         <ul class="l">
-            <?php $i=1; foreach($data['packages']['svg'] as $svg): ?>
+            <?php $i=1; foreach($data['packages'] as $svg): ?>
                 <li data-slug="<?php echo $svg['slug']; ?>" class="current_svg" id="l-<?php echo $i; ?>">
-                    <h3><?php echo $svg['label']; ?></h3>
+                    <h3><?php echo $svg['name']; ?></h3>
                     <p><?php echo $svg['description']; ?></p>
                     <input type="text" value='[cap_svg svg="<?php echo $svg['slug']; ?>"]' class="shortcode" />
                     <div class="meta">

@@ -82,7 +82,10 @@ if (!class_exists("Cap_Graphics_Options")) {
         function svg_submenu()
         {
 
-            $svg  = parent::gc_get_package('svg');
+            $data['packages']  = parent::gc_get_package_db('svg',1);
+            //error_log(print_r($svg,true));
+/*
+
             $json = json_decode($svg,true);
             $new  = array();
             foreach($json['svg'] as $k=>$v) { error_log(print_r($v,true));
@@ -90,7 +93,9 @@ if (!class_exists("Cap_Graphics_Options")) {
                     $new['svg'][] = $v;
                 }
             }
-            $data['packages']   = $new;
+            */
+
+
             return parent::gc_get_template($data,'admin/svg_submenu.php');
         }
 
