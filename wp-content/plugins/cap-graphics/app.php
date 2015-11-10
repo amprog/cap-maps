@@ -798,7 +798,7 @@ EOD;
 
                 $i = 1;
                 foreach($files as $file) {
-                    wp_enqueue_script('gc-'.$i,  plugin_dir_url(__FILE__).'/assets/js/common/'.$file);
+                    wp_enqueue_script('gc-'.$i,  plugin_dir_url(__FILE__).'/assets/js/common/'.trim($file));
                     $i++;
                 }
             }
