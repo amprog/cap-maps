@@ -293,12 +293,6 @@ EOD;
          */
         function gc_chart_save_callback() {
 
-
-            //TODO:  CANNOT get data to save in EXACT format that is needed. WILL NEED TO USE JSON TEMPLATE
-
-
-            //TODO:  clean post
-
             $data          = $_POST['data'];
             $chart_action  = $_POST['chart_action']  = array_key_exists('chart_action', $data) ? $data['chart_action'] : null;
             $chart_slug    = array_key_exists('chart_slug', $data) ? $data['chart_slug'] : null;
@@ -427,23 +421,21 @@ EOD;
 }
 ]
 }';
+            //$data['data_array'][0]['chart_data']
 
             $save_result = self::gc_save_file(self::get_file_location('charts',$chart_slug).'/index.json',$chart_array_data);
+            $new         = json_decode($chart_array_data,true);  //unfortunately need data for gc_side
+            $html        = self::gc_side($new,$chart_slug,$save['options']['chart_type']);
 
             //return html as chart update
-
-
             $return = array(
-                'data'=>$data,
-                'post'=>$_POST,
+                'html'=>$html,
                 'save_result'=>$save_result,
                 'chart_array_data'=>$chart_array_data
             );
 
             wp_send_json($return);
             wp_die();
-
-
 
         }
 
@@ -571,6 +563,52 @@ EOD;
 
 
             $results = $wpdb->get_results($sql, ARRAY_A );
+            return $results;
+        }
+
+        public static function gc_item_status_callback() {
+
+            $slug       = array_key_exists('slug', $_POST) ? $_POST['slug'] : null;
+            $type       = array_key_exists('type', $_POST) ? $_POST['type'] : null;
+            $status     = array_key_exists('status', $_POST) ? intval($_POST['status']) : null;
+            $result     = self::gc_item_status($type,$slug,$status);
+
+            $return   = array(
+                'result'=> $result
+            );
+
+            wp_send_json($return);
+            wp_die();
+        }
+
+        /**
+         * Change status of an item
+         * @param $type
+         * @param $slug
+         * @param $status
+         * @return array|null|object
+         */
+        public static function gc_item_status($type,$slug,$status) {
+
+            global $wpdb;
+
+            if($type=='svg') {
+                $table = '_gc_svg';
+            } else {
+                $table = '_gc_charts';
+            }
+
+            $results = $wpdb->update(
+                $table,
+                array(
+                    'status' => $status
+                ),
+                array( 'slug' => $slug ),
+                array(
+                    '%d'
+                ),
+                array( '%s' )
+            );
             return $results;
         }
 
@@ -1140,10 +1178,9 @@ EOS;
 
             $lower_chart_type = strtolower($chart_type);
 
-
             if($chart_type=='Pie' || $chart_type=='Doughnut') {
                 $legend_inner = $canvas_type = '';
-                if($data['options']['legend']=='1') {
+                if($data['options']['legend']==1) {
                     $legend_inner = '<div class="left">
                         <div class="legend">
                             <ul>';
@@ -1167,7 +1204,7 @@ EOS;
                 $admin_html = <<<EOS
 <div class="clear"> 
     <div class="short-cnt">
-        <input type="text" value="[cap_chart chart='$chart_slug']" class="[cap_chart chart='example_pie']" />
+        <input type="text" value="[cap_chart chart='$chart_slug']" class="shortcode" />
     </div> 
     <div class="float">
         <input type="button" class="button button-primary chart_update" name="save_options" value="save"/>
@@ -1722,8 +1759,9 @@ NCURSES_KEY_EOS;
 
 
         /**
+         * DECOM: no longer rewriting json files
          * change status of item.
-         */
+
         public static function gc_item_status_callback() {
 
             $slug       = array_key_exists('slug', $_POST) ? $_POST['slug'] : null;
@@ -1753,7 +1791,7 @@ NCURSES_KEY_EOS;
             wp_send_json($return);
             wp_die();
         }
-
+    */
         /**
          * UTILITY: Delete a directory with files
          * @param $path

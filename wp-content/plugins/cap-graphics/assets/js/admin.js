@@ -78,7 +78,7 @@ jQuery(document).ready(function($) {
                         'status': 0
                     };
                     jQuery.post(ajaxurl, data, function (response) {
-                        console.log(response);
+                        msg('This chart has been deleted',2000,'info');
                         $('#l-' + chart).remove();
                     });
                 }
@@ -156,11 +156,9 @@ jQuery(document).ready(function($) {
                         'type': type,
                         'slug': slug,
                         'status': 0
-
                     };
-                    console.dir(data);
                     jQuery.post(ajaxurl, data, function (response) {
-                        console.log(response);
+                        msg('This SVG has been deleted',2000,'info');
                         $('#l-' + svg).remove();
                     });
                 }
@@ -363,20 +361,12 @@ jQuery(document).ready(function($) {
             'chart_action': chart_action,
             'chart_slug': chart_slug,
             'chart_type': chart_type,
-            //'count': $('#count').val(),
             'data': obj
         }; console.dir(data);
         //FIXME:  we need a better way to keep track of counts
         $.post(ajaxurl, data, function(response) {
-            console.log('chart_update response');
-            console.dir(response);
-
             json = jQuery.parseJSON(response.chart_array_data);
-            console.log("response from ajax query gc_chart_save");
-            console.dir(json);
-            //check for error, and update chart
-            //$('#c1_wrap').html('<canvas id="c1" width="300" height="300"></canvas>');
-            $('#c1_wrap').html(response.html);
+            $('.chart').replaceWith(response.html);
             var str = json.options.chart_type.toString();
             new Chart(document.getElementById('c1').getContext('2d'))[str](json.data_array[0].chart_data,json.options);
 
@@ -449,7 +439,7 @@ jQuery(document).ready(function($) {
                 modal: true,
                 title: 'Confirmation',
                 buttons: {
-                    "Yes": function () {//TODO: build delete functionality
+                    "Yes": function () {
                         defer.resolve("true")
                         $(this).dialog("close");
                     },
