@@ -99,7 +99,10 @@ if (!class_exists("Cap_Graphics_Options")) {
          */
         function charts_submenu()
         {
+            //TODO: get this from database, not charts.json
             $charts = parent::gc_get_package('charts');
+
+
             $json   = json_decode($charts,true);
             $new    = array();
             foreach($json['charts'] as $k=>$v) { error_log(print_r($v,true));

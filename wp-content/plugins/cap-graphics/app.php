@@ -553,6 +553,15 @@ EOD;
             return file_get_contents(self::gc_get_package_file($type));  //TODO: needs to pull from options and then media library or local
         }
 
+        /**
+         * Get charts or svg from database
+         * @param $type
+         * @return string
+         */
+        public static function gc_get_package_db($type) {
+
+
+        }
 
         /**
          * TODO: this used to save meta box, but now we need to save charts outside of post system
