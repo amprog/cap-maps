@@ -791,6 +791,17 @@ EOD;
             $custom_js   = $package_uri . '/index.js';
             $custom_css  = $package_uri. '/index.css';
             $svg_file    = $package_dir. '/index.svg';
+            $db          = self::gc_sql_get_svg_files($svg_slug); //firstget this svg from database, so we know if we include d3
+
+            if($db[0]) {
+                $files = str_getcsv($db[0]->extra_files);
+
+                $i = 1;
+                foreach($files as $file) {
+                    wp_enqueue_script('gc-'.$i,  plugin_dir_url(__FILE__).'/assets/js/common/'.$file);
+                    $i++;
+                }
+            }
 
             //if no svg, error out
             if (file_exists($svg_file)) {
@@ -806,6 +817,8 @@ EOD;
                 wp_enqueue_style('css-' . $id, $custom_css);
             }
             $data['svg_slug'] = $svg_slug;
+
+
             $content          .= self::gc_get_template($data,'svg-view.php');
 
             return $content;
@@ -1644,6 +1657,21 @@ NCURSES_KEY_EOS;
 
             wp_send_json($return);
             wp_die();
+        }
+
+        /**
+         * Return just the file, to include on front end
+         * @param $slug
+         * @return array|null|object
+         * @internal param $id
+         */
+        public static function gc_sql_get_svg_files($slug) {
+
+            global $wpdb;
+
+            $sql =  "SELECT extra_files FROM _gc_svg WHERE slug = '$slug';";
+            $results = $wpdb->get_results($sql, OBJECT );
+            return $results;
         }
 
         /**
