@@ -1,0 +1,35 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+body {
+    background: #000;
+    font-family: 'Open-Sans',sans-serif;
+}
+#tag {
+    color: white;
+    position: absolute;
+    display: none;
+    opacity: .85;
+    border-radius:2px;
+    border:1px solid white;
+    padding:3px 6px;
+}
+.svg-container {
+    width: 100%;
+    overflow: visible;
+    margin-top: 50px;
+    position: relative;
+}
+.node {
+    cursor: pointer;
+}
+.edge {
+    fill: none;
+    stroke: #657b83;
+    stroke-width: .75px;
+}
+
+.hentry {
+    background: #000
+}
