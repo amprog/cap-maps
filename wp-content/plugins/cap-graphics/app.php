@@ -1432,7 +1432,7 @@ E_ALL;
 
             $package_dir = self::get_file_location('svg',$svg_slug);
             $package_uri = self::get_package_uri('svg',$svg_slug);
-            error_log("svg_slug: $svg_slug");
+            $results     = self::gc_sql_get_graphic($svg_slug);               error_log(print_r($results,true));   //get name and desc from db
 
             switch ($svg_action) {
                 case 'copy':
@@ -1442,9 +1442,9 @@ E_ALL;
                     break;
                 case 'edit':
                     $data['svg_admin'] = '<ul class="sub"><li><input type="hidden" id="svg_slug" name="svg_slug" value="'.$svg_slug.'" /></li>';
-                    //get name and desc from db
-                    $results = self::gc_sql_get_graphic($id);
-    error_log(print_r($results,true));
+
+
+
                     break;
                 case 2:
 
@@ -1456,12 +1456,12 @@ E_ALL;
             $data['svg_admin'] .= <<<NCURSES_KEY_EOS
         <li>
             <dd>SVG Name</dd>
-            <input type="text" id="svg_name" value="{$data['svg_name']}" />
+            <input type="text" id="svg_name" value="{$results[0]['name']}" />
             <input type="hidden" id="id" value="$id" />
         </li>
         <li>
             <dd>SVG Description</dd>
-            <textarea id="svg_description" class="text">{$data['svg_description']}</textarea>
+            <textarea id="svg_description" class="text">{$results[0]['description']}</textarea>
         </li>
         </ul>
 NCURSES_KEY_EOS;
@@ -1531,8 +1531,9 @@ NCURSES_KEY_EOS;
             //wp_enqueue_style( $svg_slug,  $package_uri . '/index.css');
             //wp_enqueue_script( $svg_slug, $package_uri. '/index.js');
             //enqueue files
-            $data['svg_slug'] = $svg_slug;
-            $data['svg_data'] = '<div id="svg-'.$svg_slug.'" class="svg-wrap">
+            $data['svg_slug']   = $svg_slug;
+            $data['svg_action'] = $svg_action;
+            $data['svg_data']   = '<div id="svg-'.$svg_slug.'" class="svg-wrap">
 <div class="svg_pre"></div>
 <div class="svg_wrap">'.$data['svg'].'</div>
 <div class="svg_post_meta"></div>
@@ -1641,6 +1642,8 @@ NCURSES_KEY_EOS;
          */
         function gc_file_save_action_callback()
         {
+            global $wpdb;
+
             $svg_action      = array_key_exists('svg_action', $_POST) ? $_POST['svg_action'] : null;
             $id              = array_key_exists('id', $_POST) ? $_POST['id'] : null;
             $svg_slug        = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
@@ -1650,7 +1653,7 @@ NCURSES_KEY_EOS;
             $file            = array_key_exists('file', $_POST) ? $_POST['file'] : null;
             $folder          = self::get_file_location('svg',$svg_slug);
             $filename        = $folder.'index.'.$file;
-
+error_log("svg_action: $svg_action");
             //TODO:  could be a copy. only way to tell, is by checking :(  if this has to happen, stored procedure would be nice
             switch ($svg_action) {
                 case 'copy':
@@ -1662,18 +1665,18 @@ NCURSES_KEY_EOS;
 
                     } else {
                         //insert into database as a new
-                        global $wpdb;
-
                         $wpdb->insert(
-                            '_gc_graphics',
+                            '_gc_svg',
                             array(
                                 'type' => 'svg',
                                 'slug' => $svg_slug,
                                 'name' => $svg_name,
                                 'description' => $svg_description,
                                 'status' => 1,
+                                'extra_files' => $extra_files
                             ),
                             array(
+                                '%s',
                                 '%s',
                                 '%s',
                                 '%s',
@@ -1685,8 +1688,29 @@ NCURSES_KEY_EOS;
                     }
 
                     break;
-                case 1:
-                    echo "i equals 1";
+                case 'edit':
+
+                    $wpdb->update(
+                        '_gc_svg',
+                        array(
+                            'type' => 'svg',
+                            'slug' => $svg_slug,
+                            'name' => $svg_name,
+                            'description' => $svg_description,
+                            'status' => 1,
+                            'extra_files' => $extra_files
+                        ),
+                        array('slug'=>$svg_slug),
+                        array(
+                            '%s',
+                            '%s',
+                            '%s',
+                            '%s',
+                            '%s',
+                            '%s'
+                        )
+                    );
+
                     break;
                 case 2:
                     echo "i equals 2";
@@ -1733,15 +1757,15 @@ NCURSES_KEY_EOS;
 
         /**
          * Simple get query, returns all
-         * @param $id
+         * @param $svg_slug
          * @return array|null|object
          */
-        public static function gc_sql_get_graphic($id) {
+        public static function gc_sql_get_graphic($svg_slug) {
 
             global $wpdb;
 
-            $sql =  "SELECT * FROM _gc_graphics WHERE id = $id;";
-            $results = $wpdb->get_results($sql, OBJECT );
+            $sql =  "SELECT * FROM _gc_svg WHERE slug = '$svg_slug';";
+            $results = $wpdb->get_results($sql, ARRAY_A );
             return $results;
         }
 

@@ -209,8 +209,8 @@ jQuery(document).ready(function($) {
                 'action': 'gc_svg_action',
                 'svg_slug': $( '#l-'+svg).data('slug'),
                 'svg_action': c
-            };console.log("dbla");
-            jQuery.post(ajaxurl, data, function(response) { console.log("response"); console.log(response);
+            }; console.dir(data);
+            jQuery.post(ajaxurl, data, function(response) { console.log(response);
                 $('#list_assets').html(response.html);
             });
 
@@ -308,12 +308,14 @@ jQuery(document).ready(function($) {
             var data = {
                 'action': 'gc_file_save_action',
                 'file': file,
+                'svg_name': $('#svg_name').val(),
+                'svg_description': $('#svg_description').val(),
                 'svg_action': $('#svg_action').val(),
                 'svg_slug': validSlug(svg_slug),
                 'id': $('#id').val(),
                 'data': $("textarea[name='"+$(this).data('file')+"']").val()
-            };
-            $.post(ajaxurl, data, function(response) {
+            }; console.dir(data);
+            $.post(ajaxurl, data, function(response) {console.dir(response);
                 $('#btn_'+file).removeClass('loading');
             });
         } else {
