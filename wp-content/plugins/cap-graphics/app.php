@@ -1661,10 +1661,13 @@ NCURSES_KEY_EOS;
                 case 'copy':
                     //save in database, but may already exist
 
-                    $select = self::gc_svg_check_dupe($svg_slug);
+                    $select = self::gc_sql_get_graphic($svg_slug);
 
                     if($select) {
-                        $svg_slug = $svg_slug.'_copy'.rand(77);
+                        $svg_slug = $svg_slug.'_copy'.rand(77); error_log("new svg");  error_log(print_r($select,true));
+                        $svg_new  = '1';
+                    } else {
+                        $svg_new  = '0';
                     }
 
                     //insert into database as a new
@@ -1687,7 +1690,6 @@ NCURSES_KEY_EOS;
                             '%s'
                         )
                     );
-
 
                     break;
                 case 'edit':
@@ -1735,7 +1737,8 @@ NCURSES_KEY_EOS;
             $return   = array(
                 'result'=> $result,
                 'file'=> $filename,
-                'svg_slug'=> $svg_slug
+                'svg_slug'=> $svg_slug,
+                'svg_new'=>$svg_new
             );
 
             wp_send_json($return);

@@ -318,6 +318,13 @@ jQuery(document).ready(function($) {
             }; console.dir(data);
             $.post(ajaxurl, data, function(response) {console.dir(response);
                 $('#btn_'+file).removeClass('loading');
+
+                if(response.svg_new=='1') {
+                    $('#svg_slug').val(response.svg_slug);
+                    $('#svg_slug').attr('disabled',true);
+                    $('#svg_action').val('edit');
+                }
+
             });
         } else {
             msg("Please enter a slug",3000,'warning');
