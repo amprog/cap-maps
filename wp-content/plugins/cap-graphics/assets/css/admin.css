@@ -507,7 +507,8 @@ ul.chart_data_wrap input {
 .note {
     font-style: italic;
     color: #ff1213;
-    padding-bottom: 10px;
+    padding: 0 0 10px 0;
+    margin: 0;
 }
 
 [data-notify="container"] {

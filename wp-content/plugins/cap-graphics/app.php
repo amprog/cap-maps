@@ -1436,9 +1436,7 @@ E_ALL;
 
             switch ($svg_action) {
                 case 'copy':
-                    $data['svg_admin']        = '<ul class="sub"><li><dd>SVG Slug</dd><input type="text" value="'.$svg_slug.'_copy" id="svg_slug" /><div class="note">Click on any of the save icons to save a new SVG Graphic</div></li>';
-                    $data['svg_name']         = '';
-                    $data['svg_description']  = '';
+                    $data['svg_admin'] = '<ul class="sub"><li><dd>SVG Slug</dd><input type="text" value="'.$svg_slug.'_copy" id="svg_slug" /><div class="note">Click on any of the save icons to save a new SVG Graphic</div></li>';
                     break;
                 case 'edit':
                     $data['svg_admin'] = '<ul class="sub"><li><input type="hidden" id="svg_slug" name="svg_slug" value="'.$svg_slug.'" /></li>';
@@ -1457,11 +1455,15 @@ E_ALL;
         <li>
             <dd>SVG Name</dd>
             <input type="text" id="svg_name" value="{$results[0]['name']}" />
-            <input type="hidden" id="id" value="$id" />
         </li>
         <li>
             <dd>SVG Description</dd>
             <textarea id="svg_description" class="text">{$results[0]['description']}</textarea>
+        </li>
+        <li>
+            <dd>Extra Files</dd>
+            <input type="text" id="extra_files" value="{$results[0]['extra_files']}" />
+            <p class="note">Enter comma separated filepaths to extra files needed by this graphic</p>
         </li>
         </ul>
 NCURSES_KEY_EOS;
@@ -1645,47 +1647,47 @@ NCURSES_KEY_EOS;
             global $wpdb;
 
             $svg_action      = array_key_exists('svg_action', $_POST) ? $_POST['svg_action'] : null;
-            $id              = array_key_exists('id', $_POST) ? $_POST['id'] : null;
             $svg_slug        = array_key_exists('svg_slug', $_POST) ? $_POST['svg_slug'] : null;
             $svg_name        = array_key_exists('svg_name', $_POST) ? $_POST['svg_name'] : null;
+            $svg_action      = array_key_exists('svg_action', $_POST) ? $_POST['svg_action'] : null;
             $svg_description = array_key_exists('svg_description', $_POST) ? $_POST['svg_description'] : null;
+            $extra_files     = array_key_exists('extra_files', $_POST) ? $_POST['extra_files'] : null;
             $data            = array_key_exists('data', $_POST) ? stripslashes($_POST['data']) : null;  //use strip slashes because of MAGIC QUOTES
             $file            = array_key_exists('file', $_POST) ? $_POST['file'] : null;
             $folder          = self::get_file_location('svg',$svg_slug);
             $filename        = $folder.'index.'.$file;
-error_log("svg_action: $svg_action");
-            //TODO:  could be a copy. only way to tell, is by checking :(  if this has to happen, stored procedure would be nice
+
             switch ($svg_action) {
                 case 'copy':
                     //save in database, but may already exist
 
-                    $select = self::gc_sql_get_graphic($id);
+                    $select = self::gc_svg_check_dupe($svg_slug);
 
                     if($select) {
-
-                    } else {
-                        //insert into database as a new
-                        $wpdb->insert(
-                            '_gc_svg',
-                            array(
-                                'type' => 'svg',
-                                'slug' => $svg_slug,
-                                'name' => $svg_name,
-                                'description' => $svg_description,
-                                'status' => 1,
-                                'extra_files' => $extra_files
-                            ),
-                            array(
-                                '%s',
-                                '%s',
-                                '%s',
-                                '%s',
-                                '%s',
-                                '%s'
-                            )
-                        );
-
+                        $svg_slug = $svg_slug.'_copy'.rand(77);
                     }
+
+                    //insert into database as a new
+                    $wpdb->insert(
+                        '_gc_svg',
+                        array(
+                            'type' => 'svg',
+                            'slug' => $svg_slug,
+                            'name' => $svg_name,
+                            'description' => $svg_description,
+                            'status' => 1,
+                            'extra_files' => $extra_files
+                        ),
+                        array(
+                            '%s',
+                            '%s',
+                            '%s',
+                            '%s',
+                            '%s',
+                            '%s'
+                        )
+                    );
+
 
                     break;
                 case 'edit':

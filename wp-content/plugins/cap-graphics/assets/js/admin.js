@@ -310,6 +310,7 @@ jQuery(document).ready(function($) {
                 'file': file,
                 'svg_name': $('#svg_name').val(),
                 'svg_description': $('#svg_description').val(),
+                'extra_files': $('#extra_files').val(),
                 'svg_action': $('#svg_action').val(),
                 'svg_slug': validSlug(svg_slug),
                 'id': $('#id').val(),
