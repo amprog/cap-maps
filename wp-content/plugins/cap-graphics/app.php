@@ -293,12 +293,14 @@ EOD;
          */
         function gc_chart_save_callback() {
 
+            global $wpdb;
+
             $data          = $_POST['data'];
             $chart_action  = $_POST['chart_action']  = array_key_exists('chart_action', $data) ? $data['chart_action'] : null;
             $chart_slug    = array_key_exists('chart_slug', $data) ? $data['chart_slug'] : null;
             $chart_type    = array_key_exists('chart_type', $data) ? $data['chart_type'] : null;
 
-            error_log(__FILE__.':'.__LINE__."- chart_action: $chart_action");
+            error_log(__FILE__.':'.__LINE__."- chart_action: $chart_action");          error_log(print_r($data,true));
 
 
             //FIXME: may not even need this case statement any more
@@ -318,29 +320,53 @@ EOD;
 
                     //TODO: add new chart to array and rewrite
                     $charts_json['charts'][]['slug']        = $chart_slug;
-                    $charts_json['charts'][]['label']       = $data['options']['chart_name'];
-                    $charts_json['charts'][]['description'] =  'New Chart: '.$data['options']['chart_type'];
+                    $charts_json['charts'][]['label']       = $data['chart_name'];
+                    $charts_json['charts'][]['description'] = $data['chart_description'];
 
                     //rewrite json file
                     //self::gc_save_json_file($file,$charts_json);
+
+
+                    //insert into database as a new
+                    $wpdb->insert(
+                        '_gc_charts',
+                        array(
+                            'type' => ucwords($chart_type),
+                            'slug' => $chart_slug,
+                            'name' => $data['chart_name'],
+                            'description' => $data['chart_description'],
+                            'status' => 1
+                        ),
+                        array(
+                            '%s',
+                            '%s',
+                            '%s',
+                            '%s',
+                            '%d'
+                        )
+                    );
+
+
                     break;
                 case 'edit':
-                    //TODO: fix the updating of charts
-                    //error_log(__FILE__.':'.__LINE__."- before slug");
 
-                    //error_log(__FILE__.':'.__LINE__."- after: $chart_slug");
-
-
-                    //if chart slug, differs from chart_select then rename file!
-                    //TODO: phase ii feature rename slugs
-                    /*
-                    if($chart_slug!=$chart_select) {
-                        system("rm -rf ".escapeshellarg(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_select.'/'));  //system works better than php
-
-                        mkdir(ABSPATH.$this->gc_frontend->plugin_uri.'/charts/'.$chart_slug.'/');  //make directory
-                    }
-                    */
-
+                    $wpdb->update(
+                        '_gc_charts',
+                        array(
+                            'type' => ucwords($chart_type),
+                            'slug' => $chart_slug,
+                            'name' => $data['chart_name'],
+                            'description' => $data['chart_description'],
+                            'status' => 1
+                        ),
+                        array(
+                            '%s',
+                            '%s',
+                            '%s',
+                            '%s',
+                            '%d'
+                        )
+                    );
 
                     break;
                 default:
@@ -349,7 +375,7 @@ EOD;
             }
 
 
-            $save['options']['chart_type']          = array_key_exists('chart_type', $data) ? sanitize_text_field($data['chart_type']) : null;
+            $save['options']['chart_type']          = array_key_exists('chart_type', $data) ? ucwords(sanitize_text_field($data['chart_type'])) : null;
             $save['options']['chart_name']          = array_key_exists('chart_name', $data) ? sanitize_text_field($data['chart_name']) : null;
             $save['options']['segmentStrokeColor']  = array_key_exists('segmentStrokeColor', $data) ? $data['segmentStrokeColor'] : null;
             $save['options']['chart_source']        = array_key_exists('chart_source', $data) ? $data['chart_source'] : null;
@@ -421,11 +447,11 @@ EOD;
 }
 ]
 }';
-            //$data['data_array'][0]['chart_data']
 
             $save_result = self::gc_save_file(self::get_file_location('charts',$chart_slug).'/index.json',$chart_array_data);
             $new         = json_decode($chart_array_data,true);  //unfortunately need data for gc_side
             $html        = self::gc_side($new,$chart_slug,$save['options']['chart_type']);
+
 
             //return html as chart update
             $return = array(
@@ -511,10 +537,10 @@ EOD;
             //$settings = new Cap_Graphics_Settings();
             //$options = Cap_Graphics_Settings::merge_options($settings->$app_defaults, $settings->$app_options);
 
-            error_log(print_r($options,true));
+            //error_log(print_r($options,true));
 
             $upload_dir = wp_upload_dir();
-            error_log(print_r($upload_dir,true));
+            //error_log(print_r($upload_dir,true));
 
             return plugin_dir_path( __FILE__ ).'packages/'.$type.'/'.$slug.'/';
         }
@@ -908,7 +934,11 @@ EOD;
  jQuery(document).ready(function($) {
     $.getJSON("$jsonfile_uri").done(function( json ) {
         var str = json.options.chart_type.toString();
-        new Chart(document.getElementById('c1').getContext('2d'))[str](json.data_array[0].chart_data,json.options);
+        var c   = document.getElementById("c1").getContext("2d");
+        c.canvas.width = 300;
+        c.canvas.height = 300;
+        new Chart(c)[str](json.data_array[0].chart_data,json.options);
+
     })
     .fail(function( jqxhr, textStatus, error ) {
         var err = textStatus + ", " + error;
@@ -933,13 +963,15 @@ EOS;
 
             $chart_slug         = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
             $chart_action       = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
-            $d_place            = 'Enter a Slug with Underscores Not Spaces';
             $jsonfile           = self::get_file_location('charts',$chart_slug).'/index.json';
             $jsonfile_uri       = self::get_package_uri('charts',$chart_slug).'/index.json';
             $json               = file_get_contents($jsonfile); //error_log(print_r($json,true));
             $data               = json_decode($json,true);
-            $chart_name         = isset($data['options']['chart_name']) ? $data['options']['chart_name'] : null;
-            $chart_type         = isset($data['options']['chart_type']) ? $data['options']['chart_type']  : null;
+            $db_data            = self::gc_sql_get_chart($chart_slug);
+            $chart_id           = $db_data[0]['id'];
+            $chart_name         = $db_data[0]['name'];  //should come from DB
+            $chart_type         = $db_data[0]['type']; //should come from DB
+            $chart_description  = $db_data[0]['description']; //should come from DB
             $chart_source       = isset($data['options']['chart_source']) ? $data['options']['chart_source']  : null;
             $segmentStrokeColor = isset($data['options']['segmentStrokeColor']) ? $data['options']['segmentStrokeColor']  : null;
             $width              = isset($data['options']['width']) ? $data['options']['width']  : null;
@@ -954,23 +986,22 @@ EOS;
             //message changes depending on chart action
             switch ($chart_action) {
                 case 'copy':
-                    $message     = 'You are copying an existing chart, so you must change the slug!';
-                    $chart_slug  = $chart_slug.'_copy';
+                    $d_place      = '';
+                    $chart_slug_d = $chart_slug.'_copy';
                     break;
                 case 'edit':
-                    $message  = 'You cannot change the slug of an existing chart!';
+                    $d_place  = 'Cannot change slug: '.$chart_slug;
+                    $disable  = 'disabled';
                     break;
                 default:
-                    $message  = '';
+                    $d_place  = 'Enter a Slug with Underscores Not Spaces';
             }
-
 
             if($data['options']['animateRotate']=='1') {
                 $animateRotate  = 1;
             } else {
                 $animateRotate  = 0;
             }
-
 
             //get default values for switches
             switch ($name) {
@@ -1065,7 +1096,7 @@ EOS;
         <ul class="sub">
             <li>
                 <dd>Chart Slug</dd>
-                <input type="text" name="chart_slug_d" id="chart_slug_d" value="$chart_slug" placeholder="$d_place" $disable />
+                <input type="text" name="chart_slug_d" id="chart_slug_d" value="$chart_slug_d" placeholder="$d_place" $disable />
             </li>
             <li>
                 <dd>Chart Name</dd>
@@ -1074,6 +1105,10 @@ EOS;
             <li>
                 <dd>Data Source</dd>
                 <input type="text" class="autoupdate" name="chart_source" id="chart_source" placeholder="Enter a url for the source of this data" value="$chart_source" />
+            </li>
+            <li>
+                <dd>Description</dd>
+                <textarea class="autoupdate text" name="chart_description" id="chart_description">$chart_description</textarea>
             </li>
             <li>
                 <dd>Line Color</dd>
@@ -1107,7 +1142,7 @@ EOS;
                 <label class="cb-enable $animateRotate_enable" data-class="animateRotate"><span>Yes</span></label> <input type="checkbox" name="animateRotate" value="1" id="animateRotate_enabled" $animateRotate_1 />
                 <label class="cb-disable $animateRotate_disable" data-class="animateRotate"><span>No</span></label> <input type="checkbox" name="animateRotate" value="0" id="animateRotate_disabled" $animateRotate_2 />
             </li>
-            <li><div class="note">NOTE:  The legend is only for Doughnut and Pie Charts</div><h4><a href="javascript:void(0);" class="add_field" data-type="$chart_type">Add Line to Chart</a></h4></li>
+            <li><div class="note">NOTE:  The legend is only for Doughnut and Pie Charts</div><h4><a href="javascript:void(0);" class="add-field" data-type="$chart_type">Add Line to Chart</a></h4></li>
             <li>
                 <input type="hidden" id="chart_action" name="chart_action" value="$chart_action" />
                 <input type="hidden" id="chart_slug" name="chart_slug" value="$chart_slug" />
@@ -1124,10 +1159,7 @@ EOS;
 </div>
 EOS;
 
-//TODO: phase II on update, text fields update chart
-//TODO: add dissapearing js error with $message
             $html .= <<< EOS
-
 <script>
  jQuery(document).ready(function($) {
     $.getJSON("$jsonfile_uri").done(function( json ) {
@@ -1142,7 +1174,6 @@ EOS;
 });
 </script>
 EOS;
-
 
             $return = array(
                 'html'=>$html,
@@ -1163,7 +1194,7 @@ EOS;
          * @return string
          */
         public static function gc_side($data,$chart_slug,$chart_type,$admin = NULL) {
-
+            error_log("gc_side");  error_log(print_r($data,true));
             if($data['options']['name']) {
                 $chart_name = '<h3>'.$data['options']['chart_name'].'</h3>';
             } else {
@@ -1176,9 +1207,8 @@ EOS;
                 $chart_source = '';
             }
 
-            $lower_chart_type = strtolower($chart_type);
-
-            if($chart_type=='Pie' || $chart_type=='Doughnut') {
+            error_log("chart_type: $chart_type");
+            if($chart_type=='pie' || $chart_type=='doughnut') {
                 $legend_inner = $canvas_type = '';
                 if($data['options']['legend']==1) {
                     $legend_inner = '<div class="left">
@@ -1200,17 +1230,17 @@ EOS;
 
 
             if($admin) {
-                $canvas_html = '<canvas id="c1" width="300" height="300"></canvas>';  //on admin page, keep chart small
+                $canvas_html = '<canvas id="c1" width="300" height="300" style="width: 300px; height: 300px;"></canvas>';  //on admin page, keep chart small
                 $admin_html = <<<EOS
 <div class="clear"> 
     <div class="short-cnt">
         <input type="text" value="[cap_chart chart='$chart_slug']" class="shortcode" />
     </div> 
     <div class="float">
-        <input type="button" class="button button-primary chart-update" name="save_options" value="save" />
+        <input type="button" class="button button-primary goback" value="go back" data-url="/wp-admin/admin.php?page=cap-graphics-charts" />
     </div> 
     <div class="float">
-        <input type="button" class="button button-primary goback" value="go back" data-url="/wp-admin/admin.php?page=cap-graphics-charts" />
+        <input type="button" class="button button-2 chart-update" name="save_options" value="save" />
     </div> 
 </div>
 EOS;
@@ -1219,10 +1249,8 @@ EOS;
                 $admin_html = '';
             }
 
-
                 return  <<< EOS
-
-            <div class="chart $chart_slug $lower_chart_type">
+            <div class="chart $chart_slug $chart_type">
                 {$chart_name}
                 <div $canvas_type>$canvas_html {$chart_source}</div>
                 $legend_inner
@@ -1231,7 +1259,6 @@ EOS;
 EOS;
 
         }
-
 
         /**
          * AJAX: get a line and prepend depending on chart type
@@ -1654,7 +1681,7 @@ NCURSES_KEY_EOS;
                     $select = self::gc_sql_get_graphic($svg_slug);
 
                     if($select) {
-                        $svg_slug = $svg_slug.'_copy'.rand(77); error_log("new svg");  error_log(print_r($select,true));
+                        $svg_slug = $svg_slug.'_copy'.rand(77); //error_log("new svg");  error_log(print_r($select,true));
                         $svg_new  = '1';
                     } else {
                         $svg_new  = '0';
@@ -1775,11 +1802,24 @@ NCURSES_KEY_EOS;
         public static function gc_sql_get_all_graphics() {
             global $wpdb;
 
-            $sql =  'SELECT * FROM _gc_graphics;';
+            $sql =  'SELECT * FROM _gc_svg;';
             $results = $wpdb->get_results($sql, OBJECT );
             return $results;
         }
 
+        /**
+         * Get a chart
+         * @param $slug
+         * @return array|null|object
+         */
+        public static function gc_sql_get_chart($slug) {
+
+            global $wpdb;
+
+            $sql =  "SELECT * FROM _gc_charts WHERE slug = '$slug';";
+            $results = $wpdb->get_results($sql, ARRAY_A );
+            return $results;
+        }
 
         /**
          * DECOM: no longer rewriting json files

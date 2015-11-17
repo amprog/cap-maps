@@ -275,7 +275,7 @@ jQuery(document).ready(function($) {
      * Add fields
      * FIXME:  add field needs to set a _SESSION for count. so that we can get this session in app.php LINE 460
      */
-    $( ".add_field" ).live( "click", function() {
+    $( ".add-field" ).live( "click", function() {
         var chart_type = $(this).data('type');
         if(chart_type) {
             var data = {
@@ -354,6 +354,7 @@ jQuery(document).ready(function($) {
         //first check to see if this is copy
         if(chart_action=='copy') {
             //make sure the slug name changed
+
             if($('#chart_slug_d').val()==$('#chart_slug').val()) {
                 msg('You need to change the slug name since you are copying another chart!',3000,'danger')
                 return;
@@ -373,12 +374,14 @@ jQuery(document).ready(function($) {
             'data': obj
         }; console.dir(data);
         //FIXME:  we need a better way to keep track of counts
-        $.post(ajaxurl, data, function(response) {
+        $.post(ajaxurl, data, function(response) {  console.dir(response);
             json = jQuery.parseJSON(response.chart_array_data);
             $('.chart').replaceWith(response.html);
             var str = json.options.chart_type.toString();
-            new Chart(document.getElementById('c1').getContext('2d'))[str](json.data_array[0].chart_data,json.options);
-
+            var c   = document.getElementById("c1").getContext("2d");
+            c.canvas.width = 300;
+            c.canvas.height = 300;
+            new Chart(c)[str](json.data_array[0].chart_data,json.options);
         });
     });
 

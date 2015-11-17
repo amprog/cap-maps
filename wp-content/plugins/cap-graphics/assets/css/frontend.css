@@ -1,14 +1,12 @@
-
-/*
-   width="2583.2649"
-   height="1556.9987"
-   
-   */
-
-
-svg,canvas {
+svg {
     width: 100%;
     height: 100%;
+}
+
+canvas{
+    width: 100% !important;
+    max-width: 800px;
+    height: auto !important;
 }
 
 #adminmenu #toplevel_page_cap-graphics .wp-menu-image img {
