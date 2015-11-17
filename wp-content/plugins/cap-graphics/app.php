@@ -1583,6 +1583,7 @@ NCURSES_KEY_EOS;
     </div>
     <div class="left r">
         <input type="button" class="button button-primary goback" value="go back" data-url="/wp-admin/admin.php?page=cap-graphics-svg" />
+        <input type="button" class="button button-secondary save_svg" value="save" />
     </div>
 </div>
 
@@ -1590,31 +1591,19 @@ NCURSES_KEY_EOS;
 <ul class="sub svg_edit">
 <li>
     <span>SVG File</span>
-     <div class="btns_data">
-        <a href="javascript:void(0);" class="btn save" data-file="svg" id="btn_svg">save</a>
-    </div>
-    <textarea name="svg">{$data['svg']}</textarea>
+    <textarea name="svg_data" id="svg_data">{$data['svg']}</textarea>
 </li>
 <li>
     <span>Javascript Code</span>
-    <div class="btns_data">
-        <a href="javascript:void(0);" class="btn save" data-file="js" id="btn_js">save</a>
-    </div>
-    <textarea name="js">{$data['js']}</textarea>
+    <textarea name="js_data" id="js_data">{$data['js']}</textarea>
 </li>
 <li>
     <span>CSS Styles</span>
-    <div class="btns_data">
-        <a href="javascript:void(0);" class="btn save" data-file="css" id="btn_css">save</a>
-    </div>
-    <textarea name="css">{$data['css']}</textarea>
+    <textarea name="css_data" id="css_data">{$data['css']}</textarea>
 </li>
 <li>
     <span>JSON Data</span>
-    <div class="btns_data">
-        <a href="javascript:void(0);" class="btn save" data-file="json" id="btn_json">save</a>
-    </div>
-    <textarea name="json">{$data['json']}</textarea>
+    <textarea name="json_data" id="json_data">{$data['json']}</textarea>
 </li>
 <li><input type="hidden" id="svg_action" name="svg_action" value="{$data['svg_action']}" /></li>
 </ul>
@@ -1652,10 +1641,11 @@ NCURSES_KEY_EOS;
             $svg_action      = array_key_exists('svg_action', $_POST) ? $_POST['svg_action'] : null;
             $svg_description = array_key_exists('svg_description', $_POST) ? $_POST['svg_description'] : null;
             $extra_files     = array_key_exists('extra_files', $_POST) ? $_POST['extra_files'] : null;
-            $data            = array_key_exists('data', $_POST) ? stripslashes($_POST['data']) : null;  //use strip slashes because of MAGIC QUOTES
-            $file            = array_key_exists('file', $_POST) ? $_POST['file'] : null;
+            $svg_data        = array_key_exists('svg_data', $_POST) ? stripslashes($_POST['svg_data']) : null;  //use strip slashes because of MAGIC QUOTES
+            $js_data         = array_key_exists('js_data', $_POST) ? stripslashes($_POST['js_data']) : null;  //use strip slashes because of MAGIC QUOTES
+            $css_data        = array_key_exists('css_data', $_POST) ? stripslashes($_POST['css_data']) : null;  //use strip slashes because of MAGIC QUOTES
+            $json_data       = array_key_exists('json_data', $_POST) ? stripslashes($_POST['json_data']) : null;  //use strip slashes because of MAGIC QUOTES
             $folder          = self::get_file_location('svg',$svg_slug);
-            $filename        = $folder.'index.'.$file;
 
             switch ($svg_action) {
                 case 'copy':
@@ -1725,18 +1715,24 @@ NCURSES_KEY_EOS;
                 mkdir($folder);
             }
 
-            $fh = fopen($filename, "w");
-            if ($fh == false) {
-                $result = 0;
-            } else {
-                fputs($fh, $data);
-                fclose($fh);
-                $result = 1;
+
+            //save all files regardless
+
+            $file_types = array('svg'=>$svg_data,'js'=>$js_data,'css'=>$css_data,'json'=>$json_data);
+
+            foreach($file_types as $file=>$data) {
+                $fh = fopen($folder.'index.'.$file, "w");
+                if ($fh == false) {
+                    $result = 0;
+                } else {
+                    fputs($fh, $data);
+                    fclose($fh);
+                    $result = 1;
+                }
             }
 
             $return   = array(
                 'result'=> $result,
-                'file'=> $filename,
                 'svg_slug'=> $svg_slug,
                 'svg_new'=>$svg_new
             );

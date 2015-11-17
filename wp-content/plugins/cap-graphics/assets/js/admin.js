@@ -298,33 +298,32 @@ jQuery(document).ready(function($) {
         $('#data-'+$(this).data('id')).remove();
     });
 
-    //file save
-    $( ".btn.save" ).live( "click", function() {
-        $(this).addClass('loading');
-        file         =  $(this).data('file');
+    //save svg
+    $( ".save_svg" ).live( "click", function() {
         var svg_slug = $('#svg_slug').val();
 
         if(svg_slug) {
             var data = {
                 'action': 'gc_file_save_action',
-                'file': file,
                 'svg_name': $('#svg_name').val(),
                 'svg_description': $('#svg_description').val(),
                 'extra_files': $('#extra_files').val(),
                 'svg_action': $('#svg_action').val(),
                 'svg_slug': validSlug(svg_slug),
                 'id': $('#id').val(),
-                'data': $("textarea[name='"+$(this).data('file')+"']").val()
+                'svg_data': $("textarea[name='svg_data']").val(),
+                'js_data': $("textarea[name='js_data']").val(),
+                'css_data': $("textarea[name='css_data']").val(),
+                'json_data': $("textarea[name='json_data']").val()
             }; console.dir(data);
             $.post(ajaxurl, data, function(response) {console.dir(response);
-                $('#btn_'+file).removeClass('loading');
 
                 if(response.svg_new=='1') {
                     $('#svg_slug').val(response.svg_slug);
                     $('#svg_slug').attr('disabled',true);
                     $('#svg_action').val('edit');
                 }
-
+                msg("SVG Graphic Saved",3000,'info');
             });
         } else {
             msg("Please enter a slug",3000,'warning');
