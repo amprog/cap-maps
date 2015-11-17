@@ -298,7 +298,7 @@ EOD;
             $data          = $_POST['data'];
             $chart_action  = $_POST['chart_action']  = array_key_exists('chart_action', $data) ? $data['chart_action'] : null;
             $chart_slug    = array_key_exists('chart_slug', $data) ? $data['chart_slug'] : null;
-            $chart_type    = array_key_exists('chart_type', $data) ? $data['chart_type'] : null;
+            $chart_type    = array_key_exists('chart_type', $data) ? strtolower($data['chart_type']) : null;
 
             error_log(__FILE__.':'.__LINE__."- chart_action: $chart_action");          error_log(print_r($data,true));
 
@@ -331,7 +331,7 @@ EOD;
                     $wpdb->insert(
                         '_gc_charts',
                         array(
-                            'type' => ucwords($chart_type),
+                            'type' => $chart_type,
                             'slug' => $chart_slug,
                             'name' => $data['chart_name'],
                             'description' => $data['chart_description'],
@@ -353,7 +353,7 @@ EOD;
                     $wpdb->update(
                         '_gc_charts',
                         array(
-                            'type' => ucwords($chart_type),
+                            'type' => $chart_type,
                             'slug' => $chart_slug,
                             'name' => $data['chart_name'],
                             'description' => $data['chart_description'],
@@ -1206,9 +1206,9 @@ EOS;
             } else {
                 $chart_source = '';
             }
-
+            $l_type = strtolower($chart_type);
             error_log("chart_type: $chart_type");
-            if($chart_type=='pie' || $chart_type=='doughnut') {
+            if($l_type=='pie' || $l_type=='doughnut') {
                 $legend_inner = $canvas_type = '';
                 if($data['options']['legend']==1) {
                     $legend_inner = '<div class="left">
