@@ -1207,7 +1207,7 @@ EOS;
         <input type="text" value="[cap_chart chart='$chart_slug']" class="shortcode" />
     </div> 
     <div class="float">
-        <input type="button" class="button button-primary chart_update" name="save_options" value="save"/>
+        <input type="button" class="button button-primary chart-update" name="save_options" value="save" />
     </div> 
     <div class="float">
         <input type="button" class="button button-primary goback" value="go back" data-url="/wp-admin/admin.php?page=cap-graphics-charts" />
@@ -1583,7 +1583,7 @@ NCURSES_KEY_EOS;
     </div>
     <div class="left r">
         <input type="button" class="button button-primary goback" value="go back" data-url="/wp-admin/admin.php?page=cap-graphics-svg" />
-        <input type="button" class="button button-secondary save_svg" value="save" />
+        <input type="button" class="button button-2 save-svg" value="save" />
     </div>
 </div>
 
@@ -1715,9 +1715,7 @@ NCURSES_KEY_EOS;
                 mkdir($folder);
             }
 
-
             //save all files regardless
-
             $file_types = array('svg'=>$svg_data,'js'=>$js_data,'css'=>$css_data,'json'=>$json_data);
 
             foreach($file_types as $file=>$data) {

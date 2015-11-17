@@ -299,7 +299,7 @@ jQuery(document).ready(function($) {
     });
 
     //save svg
-    $( ".save_svg" ).live( "click", function() {
+    $( ".save-svg" ).live( "click", function() {
         var svg_slug = $('#svg_slug').val();
 
         if(svg_slug) {
@@ -331,7 +331,7 @@ jQuery(document).ready(function($) {
     });
 
     //update canvas and save
-    $( ".chart_update" ).live( "click", function() {
+    $( ".chart-update" ).live( "click", function() {
 
         var chart_action = $('#chart_action').val();
         var chart_type   = $('#chart_type').val();
@@ -409,7 +409,6 @@ jQuery(document).ready(function($) {
 
 
     });
-
 */
 
 

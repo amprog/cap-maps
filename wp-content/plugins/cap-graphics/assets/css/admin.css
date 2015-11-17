@@ -46,6 +46,13 @@ ul.sub li input {
     width: 120px!important;
 }
 
+.button-2 {
+    background: #d54e21!important;
+    width: 120px!important;
+    border: 0!important;
+    color: #ffffff!important;
+}
+
 ul.chart_data_wrap {
     margin:0;
     padding:0;
