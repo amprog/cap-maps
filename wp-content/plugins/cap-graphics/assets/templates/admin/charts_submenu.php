@@ -1,8 +1,6 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" />
-<link rel="stylesheet" href="<?php echo $data['charts_css_file']; ?>/jquery.fancybox.css" />
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script src="<?php echo $data['charts_js_file']; ?>common/Chart.min.js"></script>
-<script src="<?php echo $data['charts_js_file']; ?>common/jquery.fancybox.pack.js"></script>
 <script src="<?php echo $data['charts_js_file']; ?>custom/jquery.object.js"></script>
 <div class="wrap">
     <div class="message"></div>

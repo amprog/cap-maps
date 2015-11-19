@@ -954,7 +954,7 @@ EOS;
 
 
         /**
-         * AJAX: Create a NEW CHART
+         * AJAX: handles all chart actions for EDIT,COPY and NEW
          *
          */
         function gc_chart_action_callback() {
@@ -963,15 +963,46 @@ EOS;
 
             $chart_slug         = array_key_exists('chart_slug', $_POST) ? $_POST['chart_slug'] : null;
             $chart_action       = array_key_exists('chart_action', $_POST) ? $_POST['chart_action'] : null;
-            $jsonfile           = self::get_file_location('charts',$chart_slug).'/index.json';
-            $jsonfile_uri       = self::get_package_uri('charts',$chart_slug).'/index.json';
+            error_log("chart_action: $chart_action");
+            //messages and whether or not we pull json from starter file should be switched here
+            switch ($chart_action) {
+                case 'copy':
+                    $d_place      = '';
+                    $chart_slug_d = $chart_slug.'_copy';
+                    $jsonfile           = self::get_file_location('charts',$chart_slug).'/index.json';
+                    $jsonfile_uri       = self::get_package_uri('charts',$chart_slug).'/index.json';
+                    $db_data            = self::gc_sql_get_chart($chart_slug);
+                    $chart_name         = $db_data[0]['name'];  //should come from DB
+                    $chart_type         = $db_data[0]['type']; //should come from DB
+                    $chart_description  = $db_data[0]['description']; //should come from DB
+                    break;
+                case 'edit':
+                    $d_place            = 'Cannot change slug: '.$chart_slug;
+                    $disable            = 'disabled';
+                    $jsonfile           = self::get_file_location('charts',$chart_slug).'/index.json';
+                    $jsonfile_uri       = self::get_package_uri('charts',$chart_slug).'/index.json';
+                    $db_data            = self::gc_sql_get_chart($chart_slug);
+                    $chart_name         = $db_data[0]['name'];  //should come from DB
+                    $chart_type         = $db_data[0]['type']; //should come from DB
+                    $chart_description  = $db_data[0]['description']; //should come from DB
+                    break;
+                case 'new':
+                    //pull json from starter package which is ALWAYS LOCAL, depending on type
+                    $chart_type         = array_key_exists('chart_type', $_POST) ? $_POST['chart_type'] : null;
+                    $jsonfile           = plugin_dir_path( __FILE__ ).'assets/chart_starter/'.$chart_type.'.json';  error_log("jsonfile: $jsonfile");
+                    $jsonfile_uri       = plugin_dir_url( __FILE__ ).'assets/chart_starter/'.$chart_type.'.json';  error_log("jsonfile_uri: $jsonfile_uri");
+
+                    $d_place            = 'Enter a Slug with Underscores Not Spaces';
+                    break;
+                default:
+                    $d_place  = 'Enter a Slug with Underscores Not Spaces';
+            }
+
+
+
+
             $json               = file_get_contents($jsonfile); //error_log(print_r($json,true));
             $data               = json_decode($json,true);
-            $db_data            = self::gc_sql_get_chart($chart_slug);
-            $chart_id           = $db_data[0]['id'];
-            $chart_name         = $db_data[0]['name'];  //should come from DB
-            $chart_type         = $db_data[0]['type']; //should come from DB
-            $chart_description  = $db_data[0]['description']; //should come from DB
             $chart_source       = isset($data['options']['chart_source']) ? $data['options']['chart_source']  : null;
             $segmentStrokeColor = isset($data['options']['segmentStrokeColor']) ? $data['options']['segmentStrokeColor']  : null;
             $width              = isset($data['options']['width']) ? $data['options']['width']  : null;
@@ -983,19 +1014,7 @@ EOS;
             $chart_type_camel   = ucwords($chart_type);
 
 
-            //message changes depending on chart action
-            switch ($chart_action) {
-                case 'copy':
-                    $d_place      = '';
-                    $chart_slug_d = $chart_slug.'_copy';
-                    break;
-                case 'edit':
-                    $d_place  = 'Cannot change slug: '.$chart_slug;
-                    $disable  = 'disabled';
-                    break;
-                default:
-                    $d_place  = 'Enter a Slug with Underscores Not Spaces';
-            }
+
 
             if($data['options']['animateRotate']=='1') {
                 $animateRotate  = 1;
@@ -1116,11 +1135,11 @@ EOS;
             </li>
             <li>
                 <dd>Chart Height</dd>
-                <input type="number"  class="c_1_4" name="height" id="height" placeholder="Enter a height for this chart (defaut: 300)" value="$height" />
+                <input type="number"  class="c_1_4" name="height" id="height" placeholder="Enter height" value="$height" />
             </li>
             <li>
                 <dd>Chart Width</dd>
-                <input type="number" class="c_1_4" name="width" id="width" placeholder="Enter a width for this chart (defaut: 300)" value="$width" />
+                <input type="number" class="c_1_4" name="width" id="width" placeholder="Enter width" value="$width" />
             </li>
             <li class="switch">
                 <div>Show Name</div>
@@ -1163,8 +1182,7 @@ EOS;
 <script>
  jQuery(document).ready(function($) {
     $.getJSON("$jsonfile_uri").done(function( json ) {
-        var str = json.options.chart_type.toString();
-        new Chart(document.getElementById('c1').getContext('2d'))[str](json.data_array[0].chart_data,json.options);
+        new Chart(document.getElementById('c1').getContext('2d')).$chart_type(json.data_array[0].chart_data,json.options);
     })
     .fail(function( jqxhr, textStatus, error ) {
         var err = textStatus + ", " + error;
@@ -1207,7 +1225,7 @@ EOS;
                 $chart_source = '';
             }
             $l_type = strtolower($chart_type);
-            error_log("chart_type: $chart_type");
+
             if($l_type=='pie' || $l_type=='doughnut') {
                 $legend_inner = $canvas_type = '';
                 if($data['options']['legend']==1) {

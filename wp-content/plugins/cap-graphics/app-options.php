@@ -127,12 +127,10 @@ if (!class_exists("Cap_Graphics_Options")) {
 
 
                 //add chart typs here to one array
-                $data['charts']['pie']['label'] = 'Pie Chart';
-                $data['charts']['pie']['img']   = $images.'pie.png';
-
-
-                $data['charts']['doughnut']['label'] = 'Doughnut Chart';
-                $data['charts']['doughnut']['img']   = $images.'doughnut.png';
+                $data['charts']['Pie']['label'] = 'Pie Chart';
+                $data['charts']['Doughnut']['label'] = 'Doughnut Chart';
+                $data['charts_js_file']  = '/wp-content/plugins/cap-graphics/assets/js/'; //TODO: replace all of these with proper constant
+                $data['charts_css_file'] = '/wp-content/plugins/cap-graphics/assets/css/';
 
 
                 return parent::gc_get_template($data,'admin/charts_new.php');

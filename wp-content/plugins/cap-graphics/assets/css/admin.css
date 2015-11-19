@@ -375,18 +375,18 @@ ul.chart_data_wrap input {
     margin: 0 auto;
 }
 
-.starter.pie {
+.starter.Pie {
     background: url('../images/pie.png');
 }
 
-.starter.doughnut {
+.starter.Doughnut {
     background: url('../images/doughnut.png');
 }
 
-.starter.bar {
+.starter.Bar {
     background: url('../images/bar.png');
 }
-.starter.line {
+.starter.Line {
     background: url('../images/line.png');
 }
 

@@ -1,61 +1,39 @@
 jQuery(document).ready(function($) {
     //TODO:  js for placing charts needs to be a foreach that iterates through all charts it finds on the page
     svg_wrap = $('#svg_select_wrap');
+
+
+
     //creating new charts
     $( ".create" ).live( "click", function(e) {
-
+        console.log('type: '+$(this).data('type'));
         if($(this).data('type')=='svg') {
 
             $('#svg_select_wrap').remove();
             //$('#svg_select_wrap #svg_select_inner').addClass('h');
             $('#svg_slug_wrap').html('<span>SVG Package Name</span>  <input type="text" name="svg_slug" id="svg_slug" placeholder="Enter a slug for this SVG Graphic" />');
             var data = {
-                'action': 'cap_map_svg_action',
+                'action': 'gc_svg_action',
                 'svg_slug': $( this ).val()
             };
             jQuery.post(ajaxurl, data, function(response) { console.dir(response);
                 $('#svg_new').html(response.html);
             });
-        } else if($(this).data('type')=='chart') {
-            $('#chart_select_wrap').remove();
-            var data = {
-                'action': 'cap_map_chart_action',
-                'chart_slug': $( this ).val()
-            };
-            jQuery.post(ajaxurl, data, function(response) {
-                $('#chart_new').html(response.html);
-            });
         } else {
 
+            $('#chart_select_wrap').remove();
+            var data = {
+                'action': 'gc_chart_action',
+                'chart_slug': $( this ).val(),
+                'chart_type': $(this).data('type'),
+                'chart_action': 'new'
+            };
+            jQuery.post(ajaxurl, data, function(response) { console.dir(response);
+                $('#list_assets').html(response.html);
+            });
         }
         e.preventDefault();
     });
-
-    //create new charts
-    $( ".new_chart" ).live( "click", function(e) {
-        var data = {
-            'action': 'cap_map_chart_action',
-            'chart_type': $( this ).data('type')
-        };
-        jQuery.post(ajaxurl, data, function(response) {
-            $('#list_assets').html(response.html); console.dir(response);
-        });
-    });
-
-
-    //save new chart
-    /* DO NOT DO THIS WITH AJAX
-    $( "#frm_new_chart .button-primary" ).live( "click", function() {
-        console.dir($('#frm_new_chart').serialize());
-        var data = {
-            'action': 'gc_chart_save_callback',
-            'data': $('#frm_new_chart').serialize()
-        };
-        jQuery.post(ajaxurl, data, function(response) {
-            $('#list_assets').html(response.html); console.dir(response);
-        });
-    });
-*/
 
 
     //all button clicks for charts
