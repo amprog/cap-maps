@@ -314,6 +314,25 @@ jQuery(document).ready(function($) {
         var chart_action = $('#chart_action').val();
         var chart_type   = $('#chart_type').val();
 
+        //first check to see if this is copy
+        if(chart_action=='copy') {
+            //make sure the slug name changed
+
+            if($('#chart_slug_d').val()==$('#chart_slug').val()) {
+                msg('You need to change the slug name since you are copying another chart!',3000,'danger')
+                return;
+            }
+            var chart_slug = $('#chart_slug').val();
+        } else {
+            var chart_slug = $('#chart_slug_d').val();
+        }
+
+        //make sure there is a slug
+        if(!chart_slug) {
+            msg("Please enter a chart slug!",3000,'warning');
+            return;
+        }
+
         //check if total value is over 100
         if(chart_type=='Pie' || chart_type=='Doughnut') {
 
@@ -329,19 +348,6 @@ jQuery(document).ready(function($) {
             }
         }
 
-        //first check to see if this is copy
-        if(chart_action=='copy') {
-            //make sure the slug name changed
-
-            if($('#chart_slug_d').val()==$('#chart_slug').val()) {
-                msg('You need to change the slug name since you are copying another chart!',3000,'danger')
-                return;
-            }
-            var chart_slug = $('#chart_slug').val();
-        } else {
-            var chart_slug = $('#chart_slug_d').val();
-        }
-
         //turn a form into an object
         obj = $('#frm_chart_update').serializeObject();
         var data = {
@@ -355,6 +361,7 @@ jQuery(document).ready(function($) {
         $.post(ajaxurl, data, function(response) {  console.dir(response);
             json = jQuery.parseJSON(response.chart_array_data);
             $('.chart').replaceWith(response.html);
+            $('.shortcode').val(response.shortcode);
             var str = json.options.chart_type.toString();
             var c   = document.getElementById("c1").getContext("2d");
             c.canvas.width = 300;

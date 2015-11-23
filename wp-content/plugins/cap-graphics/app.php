@@ -306,6 +306,7 @@ EOD;
             //FIXME: may not even need this case statement any more
             switch ($chart_action) {
                 case 'new':
+                    $chart_slug    = array_key_exists('chart_slug_d', $data) ? $data['chart_slug_d'] : null;
                 case 'copy':
                     //new and copy should essentially run the same code
                     //TODO: Instead of grabbing json from starter folder, we need to use the json php file in templates/json
@@ -457,7 +458,8 @@ EOD;
             $return = array(
                 'html'=>$html,
                 'save_result'=>$save_result,
-                'chart_array_data'=>$chart_array_data
+                'chart_array_data'=>$chart_array_data,
+                'shortcode'=>"[cap_chart chart='$chart_slug']" //incase there is a change
             );
 
             wp_send_json($return);
