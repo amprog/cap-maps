@@ -11,7 +11,7 @@
             <li data-type="<?php echo $key; ?>" class="create">
                 <a href="javascript:void(0);">
                     <h3><?php echo $chart['label']; ?></h3>
-                    <div class="starter <?php echo $key; ?>"></div>
+                    <div class="starter <?php echo strtolower($key); ?>"></div>
                     <div class="meta">
                         <p>Create New</p>
                     </div>

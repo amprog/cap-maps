@@ -317,7 +317,6 @@ jQuery(document).ready(function($) {
         //first check to see if this is copy
         if(chart_action=='copy') {
             //make sure the slug name changed
-
             if($('#chart_slug_d').val()==$('#chart_slug').val()) {
                 msg('You need to change the slug name since you are copying another chart!',3000,'danger')
                 return;
@@ -325,6 +324,7 @@ jQuery(document).ready(function($) {
             var chart_slug = $('#chart_slug').val();
         } else {
             var chart_slug = $('#chart_slug_d').val();
+            $('#chart_action').val('edit');
         }
 
         //make sure there is a slug
@@ -362,9 +362,16 @@ jQuery(document).ready(function($) {
             json = jQuery.parseJSON(response.chart_array_data);
             $('.chart').replaceWith(response.html);
             $('.shortcode').val(response.shortcode);
-            var str = json.options.chart_type.toString();
-            var c   = document.getElementById("c1").getContext("2d");
-            c.canvas.width = 300;
+
+            //check for slug_d and update
+            if( $('#chart_slug_d').length ) {
+                $('#chart_slug_d').val(response.chart_slug);
+            }
+            $('#chart_slug').val(response.chart_slug);  //always update slug
+
+            var str         = json.options.chart_type.toString();
+            var c           = document.getElementById("c1").getContext("2d");
+            c.canvas.width  = 300;
             c.canvas.height = 300;
             new Chart(c)[str](json.data_array[0].chart_data,json.options);
         });

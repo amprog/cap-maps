@@ -302,31 +302,59 @@ EOD;
 
             error_log(__FILE__.':'.__LINE__."- chart_action: $chart_action");          error_log(print_r($data,true));
 
+            if(!$chart_slug) {
+                $chart_slug    = array_key_exists('chart_slug_d', $data) ? $data['chart_slug_d'] : null;
+            }
 
             //FIXME: may not even need this case statement any more
             switch ($chart_action) {
                 case 'new':
-                    $chart_slug    = array_key_exists('chart_slug_d', $data) ? $data['chart_slug_d'] : null;
-                case 'copy':
-                    //new and copy should essentially run the same code
-                    //TODO: Instead of grabbing json from starter folder, we need to use the json php file in templates/json
-                    //$package_file = ABSPATH.$this->gc_frontend->chart_folder.'/charts.json';
-
-                    $package      = self::get_file_location('charts',$chart_slug);
-                    //$file         = self::get_file_location('charts',$chart_slug).'/index.json';
-
-                    //$charts_json  = json_decode(file_get_contents($file),true);
-                    mkdir($package);  //make directory
 
 
-                    //TODO: add new chart to array and rewrite
+                    //check to see if slug aleady exists
+                    $check = self::gc_sql_get_chart($chart_slug);
+                    if($check[0]['slug']==$chart_slug) {
+                        $chart_slug .='_copy'.rand(13434);
+                    }
+
                     $charts_json['charts'][]['slug']        = $chart_slug;
                     $charts_json['charts'][]['label']       = $data['chart_name'];
                     $charts_json['charts'][]['description'] = $data['chart_description'];
 
-                    //rewrite json file
-                    //self::gc_save_json_file($file,$charts_json);
+                    //insert into database as a new
+                    $wpdb->insert(
+                        '_gc_charts',
+                        array(
+                            'type' => $chart_type,
+                            'slug' => $chart_slug,
+                            'name' => $data['chart_name'],
+                            'description' => $data['chart_description'],
+                            'status' => 1
+                        ),
+                        array(
+                            '%s',
+                            '%s',
+                            '%s',
+                            '%s',
+                            '%d'
+                        )
+                    );
 
+                case 'copy':
+                    //new and copy should essentially run the same code
+                    //TODO: Instead of grabbing json from starter folder, we need to use the json php file in templates/json
+                    //$package_file = ABSPATH.$this->gc_frontend->chart_folder.'/charts.json';
+                    $check = self::gc_sql_get_chart($chart_slug);
+                    if($check[0]['slug']==$chart_slug) {
+                        $chart_slug .='_copy'.rand(13434);
+                    }
+
+                    $package      = self::get_file_location('charts',$chart_slug);
+                    mkdir($package);  //make directory
+
+                    $charts_json['charts'][]['slug']        = $chart_slug;
+                    $charts_json['charts'][]['label']       = $data['chart_name'];
+                    $charts_json['charts'][]['description'] = $data['chart_description'];
 
                     //insert into database as a new
                     $wpdb->insert(
@@ -350,24 +378,82 @@ EOD;
 
                     break;
                 case 'edit':
+                    $check = self::gc_sql_get_chart($chart_slug);
 
-                    $wpdb->update(
-                        '_gc_charts',
-                        array(
-                            'type' => $chart_type,
-                            'slug' => $chart_slug,
-                            'name' => $data['chart_name'],
-                            'description' => $data['chart_description'],
-                            'status' => 1
-                        ),
-                        array(
-                            '%s',
-                            '%s',
-                            '%s',
-                            '%s',
-                            '%d'
-                        )
-                    );
+
+                    //if empty, create. this could still be the case
+                    if(!$check[0]['slug']) {
+                        $package      = self::get_file_location('charts',$chart_slug);
+                        mkdir($package);  //make directory
+error_log();
+                        $wpdb->insert(
+                            '_gc_charts',
+                            array(
+                                'type' => $chart_type,
+                                'slug' => $chart_slug,
+                                'name' => $data['chart_name'],
+                                'description' => $data['chart_description'],
+                                'status' => 1
+                            ),
+                            array(
+                                '%s',
+                                '%s',
+                                '%s',
+                                '%s',
+                                '%d'
+                            )
+                        );
+                        error_log(__FILE__.':'.__LINE__."- 1");
+                    } else if($check[0]['slug']==$chart_slug) {
+                        $chart_slug .='_copy'.rand(13434);
+                        $package      = self::get_file_location('charts',$chart_slug);
+                        mkdir($package);  //make directory
+                        $wpdb->update(
+                            '_gc_charts',
+                            array(
+                                'type' => $chart_type,
+                                'slug' => $chart_slug,
+                                'name' => $data['chart_name'],
+                                'description' => $data['chart_description'],
+                                'status' => 1
+                            ),
+                            array(
+                                '%s',
+                                '%s',
+                                '%s',
+                                '%s',
+                                '%d'
+                            )
+                        );
+                        error_log(__FILE__.':'.__LINE__."- 2");
+                    } else {
+                        $wpdb->update(
+                            '_gc_charts',
+                            array(
+                                'type' => $chart_type,
+                                'slug' => $chart_slug,
+                                'name' => $data['chart_name'],
+                                'description' => $data['chart_description'],
+                                'status' => 1
+                            ),
+                            array(
+                                '%s',
+                                '%s',
+                                '%s',
+                                '%s',
+                                '%d'
+                            )
+                        );
+                        error_log(__FILE__.':'.__LINE__."- 3");
+                    }
+
+                    error_log("edit: ".$chart_slug);
+
+                    error_log("check: ".$check[0]['slug']);
+
+
+
+
 
                     break;
                 default:
@@ -424,20 +510,15 @@ EOD;
 
             for ($i = 0; $i <= 10; $i++) {
                 if(empty($data['chart_data['.$i])) {
-                    error_log("breaking at $i");
-                    //break 1;
                     continue;
                 } else {
                     $chart_array_data .= '{';
                     foreach($data['chart_data['.$i] as $k=>$v) {
-                        error_log("$i: $v");
-
                         if(is_numeric($v)) {
                             $chart_array_data .= '"'.$k.'": '.$v.',';
                         } else {
                             $chart_array_data .= '"'.$k.'": "'.$v.'",';
                         }
-
                     }
                     $chart_array_data = rtrim($chart_array_data, ","); //cut that last comma off
                     $chart_array_data .= '},';
@@ -459,7 +540,8 @@ EOD;
                 'html'=>$html,
                 'save_result'=>$save_result,
                 'chart_array_data'=>$chart_array_data,
-                'shortcode'=>"[cap_chart chart='$chart_slug']" //incase there is a change
+                'shortcode'=>"[cap_chart chart='$chart_slug']", //in case there is a change
+                'chart_slug'=>$chart_slug
             );
 
             wp_send_json($return);
@@ -1214,7 +1296,6 @@ EOS;
          * @return string
          */
         public static function gc_side($data,$chart_slug,$chart_type,$admin = NULL) {
-            error_log("gc_side");  error_log(print_r($data,true));
             if($data['options']['name']) {
                 $chart_name = '<h3>'.$data['options']['chart_name'].'</h3>';
             } else {

@@ -9,9 +9,9 @@
         <ul class="l">
             <?php $i=1; foreach($data['packages'] as $chart): ?>
                 <li data-slug="<?php echo $chart['slug']; ?>" class="current_chart" id="l-<?php echo $i; ?>">
-                    <h3><?php echo $chart['name']; ?></h3>
+                    <h3><?php if(!$chart['name']) { echo 'No Name'; } else { echo $chart['name']; } ?></h3>
                     <div class="starter <?php echo $chart['type']; ?>"></div>
-                    <p><?php echo $chart['description']; ?></p>
+                    <p><?php if(!$chart['description']) { echo 'No Description'; } else { echo $chart['description']; } ?></p>
                     <input type="text" value='[cap_chart chart="<?php echo $chart['slug']; ?>"]' class="shortcode" />
 
                     <div class="meta">
