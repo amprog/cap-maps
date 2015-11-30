@@ -1,6 +1,5 @@
 <?php
 
-//TODO: charts.json and svg.json need to go into DATABASE
 //TODO: need to put everything into s3 bucket
 //TODO: build option for using oEmbed
 //TODO:  build lyvefire version
@@ -623,8 +622,11 @@ error_log();
 
             //error_log(print_r($options,true));
 
-            $upload_dir = wp_upload_dir();
+            //$upload_dir = wp_upload_dir();
             //error_log(print_r($upload_dir,true));
+
+
+
 
             return plugin_dir_path( __FILE__ ).'packages/'.$type.'/'.$slug.'/';
         }
